@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--color-primary: #7D3BFF;
+	--color-secondary: #EEFF00;
+}
+
+/* selection colors */
+::selection {
+	background: var(--color-primary);
+	color: #fff;
+}
+
+@layer base {
+	html {
+		overscroll-behavior: none;
+	}
+	body {
+		@apply bg-white text-black font-sans antialiased;
+	}
+}
+
+@font-face {
+	font-family: whyte;
+	src: url('/fonts/Whyte.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.noselect { 
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	 user-select: none;
+ } 
+
+
+.nav-link {
+	@apply px-2 py-1 transition-colors duration-300;
+}
+.nav-link:hover {
+	background: #000;
+	color: var(--color-secondary);	
+}
+
+.highlight {
+	/* background: var(--color-primary);
+	color: white; */
+	font-weight: bold;
+}
