@@ -41,22 +41,37 @@ const { title = 'Purdue Hackers' } = Astro.props;
 		</header>
 		<slot />
 		<script>
-			(function () {
-				const header = document.getElementById('site-header');
-				const darkSection = document.querySelector('[data-header-dark]');
-				if (!header || !darkSection) return;
-
-				function update() {
+			import Lenis from 'lenis';
+			import 'lenis/dist/lenis.css';
+		
+			const lenis = new Lenis({
+				autoRaf: true,
+				lerp: 0.08,
+			});
+		
+			const header = document.getElementById('site-header');
+			const darkSection = document.querySelector('[data-header-dark]');
+			if (header && darkSection) {
+				function updateHeader() {
 					if (!darkSection) return;
 					if (!header) return;
 					const rect = darkSection.getBoundingClientRect();
 					header.classList.toggle('header-over-dark', rect.top <= 80);
 				}
-
-				window.addEventListener('scroll', update, { passive: true });
-				window.addEventListener('resize', update);
-				update();
-			})();
+				lenis.on('scroll', updateHeader);
+				updateHeader();
+			}
+		
+			document.querySelectorAll('a[href="#hack-night"]').forEach((link) => {
+				link.addEventListener('click', (e) => {
+					e.preventDefault();
+					const el = document.getElementById('hack-night');
+					if (el) {
+						const offset = -(window.innerHeight / 2 - el.offsetHeight / 2);
+						lenis.scrollTo(el, { offset, duration: 2 });
+					}
+				});
+			});
 		</script>
 	</body>
 </html>

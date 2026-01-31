@@ -17,6 +17,10 @@
 	html {
 		overscroll-behavior: none;
 	}
+	/* fallback smooth scroll when Lenis hasn’t loaded yet */
+	html:not(.lenis) {
+		scroll-behavior: smooth;
+	}
 	body {
 		@apply bg-white text-black font-sans antialiased;
 	}
