@@ -56,3 +56,27 @@
 	color: white; */
 	font-weight: bold;
 }
+
+/* pixels that turn on one by one on hover */
+.join-session-btn {
+	@apply relative inline-flex w-fit items-center justify-center overflow-hidden bg-black text-white font-inconsolata font-bold text-xl uppercase tracking-wide px-6 py-3;
+}
+.join-session-btn__pixels {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	grid-template-columns: repeat(10, 1fr);
+	grid-template-rows: repeat(3, 1fr);
+}
+.join-session-btn__pixel {
+	background: #000;
+	transition: background 0.15s ease calc(var(--i) * 8ms);
+}
+.join-session-btn:hover .join-session-btn__pixel {
+	background: var(--color-primary);
+}
+.join-session-btn__label {
+	position: relative;
+	z-index: 1;
+	pointer-events: none;
+}

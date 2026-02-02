@@ -33,48 +33,13 @@ const { title = 'Purdue Hackers' } = Astro.props;
 	<body>
 		<header id="site-header" class="fixed top-0 right-0 z-10 px-8 py-6 font-inconsolata header-links">
 			<nav class="flex gap-8">
-				<a href="https://blog.purduehackers.com/" class="nav-link text-sm text-black tracking-wide font-semibold">BLOG</a>
-				<a href="https://events.purduehackers.com/" class="nav-link text-sm text-black tracking-wide font-semibold">EVENTS</a>
-				<a href="https://drops.purduehackers.com/" class="nav-link text-sm text-black tracking-wide font-semibold">MERCH</a>
-				<a href="https://grants.purduehackers.com/" class="nav-link text-sm text-black tracking-wide font-semibold">MICROGRANTS</a>
+				<a href="https://luma.com/user/purduehackers/" class="nav-link text-base text-black tracking-wide font-semibold">EVENTS</a>
+				<a href="https://blog.purduehackers.com/" class="nav-link text-base text-black tracking-wide font-semibold">BLOG</a>
+				<a href="https://drops.purduehackers.com/" class="nav-link text-base text-black tracking-wide font-semibold">MERCH</a>
+				<a href="https://grants.purduehackers.com/" class="nav-link text-base text-black tracking-wide font-semibold">MICROGRANTS</a>
 			</nav>
 		</header>
 		<slot />
-		<script>
-			const header = document.getElementById('site-header');
-			const darkSection = document.querySelector('[data-header-dark]');
-			if (header && darkSection) {
-				function updateHeader() {
-					if (!darkSection) return;
-					if (!header) return;
-					const rect = darkSection.getBoundingClientRect();
-					header.classList.toggle('header-over-dark', rect.top <= 80);
-				}
-				window.addEventListener('scroll', updateHeader, { passive: true });
-				updateHeader();
-			}
-
-			let lastHackNightScroll = 0;
-			function scrollToHackNight() {
-				const el = document.getElementById('hack-night');
-				if (el) {
-					el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-					lastHackNightScroll = Date.now();
-				}
-			}
-
-			document.addEventListener('click', (e: MouseEvent) => {
-				if (!(e.target as HTMLElement | null)?.closest?.('a[href="#hack-night"]')) return;
-				e.preventDefault();
-				if (Date.now() - lastHackNightScroll < 500) return; // avoid double scroll on mobile
-				scrollToHackNight();
-			}, true);
-
-			document.addEventListener('touchend', (e: TouchEvent) => {
-				if (!(e.target as HTMLElement | null)?.closest?.('a[href="#hack-night"]')) return;
-				e.preventDefault();
-				scrollToHackNight();
-			}, { passive: false });
-		</script>
+		<script src="../scripts/header.ts" />
 	</body>
 </html>

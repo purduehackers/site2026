@@ -1,10 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Glider from '../components/Glider.astro';
-import { getHeroDitherSvg, getFooterDitherSvg } from '../utils/dither';
+import { getHeroDitherSvg, getFooterDitherSvg, getPixelIndices } from '../utils/dither';
 
 const ditherSvg = getHeroDitherSvg();
 const footerDitherSvg = getFooterDitherSvg();
+const pixelIndices = getPixelIndices();
 ---
 <BaseLayout>
 	<main>
@@ -16,10 +17,15 @@ const footerDitherSvg = getFooterDitherSvg();
 					class="w-full max-w-2xl h-auto object-contain object-left shrink-0 noselect pb-6"
 				/>
 				<a
-					href="#hack-night"
-					class="inline-block w-fit bg-black text-white font-inconsolata font-bold text-sm uppercase tracking-wide px-6 py-3 transition-colors duration-300 hover:bg-[var(--color-primary)]"
+					href="https://luma.com/user/purduehackers"
+					class="join-session-btn"
 				>
-					join a session
+					<span class="join-session-btn__pixels" aria-hidden="true">
+						{pixelIndices.map((delayIndex) => (
+							<span class="join-session-btn__pixel" style={`--i: ${delayIndex}`} />
+						))}
+					</span>
+					<span class="join-session-btn__label">build with us</span>
 				</a>
 			</div>
 			<Glider gridCols={80} gridRows={100} cellSize={10} speedMs={100} class="shrink-0 absolute top-0 -left-10 md:top-1/4 md:-right-20 md:left-auto" />
@@ -91,7 +97,7 @@ const footerDitherSvg = getFooterDitherSvg();
 
 		<section
 			class="relative min-h-screen w-full bg-cover bg-center bg-no-repeat flex flex-col justify-end"
-			style="background-image: url('/pic.png');"
+			style="background-image: url('/pic.png'); image-rendering: pixelated;"
 		>
 			<div
 				class="absolute top-0 left-0 right-0 h-[256px] pointer-events-none"

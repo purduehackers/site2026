@@ -36,3 +36,13 @@ export function getFooterDitherSvg(width = 4, height = 128): string {
 	const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${rects.join('')}</svg>`;
 	return 'data:image/svg+xml,' + encodeURIComponent(svg);
 }
+
+
+export function getPixelIndices(): number[] {
+	const pixelIndices = Array.from({ length: 120 }, (_, i) => i);
+	for (let i = pixelIndices.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[pixelIndices[i], pixelIndices[j]] = [pixelIndices[j], pixelIndices[i]];
+	}
+	return pixelIndices;
+}
