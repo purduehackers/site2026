@@ -421,6 +421,10 @@ export function initPixelBlast(
 		uniforms.uPixelSize.value = opts.pixelSize * renderer.getPixelRatio();
 	};
 
+	let isHovering = false;
+	let lastHoverRipple = 0;
+	const HOVER_RIPPLE_INTERVAL = 0.12; // seconds (floaty + soft)
+
 	let touch: ReturnType<typeof createTouchTexture> | null = null;
 	let liquidEffect: ReturnType<typeof createLiquidEffect> | null = null;
 	let composer: EffectComposer | null = null;
@@ -459,6 +463,23 @@ export function initPixelBlast(
 	};
 
 	let clickIx = 0;
+	// const emitRipple = (fx: number, fy: number) => {
+	// 	uniforms.uClickPos.value[clickIx].set(fx, fy);
+	// 	uniforms.uClickTimes.value[clickIx] = uniforms.uTime.value;
+	// 	clickIx = (clickIx + 1) % MAX_CLICKS;
+	// };
+
+	const onPointerEnter = () => {
+		isHovering = true;
+	};
+	
+	const onPointerLeave = () => {
+		isHovering = false;
+	};
+
+	// renderer.domElement.addEventListener('pointerenter', onPointerEnter);
+	// renderer.domElement.addEventListener('pointerleave', onPointerLeave);
+
 	const onPointerDown = (e: PointerEvent) => {
 		const { fx, fy } = mapToPixels(e);
 		uniforms.uClickPos.value[clickIx].set(fx, fy);
@@ -470,6 +491,24 @@ export function initPixelBlast(
 		const { fx, fy, w, h } = mapToPixels(e);
 		touch.addTouch({ x: fx / w, y: fy / h });
 	};
+
+	// const onPointerMove = (e: PointerEvent) => {
+	// 	const { fx, fy, w, h } = mapToPixels(e);
+	
+	// 	// liquid effect (keep this)
+	// 	if (touch) {
+	// 		touch.addTouch({ x: fx / w, y: fy / h });
+	// 	}
+	
+	// 	// hover ripples
+	// 	if (!isHovering) return;
+	
+	// 	const t = uniforms.uTime.value;
+	// 	if (t - lastHoverRipple > HOVER_RIPPLE_INTERVAL) {
+	// 		emitRipple(fx, fy);
+	// 		lastHoverRipple = t;
+	// 	}
+	// };
 
 	renderer.domElement.addEventListener('pointerdown', onPointerDown, { passive: true });
 	renderer.domElement.addEventListener('pointermove', onPointerMove, { passive: true });

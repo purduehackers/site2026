@@ -120,7 +120,7 @@ const pixelIndices = getPixelIndices();
 				<div id="pixel-blast-root" class="w-full h-full" aria-label="PixelBlast interactive dither overlay"></div>
 			</div>
 			<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" aria-hidden="true" />
-			<div class="relative z-10 flex flex-wrap items-end justify-between gap-8 px-8 py-8 md:px-12 md:py-12">
+			<div class="relative z-10 flex flex-wrap items-end justify-between gap-8 px-8 py-8 md:px-12 md:py-12 pointer-events-none">
 				<div class="font-inconsolata text-[var(--color-bg)] text-left">
 					<p class="text-sm md:text-base uppercase tracking-wide opacity-90">2026</p>
 				</div>
@@ -128,25 +128,25 @@ const pixelIndices = getPixelIndices();
 					<div class="text-right">
 						<p class="text-sm md:text-base uppercase tracking-wide opacity-90 text-[var(--color-bg)]">more from us</p>
 						<p class="mt-2 text-lg md:text-xl text-[var(--color-bg)]">
-							<a href="https://sig.horse/" class="underline hover:text-[var(--color-secondary)] transition-colors font-semibold">SIGHORSE</a>
+							<a href="https://sig.horse/" class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold">SIGHORSE</a>
 							<br />
-							<a href="https://passports.purduehackers.com/" class="underline hover:text-[var(--color-secondary)] transition-colors font-semibold">Passports</a>
+							<a href="https://passports.purduehackers.com/" class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold">Passports</a>
 							<br />
-							<a href="https://shelter.purduehackers.com/" class="underline hover:text-[var(--color-secondary)] transition-colors font-semibold">Shelter</a>
+							<a href="https://shelter.purduehackers.com/" class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold">Shelter</a>
 							<br />
-							<a href="https://commit.purduehackers.com/" class="underline hover:text-[var(--color-secondary)] transition-colors font-semibold">Commit Overflow</a>
+							<a href="https://commit.purduehackers.com/" class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold">Commit Overflow</a>
 							<br />
-							<a href="https://ring.purduehackers.com/" class="underline hover:text-[var(--color-secondary)] transition-colors font-semibold">Webring</a>
+							<a href="https://ring.purduehackers.com/" class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold">Webring</a>
 						</p>
 					</div>
 					<div class="text-right">
 						<p class="text-sm md:text-base uppercase tracking-wide opacity-90 text-[var(--color-bg)]">find us on</p>
 						<p class="mt-2 text-lg md:text-xl text-[var(--color-bg)]">
-							<a href="https://discord.gg/purduehackers" class="underline hover:text-[var(--color-secondary)] transition-colors font-semibold">Discord</a>
+							<a href="https://discord.gg/purduehackers" class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold">Discord</a>
 							<br />
-							<a href="https://github.com/purduehackers" class="underline hover:text-[var(--color-secondary)] transition-colors font-semibold">GitHub</a>
+							<a href="https://github.com/purduehackers" class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold">GitHub</a>
 							<br />
-							<a href="https://www.instagram.com/purduehackers/" class="underline hover:text-[var(--color-secondary)] transition-colors font-semibold">Instagram</a>
+							<a href="https://www.instagram.com/purduehackers/" class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold">Instagram</a>
 						</p>
 					</div>
 				</div>
@@ -162,19 +162,19 @@ const pixelIndices = getPixelIndices();
 					variant: 'square',
 					pixelSize: 2,
 					color: '#000000',
-					patternScale: 3.5,
+					patternScale: 2.5,
 					patternDensity: 1.5,
 					pixelSizeJitter: 0,
 					enableRipples: true,
-					rippleSpeed: 0.4,
-					rippleThickness: 0.12,
-					rippleIntensityScale: 1.5,
+					rippleSpeed: 0.3,
+					rippleThickness: 0.15,
+					rippleIntensityScale: 2,
 					liquid: false,
 					liquidStrength: 0.12,
 					liquidRadius: 1.2,
 					liquidWobbleSpeed: 5,
 					speed: 0.5,
-					edgeFade: 0.25,
+					edgeFade: 0,
 					transparent: true,
 				});
 				document.addEventListener('astro:before-swap', cleanup, { once: true });
