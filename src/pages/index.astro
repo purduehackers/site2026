@@ -9,10 +9,10 @@ const pixelIndices = getPixelIndices();
 ---
 <BaseLayout>
 	<main>
-		<section class="relative min-h-[90vh] flex items-center gap-16 px-20 pt-20 bg-white overflow-hidden">
+		<section class="relative min-h-[90vh] flex items-center gap-16 px-20 pt-20 overflow-hidden" style="background-color: var(--color-bg);">
 			<div class="flex flex-col gap-6">
 				<img
-					src="/purduehackers.svg"
+					src="/title.svg"
 					alt="Purdue Hackers"
 					class="w-full max-w-2xl h-auto object-contain object-left shrink-0 noselect pb-6"
 				/>
@@ -25,7 +25,7 @@ const pixelIndices = getPixelIndices();
 							<span class="join-session-btn__pixel" style={`--i: ${delayIndex}`} />
 						))}
 					</span>
-					<span class="join-session-btn__label">build with us</span>
+					<span class="join-session-btn__label pointer-events-none text-[var(--color-bg)]">build with us</span>
 				</a>
 			</div>
 			<Glider gridCols={80} gridRows={100} cellSize={10} speedMs={100} class="shrink-0 absolute top-0 -left-10 md:top-1/4 md:-right-20 md:left-auto" />
@@ -33,16 +33,16 @@ const pixelIndices = getPixelIndices();
 
 		<section
 			class="h-[256px] w-full shrink-0"
-			style={`background-color: #fff; background-image: url('${ditherSvg}'); background-size: 8px 256px; background-repeat: repeat-x; image-rendering: pixelated; image-rendering: crisp-edges;`}
+			style={`background-color: var(--color-bg); background-image: url('${ditherSvg}'); background-size: 8px 256px; background-repeat: repeat-x; image-rendering: pixelated; image-rendering: crisp-edges;`}
 			aria-hidden="true"
 		/>
-		<section data-header-dark class="min-h-screen flex flex-col items-center pt-72 px-8 py-16 bg-black text-white text-center">
+		<section data-header-dark class="min-h-screen flex flex-col items-center pt-72 px-8 py-16 bg-black text-[var(--color-bg)] text-center">
 			<!-- 1 -->
 			<div class="mb-72">
 			  <p class="max-w-[36rem] uppercase font-inconsolata text-2xl leading-relaxed mb-6">
 				A collective of hobbyists, engineers, and artists who make creative-technical software, hardware, and mixed media projects.
 			  </p>
-			  <img src="/ph.svg" alt="Purdue Hackers" class="w-6 h-6 mb-6 mx-auto" />
+			  <img src="/ph.svg" alt="Purdue Hackers" class="w-6 h-6 mb-6 mx-auto fill-[var(--color-secondary)]" />
 			  <p class="max-w-[36rem] font-whyte text-l leading-relaxed mt-6">
 				Since 2013, Purdue Hackers has been a home to build, ship, and demo creative-technical projects together. We'd love to see you here.
 			  </p>
@@ -50,7 +50,14 @@ const pixelIndices = getPixelIndices();
 			
 			<!-- 2 -->
 			<div id="hack-night" class="mb-72">
-			  <img src="/moon.svg" alt="hack night" class="w-6 h-6 mb-6 invert mx-auto" />
+				<svg
+				xmlns="http://www.w3.org/2000/svg"
+				viewBox="0 0 24 24"
+				class="w-6 h-6 mb-6 mx-auto text-[var(--color-secondary)]"
+				fill="currentColor">
+				<polygon points="22 17 22 19 21 19 21 20 20 20 20 21 18 21 18 22 16 22 16 23 10 23 10 22 8 22 8 21 6 21 6 20 5 20 5 19 4 19 4 17 3 17 3 15 2 15 2 9 3 9 3 7 4 7 4 5 5 5 5 4 6 4 6 3 8 3 8 2 10 2 10 1 15 1 15 2 13 2 13 3 11 3 11 4 10 4 10 6 9 6 9 8 8 8 8 12 9 12 9 14 10 14 10 16 11 16 11 17 13 17 13 18 15 18 15 19 19 19 19 18 21 18 21 17 22 17" />
+			  	</svg>
+			  
 			  <p class="max-w-[36rem] font-whyte text-l leading-relaxed">
 				Hack night happens <span class="highlight">every Friday night at 8pm</span>, second floor of <a href="https://www.purdue.edu/bidc/" class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300">the Bechtel Center</a>. We make custom acrylic badges each week, run workshops, and share everything on <a href="https://discord.gg/ncJ3xmhV85" class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300">Discord</a>. Ends when the last person leaves (often until 6am or later). You're invited, so pull up!
 			  </p>
@@ -82,7 +89,12 @@ const pixelIndices = getPixelIndices();
 
 			<!-- 3 -->
 			<div class="mb-72">
-				<img src="/sparkle.svg" alt="show" class="w-6 h-6 mb-6 invert mx-auto" />
+				<svg
+				xmlns="http://www.w3.org/2000/svg"
+				viewBox="0 0 24 24"
+				class="w-6 h-6 mb-6 mx-auto text-[var(--color-secondary)]"
+				fill="currentColor">
+				<polygon points="23 18 23 20 21 20 21 21 20 21 20 23 18 23 18 21 17 21 17 20 15 20 15 18 17 18 17 17 18 17 18 15 20 15 20 17 21 17 21 18 23 18"/><polygon points="23 4 23 6 21 6 21 7 20 7 20 9 18 9 18 7 17 7 17 6 15 6 15 4 17 4 17 3 18 3 18 1 20 1 20 3 21 3 21 4 23 4"/><polygon points="17 11 17 13 15 13 15 14 13 14 13 15 12 15 12 16 11 16 11 18 10 18 10 20 8 20 8 18 7 18 7 16 6 16 6 15 5 15 5 14 3 14 3 13 1 13 1 11 3 11 3 10 5 10 5 9 6 9 6 8 7 8 7 6 8 6 8 4 10 4 10 6 11 6 11 8 12 8 12 9 13 9 13 10 15 10 15 11 17 11"/></svg>
 				<p class="max-w-[36rem] font-whyte text-l leading-relaxed">
 				At the end-of-semester, we hold a show where our community comes together to share projects made throughout the semester at Hack Night and beyond.
 				</p>
@@ -104,15 +116,18 @@ const pixelIndices = getPixelIndices();
 				style={`background-image: url('${footerDitherSvg}'); background-size: 8px 256px; background-repeat: repeat-x; image-rendering: pixelated; image-rendering: crisp-edges;`}
 				aria-hidden="true"
 			/>
+			<div class="absolute inset-0 z-[1] w-full h-full" aria-hidden="true">
+				<div id="pixel-blast-root" class="w-full h-full" aria-label="PixelBlast interactive dither overlay"></div>
+			</div>
 			<div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" aria-hidden="true" />
 			<div class="relative z-10 flex flex-wrap items-end justify-between gap-8 px-8 py-8 md:px-12 md:py-12">
-				<div class="font-inconsolata text-white text-left">
+				<div class="font-inconsolata text-[var(--color-bg)] text-left">
 					<p class="text-sm md:text-base uppercase tracking-wide opacity-90">2026</p>
 				</div>
-				<div class="flex gap-12 md:gap-16 font-inconsolata text-white">
+				<div class="flex gap-12 md:gap-16 font-inconsolata text-[var(--color-bg)]">
 					<div class="text-right">
-						<p class="text-sm md:text-base uppercase tracking-wide opacity-90">more from us</p>
-						<p class="mt-2 text-lg md:text-xl">
+						<p class="text-sm md:text-base uppercase tracking-wide opacity-90 text-[var(--color-bg)]">more from us</p>
+						<p class="mt-2 text-lg md:text-xl text-[var(--color-bg)]">
 							<a href="https://sig.horse/" class="underline hover:text-[var(--color-secondary)] transition-colors font-semibold">SIGHORSE</a>
 							<br />
 							<a href="https://passports.purduehackers.com/" class="underline hover:text-[var(--color-secondary)] transition-colors font-semibold">Passports</a>
@@ -125,8 +140,8 @@ const pixelIndices = getPixelIndices();
 						</p>
 					</div>
 					<div class="text-right">
-						<p class="text-sm md:text-base uppercase tracking-wide opacity-90">find us on</p>
-						<p class="mt-2 text-lg md:text-xl">
+						<p class="text-sm md:text-base uppercase tracking-wide opacity-90 text-[var(--color-bg)]">find us on</p>
+						<p class="mt-2 text-lg md:text-xl text-[var(--color-bg)]">
 							<a href="https://discord.gg/purduehackers" class="underline hover:text-[var(--color-secondary)] transition-colors font-semibold">Discord</a>
 							<br />
 							<a href="https://github.com/purduehackers" class="underline hover:text-[var(--color-secondary)] transition-colors font-semibold">GitHub</a>
@@ -138,4 +153,37 @@ const pixelIndices = getPixelIndices();
 			</div>
 		</section>
 	</main>
+	<script>
+		import { initPixelBlast } from '../scripts/PixelBlast';
+		function init() {
+			const root = document.getElementById('pixel-blast-root');
+			if (root) {
+				const cleanup = initPixelBlast(root, {
+					variant: 'square',
+					pixelSize: 2,
+					color: '#000000',
+					patternScale: 3.5,
+					patternDensity: 1.5,
+					pixelSizeJitter: 0,
+					enableRipples: true,
+					rippleSpeed: 0.4,
+					rippleThickness: 0.12,
+					rippleIntensityScale: 1.5,
+					liquid: false,
+					liquidStrength: 0.12,
+					liquidRadius: 1.2,
+					liquidWobbleSpeed: 5,
+					speed: 0.5,
+					edgeFade: 0.25,
+					transparent: true,
+				});
+				document.addEventListener('astro:before-swap', cleanup, { once: true });
+			}
+		}
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', init);
+		} else {
+			init();
+		}
+	</script>
 </BaseLayout>

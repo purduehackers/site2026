@@ -4,13 +4,14 @@
 
 :root {
 	--color-primary: #7D3BFF;
-	--color-secondary: #EEFF00;
+	--color-secondary: #FFEE00;
+	--color-bg: #fffbf1;
 }
 
 /* selection colors */
 ::selection {
 	background: var(--color-primary);
-	color: #fff;
+	color: var(--color-bg);
 }
 
 @layer base {
@@ -22,7 +23,8 @@
 		scroll-behavior: smooth;
 	}
 	body {
-		@apply bg-white text-black font-sans antialiased;
+		background-color: var(--color-bg);
+		@apply text-black font-sans antialiased;
 	}
 }
 
@@ -67,6 +69,7 @@
 	display: grid;
 	grid-template-columns: repeat(10, 1fr);
 	grid-template-rows: repeat(3, 1fr);
+	pointer-events: none;
 }
 .join-session-btn__pixel {
 	background: #000;

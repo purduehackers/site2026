@@ -23,9 +23,9 @@ const { title = 'Purdue Hackers' } = Astro.props;
 
 		<title>{title}</title>
 		<style is:global>
-			.header-over-dark .nav-link { color: #fff !important; }
+			.header-over-dark .nav-link { color: var(--color-bg) !important; }
 			.header-over-dark .nav-link:hover {
-				background: #fff !important;
+				background: var(--color-bg) !important;
 				color: #7D3BFF !important;
 			}
 		</style>
@@ -35,8 +35,8 @@ const { title = 'Purdue Hackers' } = Astro.props;
 			<nav class="flex gap-8">
 				<a href="https://luma.com/user/purduehackers/" class="nav-link text-base text-black tracking-wide font-semibold">EVENTS</a>
 				<a href="https://blog.purduehackers.com/" class="nav-link text-base text-black tracking-wide font-semibold">BLOG</a>
-				<a href="https://drops.purduehackers.com/" class="nav-link text-base text-black tracking-wide font-semibold">MERCH</a>
 				<a href="https://grants.purduehackers.com/" class="nav-link text-base text-black tracking-wide font-semibold">MICROGRANTS</a>
+				<a href="https://drops.purduehackers.com/" class="nav-link text-base text-black tracking-wide font-semibold">MERCH</a>
 			</nav>
 		</header>
 		<slot />
