@@ -117,9 +117,23 @@ export default function PixelTrail({
   className = ''
 }) {
   const [eventSource, setEventSource] = useState(undefined);
+  const [isMobile, setIsMobile] = useState(true);
+
   useEffect(() => {
-    setEventSource(document.documentElement);
+    const mql = window.matchMedia('(min-width: 768px)');
+    setIsMobile(!mql.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(!e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
   }, []);
+
+  useEffect(() => {
+    if (!isMobile) {
+      setEventSource(document.documentElement);
+    }
+  }, [isMobile]);
+
+  if (isMobile) return null;
 
   return (
     <>
