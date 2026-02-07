@@ -49,6 +49,17 @@ if (menuToggle && mobileMenu) {
 	});
 }
 
+// pixel trail toggle
+const pixelTrailToggle = document.getElementById('pixel-trail-toggle');
+const pixelTrailContainer = document.getElementById('pixel-trail-container');
+if (pixelTrailToggle && pixelTrailContainer) {
+	pixelTrailToggle.addEventListener('click', () => {
+		const isActive = pixelTrailToggle.classList.toggle('is-active');
+		pixelTrailToggle.setAttribute('aria-pressed', String(isActive));
+		pixelTrailContainer.style.display = isActive ? '' : 'none';
+	});
+}
+
 let lastHackNightScroll = 0;
 function scrollToHackNight() {
 	const el = document.getElementById('hack-night');

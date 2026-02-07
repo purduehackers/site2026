@@ -9,7 +9,7 @@ interface Props {
 
 const {
 	gridCols = 80,
-	gridRows = 50,
+	gridRows = 100,
 	cellSize = 10,
 	speedMs = 100,
 	class: className = '',
@@ -33,7 +33,7 @@ const {
 			
 			// Read config from data attributes
 			const gridCols = parseInt(canvas.dataset.gridCols || '80');
-			const gridRows = parseInt(canvas.dataset.gridRows || '50');
+			const gridRows = parseInt(canvas.dataset.gridRows || '100');
 			const cellSize = parseInt(canvas.dataset.cellSize || '10');
 			const speedMs = parseInt(canvas.dataset.speedMs || '100');
 
@@ -75,7 +75,7 @@ const {
 		display: inline-block;
 		flex-shrink: 0;
 		padding: 0;
-		border-radius: 4px;
+		border-radius: 0px;
 		overflow: hidden;
 		pointer-events: none;
 	}
@@ -84,5 +84,7 @@ const {
 		display: block;
 		image-rendering: pixelated;
 		image-rendering: crisp-edges;
+		/* border-radius: 5px;
+		border: 1px solid #000; */
 	}
 </style>

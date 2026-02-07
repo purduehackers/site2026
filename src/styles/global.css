@@ -5,6 +5,8 @@
 :root {
 	--color-primary: #7D3BFF;
 	--color-secondary: #FFEE00;
+	--color-secondary-l: #ffb700;
+	--color-accent: #0084FF;
 	--color-bg: #fffbf1;
 }
 
@@ -87,14 +89,14 @@
 /* male hanburger */
 .mobile-menu-btn__line {
 	display: block;
-	width: 24px;
-	height: 2px;
+	width: 28px;
+	height: 4px;
 	background-color: currentColor;
 	border-radius: 0px;
 	transition: transform 0.3s ease, opacity 0.3s ease;
 }
 .mobile-menu-btn[aria-expanded="true"] .mobile-menu-btn__line:nth-child(1) {
-	transform: translateY(8px) rotate(45deg);
+	transform: translateY(12px) rotate(45deg);
 }
 .mobile-menu-btn[aria-expanded="true"] .mobile-menu-btn__line:nth-child(2) {
 	opacity: 0;
@@ -126,6 +128,34 @@ body.menu-open .mobile-menu-btn {
 	color: var(--color-secondary);
 }
 
+.mobile-title {
+
+}
+
 .footer-overlay-link {
 	pointer-events: auto;
+}
+
+/* pixel trail toggle button */
+.pixel-trail-toggle {
+	background: transparent;
+	color: #000;
+	transition: background 0.2s ease, color 0.2s ease;
+}
+.pixel-trail-toggle.is-active {
+	background: #000;
+	color: var(--color-bg);
+}
+.header-over-dark .pixel-trail-toggle {
+	color: var(--color-bg);
+}
+.header-over-dark .pixel-trail-toggle.is-active {
+	background: var(--color-bg);
+	color: #000;
+}
+
+/* ensure the pixel-trail overlay never blocks interaction */
+#pixel-trail-container,
+#pixel-trail-container * {
+	pointer-events: none !important;
 }

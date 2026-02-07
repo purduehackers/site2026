@@ -10,7 +10,7 @@ const { title = 'Purdue Hackers' } = Astro.props;
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/icon.svg" />
+		<link rel="icon" type="image/svg+xml" href="/glider.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 
@@ -32,27 +32,42 @@ const { title = 'Purdue Hackers' } = Astro.props;
 		</style>
 	</head>
 	<body>
-		<header id="site-header" class="fixed top-0 right-0 z-30 px-6 py-5 md:px-8 md:py-6 font-inconsolata">
-			<!-- desktop nav -->
-			<nav class="hidden md:flex gap-8 header-links">
-				<a href="https://luma.com/user/purduehackers/" class="nav-link text-base text-black tracking-wide font-semibold">EVENTS</a>
-				<a href="https://blog.purduehackers.com/" class="nav-link text-base text-black tracking-wide font-semibold">BLOG</a>
-				<a href="https://grants.purduehackers.com/" class="nav-link text-base text-black tracking-wide font-semibold">MICROGRANTS</a>
-				<a href="https://drops.purduehackers.com/" class="nav-link text-base text-black tracking-wide font-semibold">MERCH</a>
-			</nav>
-			<!-- mobile hanburger -->
-			<button
-				type="button"
-				id="menu-toggle"
-				class="mobile-menu-btn md:hidden flex flex-col justify-center items-center w-10 h-10 gap-1.5 text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black"
-				aria-expanded="false"
-				aria-label="Open menu"
-				aria-controls="mobile-menu"
-			>
-				<span class="mobile-menu-btn__line" aria-hidden="true"></span>
-				<span class="mobile-menu-btn__line" aria-hidden="true"></span>
-				<span class="mobile-menu-btn__line" aria-hidden="true"></span>
-			</button>
+		<header id="site-header" class="fixed top-0 left-0 right-0 z-30 px-6 py-5 md:px-8 md:py-6 font-inconsolata">
+			<div class="flex items-center justify-between">
+				<!-- toggle cursor trail -->
+				<button
+					type="button"
+					id="pixel-trail-toggle"
+					class="pixel-trail-toggle is-active hidden md:inline-flex text-base uppercase tracking-wide font-semibold px-2 py-1"
+					aria-pressed="true"
+					aria-label="Toggle pixel trail"
+				>
+				toggle trail
+				</button>
+
+	
+				<!-- desktopn nav -->
+				<nav class="hidden md:flex gap-8 header-links">
+					<a href="https://luma.com/user/purduehackers/" class="nav-link text-base text-black tracking-wide font-semibold">EVENTS</a>
+					<a href="https://blog.purduehackers.com/" class="nav-link text-base text-black tracking-wide font-semibold">BLOG</a>
+					<a href="https://grants.purduehackers.com/" class="nav-link text-base text-black tracking-wide font-semibold">MICROGRANTS</a>
+					<a href="https://drops.purduehackers.com/" class="nav-link text-base text-black tracking-wide font-semibold">MERCH</a>
+				</nav>
+	
+				<!-- mobile hanburger -->
+				<button
+					type="button"
+					id="menu-toggle"
+					class="mobile-menu-btn md:hidden ml-auto flex flex-col justify-center items-center w-10 h-10 gap-1.5 text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black"
+					aria-expanded="false"
+					aria-label="Open menu"
+					aria-controls="mobile-menu"
+				>
+					<span class="mobile-menu-btn__line" aria-hidden="true"></span>
+					<span class="mobile-menu-btn__line" aria-hidden="true"></span>
+					<span class="mobile-menu-btn__line" aria-hidden="true"></span>
+				</button>
+			</div>
 		</header>
 		<!-- mobile menu overlay -->
 		<div

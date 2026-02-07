@@ -1,21 +1,49 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PT from '../components/PT';
 import Glider from '../components/GliderShader.astro';
 import { getHeroDitherSvg, getFooterDitherSvg, getPixelIndices } from '../utils/dither';
 
 const ditherSvg = getHeroDitherSvg();
 const footerDitherSvg = getFooterDitherSvg();
 const pixelIndices = getPixelIndices();
+const ENABLE_PIXEL_CURSOR = true;
+const shouldEnablePixelCursor =
+  typeof window !== "undefined" &&
+  !window.matchMedia("(prefers-reduced-motion: reduce)").matches || ENABLE_PIXEL_CURSOR;
 ---
+
 <BaseLayout>
+	{shouldEnablePixelCursor && (
+		<div
+		  id="pixel-trail-container"
+		  style="position: fixed; inset: 0; z-index: 10; pointer-events: none;"
+		>
+		  <PT
+			client:load
+			gridSize={85}
+			trailSize={0.05}
+			maxAge={150}
+			interpolate={5}
+			gooeyFilter={{ id: "custom-goo-filter", strength: 0 }}
+		  />
+		</div>
+	  )}
 	<main>
-		<section class="relative min-h-[90vh] flex items-center gap-16 px-20 pt-20 overflow-hidden" style="background-color: var(--color-bg);">
+		<section class="relative min-h-[90vh] flex items-center md:items-center gap-16 px-4 pt-40 sm:px-10 md:px-40 md:pt-20 overflow-hidden" style="background-color: var(--color-bg);">
 			<div class="flex flex-col gap-6">
 				<img
 					src="/title.svg"
 					alt="Purdue Hackers"
 					class="w-full max-w-2xl h-auto object-contain object-left shrink-0 noselect pb-6"
 				/>
+				<p class="max-w-[36rem] font-inconsolata uppercase sm:text-lg md:text-xl font-semibold leading-relaxed mb-6">
+					A collective of 
+					<span class="text-[#FF00CC]">hobbyists</span>, 
+					<span class="text-[var(--color-primary)]">engineers</span>, and 
+					<span class="text-[var(--color-accent)]">artists</span> 
+					who make creative-technical software, hardware, and mixed media projects
+				</p>
 				<a
 					href="https://luma.com/user/purduehackers"
 					class="join-session-btn"
@@ -28,7 +56,7 @@ const pixelIndices = getPixelIndices();
 					<span class="join-session-btn__label pointer-events-none text-[var(--color-bg)]">build with us</span>
 				</a>
 			</div>
-			<Glider gridCols={80} gridRows={100} cellSize={10} speedMs={100} class="shrink-0 absolute top-0 -left-10 md:top-1/4 md:-right-20 md:left-auto" />
+			<Glider gridCols={80} gridRows={100} cellSize={10} speedMs={100} class="glider shrink-0 absolute top-[25%] -translate-y-1/4 -left-10 md:top-1/4 md:translate-y-0 md:-right-20 md:left-auto" />
 		</section>
 
 		<section
@@ -38,13 +66,10 @@ const pixelIndices = getPixelIndices();
 		/>
 		<section data-header-dark class="min-h-screen flex flex-col items-center pt-72 px-8 py-16 bg-black text-[var(--color-bg)] text-center">
 			<!-- 1 -->
-			<div class="mb-72">
-			  <p class="max-w-[36rem] uppercase font-inconsolata text-2xl leading-relaxed mb-6">
-				A collective of hobbyists, engineers, and artists who make creative-technical software, hardware, and mixed media projects.
-			  </p>
+			<div class="mb-72">	  
 			  <img src="/ph.svg" alt="Purdue Hackers" class="w-6 h-6 mb-6 mx-auto fill-[var(--color-secondary)]" />
-			  <p class="max-w-[36rem] font-whyte text-l leading-relaxed mt-6">
-				Since 2013, Purdue Hackers has been a home to build, ship, and demo creative-technical projects together. We'd love to see you here.
+			  <p class="max-w-[36rem] font-inconsolata text-lg uppercase leading-relaxed mt-6">
+				Making something you're proud of is incredibly rewarding. But it's really hard to do alone. Since 2013, Purdue Hackers has been a home to build, ship, and demo creative-technical projects together. We'd love to see you here.
 			  </p>
 			</div>
 			
@@ -147,6 +172,12 @@ const pixelIndices = getPixelIndices();
 							<a href="https://github.com/purduehackers" class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold">GitHub</a>
 							<br />
 							<a href="https://www.instagram.com/purduehackers/" class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold">Instagram</a>
+							<br />
+							<a href="https://www.linkedin.com/company/purdue-hackers/" class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold">LinkedIn</a>
+							<br />
+							<a href="https://x.com/purduehackers/" class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold">Twitter</a>
+							<br />
+							<a href="https://www.youtube.com/@PurdueHackers/" class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold">Youtube</a>
 						</p>
 					</div>
 				</div>
