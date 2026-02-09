@@ -5,8 +5,13 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        whyte: ["whyte", "system-ui", "-apple-system", "sans-serif"],
-        inconsolata: ['"Inconsolata"', "monospace"],
+        whyte: [
+          "var(--font-whyte)",
+          "system-ui",
+          "-apple-system",
+          "sans-serif",
+        ],
+        inconsolata: ["var(--font-inconsolata)", "monospace"],
       },
     },
   },

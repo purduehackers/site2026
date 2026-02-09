@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { Font } from 'astro:assets';
 
 interface Props {
 	title?: string;
@@ -14,12 +15,8 @@ const { title = 'Purdue Hackers' } = Astro.props;
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-		href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap"
-		rel="stylesheet"
-		/>
+		<Font cssVariable="--font-whyte" preload />
+		<Font cssVariable="--font-inconsolata" preload />
 
 		<title>{title}</title>
 		<style is:global>
