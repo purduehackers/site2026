@@ -33,7 +33,7 @@
 
 @font-face {
 	font-family: whyte;
-	src: url('/fonts/Whyte.ttf') format('truetype');
+	src: url('/fonts/Whyte.woff2') format('truetype');
 	font-weight: normal;
 	font-style: normal;
 }
