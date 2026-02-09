@@ -3,164 +3,153 @@
 @tailwind utilities;
 
 :root {
-	--color-primary: #7D3BFF;
-	--color-secondary: #FFEE00;
-	--color-secondary-l: #ffb700;
-	--color-accent: #0084FF;
-	--color-accent-2: #FF00CC;
-	--color-bg: #fffbf1;
+  --color-primary: #7d3bff;
+  --color-secondary: #ffee00;
+  --color-secondary-l: #ffb700;
+  --color-accent: #0084ff;
+  --color-accent-2: #ff00cc;
+  --color-bg: #fffbf1;
 }
 
 /* selection colors */
 ::selection {
-	background: var(--color-primary);
-	color: var(--color-bg);
+  background: var(--color-primary);
+  color: var(--color-bg);
 }
 
 @layer base {
-	html {
-		overscroll-behavior: none;
-	}
-	/* fallback smooth scroll when Lenis hasn’t loaded yet */
-	html:not(.lenis) {
-		scroll-behavior: smooth;
-	}
-	body {
-		background-color: var(--color-bg);
-		@apply text-black font-sans antialiased;
-	}
+  html {
+    overscroll-behavior: none;
+  }
+  /* fallback smooth scroll when Lenis hasn’t loaded yet */
+  html:not(.lenis) {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--color-bg);
+    @apply text-black font-sans antialiased;
+  }
 }
 
-@font-face {
-	font-family: whyte;
-	src: url('/fonts/Whyte.ttf') format('truetype');
-	font-weight: normal;
-	font-style: normal;
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
-
-.noselect { 
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	 user-select: none;
- } 
-
 
 .nav-link {
-	@apply px-2 py-1 transition-colors duration-300;
+  @apply px-2 py-1 transition-colors duration-300;
 }
 .nav-link:hover {
-	background: #000;
-	color: var(--color-secondary);	
+  background: #000;
+  color: var(--color-secondary);
 }
 
 .highlight {
-	/* background: var(--color-primary);
+  /* background: var(--color-primary);
 	color: white; */
-	font-weight: bold;
+  font-weight: bold;
 }
 
 /* pixels that turn on one by one on hover */
 .join-session-btn {
-	@apply relative inline-flex w-fit items-center justify-center overflow-hidden bg-black text-white font-inconsolata font-bold text-xl uppercase tracking-wide px-6 py-3;
+  @apply relative inline-flex w-fit items-center justify-center overflow-hidden bg-black text-white font-inconsolata font-bold text-xl uppercase tracking-wide px-6 py-3;
 }
 .join-session-btn__pixels {
-	position: absolute;
-	inset: 0;
-	display: grid;
-	grid-template-columns: repeat(10, 1fr);
-	grid-template-rows: repeat(3, 1fr);
-	pointer-events: none;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  pointer-events: none;
 }
 .join-session-btn__pixel {
-	background: #000;
-	transition: background 0.15s ease calc(var(--i) * 8ms);
+  background: #000;
+  transition: background 0.15s ease calc(var(--i) * 8ms);
 }
 .join-session-btn:hover .join-session-btn__pixel {
-	background: var(--color-primary);
+  background: var(--color-primary);
 }
 .join-session-btn__label {
-	position: relative;
-	z-index: 1;
-	pointer-events: none;
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
 }
 
 /* male hanburger */
 .mobile-menu-btn__line {
-	display: block;
-	width: 28px;
-	height: 4px;
-	background-color: currentColor;
-	border-radius: 0px;
-	transition: transform 0.3s ease, opacity 0.3s ease;
+  display: block;
+  width: 28px;
+  height: 4px;
+  background-color: currentColor;
+  border-radius: 0px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 .mobile-menu-btn[aria-expanded="true"] .mobile-menu-btn__line:nth-child(1) {
-	transform: translateY(12px) rotate(45deg);
+  transform: translateY(12px) rotate(45deg);
 }
 .mobile-menu-btn[aria-expanded="true"] .mobile-menu-btn__line:nth-child(2) {
-	opacity: 0;
+  opacity: 0;
 }
 .mobile-menu-btn[aria-expanded="true"] .mobile-menu-btn__line:nth-child(3) {
-	transform: translateY(-8px) rotate(-45deg);
+  transform: translateY(-8px) rotate(-45deg);
 }
 body.menu-open .mobile-menu-btn {
-	color: var(--color-bg);
+  color: var(--color-bg);
 }
 
 /* mobile menu overlay: slide down from top */
 .mobile-menu {
-	visibility: hidden;
-	transform: translateY(-100%);
-	transition:
-		transform 0.7s cubic-bezier(0.12, 0.85, 0.25, 1),
-		visibility 0.7s;
+  visibility: hidden;
+  transform: translateY(-100%);
+  transition: transform 0.7s cubic-bezier(0.12, 0.85, 0.25, 1), visibility 0.7s;
 }
 .mobile-menu.is-open {
-	visibility: visible;
-	transform: translateY(0);
+  visibility: visible;
+  transform: translateY(0);
 }
 .mobile-menu__link {
-	@apply text-[var(--color-bg)] text-5xl font-semibold tracking-wide py-5 transition-colors duration-200;
+  @apply text-[var(--color-bg)] text-5xl font-semibold tracking-wide py-5 transition-colors duration-200;
 }
 .mobile-menu__link:hover,
 .mobile-menu__link:focus {
-	color: var(--color-secondary);
+  color: var(--color-secondary);
 }
 
 .mobile-title {
-
 }
 
 .footer-overlay-link {
-	pointer-events: auto;
+  pointer-events: auto;
 }
 
 /* pixel trail toggle button */
 .pixel-trail-toggle {
-	background: transparent;
-	color: #000;
-	transition: background 0.2s ease, color 0.2s ease;
+  background: transparent;
+  color: #000;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 .pixel-trail-toggle.is-active {
-	background: #000;
-	color: var(--color-bg);
+  background: #000;
+  color: var(--color-bg);
 }
 .header-over-dark .pixel-trail-toggle {
-	color: var(--color-bg);
+  color: var(--color-bg);
 }
 .header-over-dark .pixel-trail-toggle.is-active {
-	background: var(--color-bg);
-	color: #000;
+  background: var(--color-bg);
+  color: #000;
 }
 
 /* ensure the pixel-trail overlay never blocks interaction */
 #pixel-trail-container,
 #pixel-trail-container * {
-	pointer-events: none !important;
+  pointer-events: none !important;
 }
 
 .image-rendering-pixelated {
-	image-rendering: pixelated;
+  image-rendering: pixelated;
 }

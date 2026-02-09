@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { Font } from 'astro:assets';
 
 interface Props {
 	title?: string;
@@ -14,12 +15,8 @@ const { title = 'Purdue Hackers' } = Astro.props;
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-		href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap"
-		rel="stylesheet"
-		/>
+		<Font cssVariable="--font-whyte" preload />
+		<Font cssVariable="--font-inconsolata" preload />
 
 		<title>{title}</title>
 		<style is:global>
@@ -45,15 +42,15 @@ const { title = 'Purdue Hackers' } = Astro.props;
 				toggle trail
 				</button>
 
-	
+
 				<!-- desktopn nav -->
 				<nav class="hidden md:flex gap-8 header-links">
-					<a href="https://luma.com/user/purduehackers/" class="nav-link text-base text-black tracking-wide font-semibold">EVENTS</a>
-					<a href="https://blog.purduehackers.com/" class="nav-link text-base text-black tracking-wide font-semibold">BLOG</a>
-					<a href="https://grants.purduehackers.com/" class="nav-link text-base text-black tracking-wide font-semibold">MICROGRANTS</a>
-					<a href="https://drops.purduehackers.com/" class="nav-link text-base text-black tracking-wide font-semibold">MERCH</a>
+					<a href="https://puhack.horse/discord" target="_blank" class="nav-link text-base text-black tracking-wide font-semibold">DISCORD</a>
+					<a href="https://luma.com/user/purduehackers/" target="_blank" class="nav-link text-base text-black tracking-wide font-semibold">EVENTS</a>
+					<a href="https://blog.purduehackers.com/" target="_blank" class="nav-link text-base text-black tracking-wide font-semibold">BLOG</a>
+					<a href="https://grants.purduehackers.com/" target="_blank" class="nav-link text-base text-black tracking-wide font-semibold">MICROGRANTS</a>
 				</nav>
-	
+
 				<!-- mobile hanburger -->
 				<button
 					type="button"
@@ -78,10 +75,10 @@ const { title = 'Purdue Hackers' } = Astro.props;
 			aria-label="Main menu"
 		>
 			<nav class="mobile-menu__nav flex flex-col justify-center min-h-full px-8 py-24 gap-6">
-				<a href="https://luma.com/user/purduehackers/" class="mobile-menu__link">EVENTS</a>
-				<a href="https://blog.purduehackers.com/" class="mobile-menu__link">BLOG</a>
-				<a href="https://grants.purduehackers.com/" class="mobile-menu__link">MICROGRANTS</a>
-				<a href="https://drops.purduehackers.com/" class="mobile-menu__link">MERCH</a>
+				<a href="https://puhack.horse/discord" target="_blank" class="mobile-menu__link">DISCORD</a>
+				<a href="https://luma.com/user/purduehackers/" target="_blank" class="mobile-menu__link">EVENTS</a>
+				<a href="https://blog.purduehackers.com/" target="_blank" class="mobile-menu__link">BLOG</a>
+				<a href="https://grants.purduehackers.com/" target="_blank" class="mobile-menu__link">MICROGRANTS</a>
 			</nav>
 		</div>
 		<slot />
