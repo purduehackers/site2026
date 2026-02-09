@@ -2,14 +2,14 @@
  * PixelBlast – interactive Bayer-dithering overlay (inspired by github.com/zavalit/bayer-dithering-webgl-demo).
  * Vanilla TS version for use in Astro; mounts to a container and returns a cleanup function.
  */
-import * as THREE from 'three';
-import { EffectComposer, EffectPass, RenderPass, Effect } from 'postprocessing';
+import * as THREE from "three";
+import { EffectComposer, EffectPass, RenderPass, Effect } from "postprocessing";
 
 const SHAPE_MAP: Record<string, number> = {
-	square: 0,
-	circle: 1,
-	triangle: 2,
-	diamond: 3,
+  square: 0,
+  circle: 1,
+  triangle: 2,
+  diamond: 3,
 };
 
 const MAX_CLICKS = 10;
@@ -187,96 +187,106 @@ void main(){
 `;
 
 function createTouchTexture() {
-	const size = 64;
-	const canvas = document.createElement('canvas');
-	canvas.width = size;
-	canvas.height = size;
-	const ctx = canvas.getContext('2d');
-	if (!ctx) throw new Error('2D context not available');
-	ctx.fillStyle = 'black';
-	ctx.fillRect(0, 0, canvas.width, canvas.height);
-	const texture = new THREE.Texture(canvas);
-	texture.minFilter = THREE.LinearFilter;
-	texture.magFilter = THREE.LinearFilter;
-	texture.generateMipmaps = false;
-	const trail: Array<{ x: number; y: number; age: number; force: number; vx: number; vy: number }> = [];
-	let last: { x: number; y: number } | null = null;
-	const maxAge = 64;
-	let radius = 0.1 * size;
-	const speed = 1 / maxAge;
-	const clear = () => {
-		ctx.fillStyle = 'black';
-		ctx.fillRect(0, 0, canvas.width, canvas.height);
-	};
-	const drawPoint = (p: (typeof trail)[0]) => {
-		const pos = { x: p.x * size, y: (1 - p.y) * size };
-		let intensity = 1;
-		const easeOutSine = (t: number) => Math.sin((t * Math.PI) / 2);
-		const easeOutQuad = (t: number) => -t * (t - 2);
-		if (p.age < maxAge * 0.3) intensity = easeOutSine(p.age / (maxAge * 0.3));
-		else intensity = easeOutQuad(1 - (p.age - maxAge * 0.3) / (maxAge * 0.7)) || 0;
-		intensity *= p.force;
-		const color = `${((p.vx + 1) / 2) * 255}, ${((p.vy + 1) / 2) * 255}, ${intensity * 255}`;
-		const offset = size * 5;
-		ctx.shadowOffsetX = offset;
-		ctx.shadowOffsetY = offset;
-		ctx.shadowBlur = radius;
-		ctx.shadowColor = `rgba(${color},${0.22 * intensity})`;
-		ctx.beginPath();
-		ctx.fillStyle = 'rgba(255,0,0,1)';
-		ctx.arc(pos.x - offset, pos.y - offset, radius, 0, Math.PI * 2);
-		ctx.fill();
-	};
-	const addTouch = (norm: { x: number; y: number }) => {
-		let force = 0;
-		let vx = 0;
-		let vy = 0;
-		if (last) {
-			const dx = norm.x - last.x;
-			const dy = norm.y - last.y;
-			if (dx === 0 && dy === 0) return;
-			const dd = dx * dx + dy * dy;
-			const d = Math.sqrt(dd);
-			vx = dx / (d || 1);
-			vy = dy / (d || 1);
-			force = Math.min(dd * 10000, 1);
-		}
-		last = { x: norm.x, y: norm.y };
-		trail.push({ x: norm.x, y: norm.y, age: 0, force, vx, vy });
-	};
-	const update = () => {
-		clear();
-		for (let i = trail.length - 1; i >= 0; i--) {
-			const point = trail[i];
-			const f = point.force * speed * (1 - point.age / maxAge);
-			point.x += point.vx * f;
-			point.y += point.vy * f;
-			point.age++;
-			if (point.age > maxAge) trail.splice(i, 1);
-		}
-		for (let i = 0; i < trail.length; i++) drawPoint(trail[i]);
-		texture.needsUpdate = true;
-	};
-	return {
-		canvas,
-		texture,
-		addTouch,
-		update,
-		set radiusScale(v: number) {
-			radius = 0.1 * size * v;
-		},
-		get radiusScale() {
-			return radius / (0.1 * size);
-		},
-		size,
-	};
+  const size = 64;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("2D context not available");
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  const texture = new THREE.Texture(canvas);
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
+  const trail: Array<{
+    x: number;
+    y: number;
+    age: number;
+    force: number;
+    vx: number;
+    vy: number;
+  }> = [];
+  let last: { x: number; y: number } | null = null;
+  const maxAge = 64;
+  let radius = 0.1 * size;
+  const speed = 1 / maxAge;
+  const clear = () => {
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  };
+  const drawPoint = (p: typeof trail[0]) => {
+    const pos = { x: p.x * size, y: (1 - p.y) * size };
+    let intensity = 1;
+    const easeOutSine = (t: number) => Math.sin((t * Math.PI) / 2);
+    const easeOutQuad = (t: number) => -t * (t - 2);
+    if (p.age < maxAge * 0.3) intensity = easeOutSine(p.age / (maxAge * 0.3));
+    else
+      intensity = easeOutQuad(1 - (p.age - maxAge * 0.3) / (maxAge * 0.7)) || 0;
+    intensity *= p.force;
+    const color = `${((p.vx + 1) / 2) * 255}, ${((p.vy + 1) / 2) * 255}, ${
+      intensity * 255
+    }`;
+    const offset = size * 5;
+    ctx.shadowOffsetX = offset;
+    ctx.shadowOffsetY = offset;
+    ctx.shadowBlur = radius;
+    ctx.shadowColor = `rgba(${color},${0.22 * intensity})`;
+    ctx.beginPath();
+    ctx.fillStyle = "rgba(255,0,0,1)";
+    ctx.arc(pos.x - offset, pos.y - offset, radius, 0, Math.PI * 2);
+    ctx.fill();
+  };
+  const addTouch = (norm: { x: number; y: number }) => {
+    let force = 0;
+    let vx = 0;
+    let vy = 0;
+    if (last) {
+      const dx = norm.x - last.x;
+      const dy = norm.y - last.y;
+      if (dx === 0 && dy === 0) return;
+      const dd = dx * dx + dy * dy;
+      const d = Math.sqrt(dd);
+      vx = dx / (d || 1);
+      vy = dy / (d || 1);
+      force = Math.min(dd * 10000, 1);
+    }
+    last = { x: norm.x, y: norm.y };
+    trail.push({ x: norm.x, y: norm.y, age: 0, force, vx, vy });
+  };
+  const update = () => {
+    clear();
+    for (let i = trail.length - 1; i >= 0; i--) {
+      const point = trail[i];
+      const f = point.force * speed * (1 - point.age / maxAge);
+      point.x += point.vx * f;
+      point.y += point.vy * f;
+      point.age++;
+      if (point.age > maxAge) trail.splice(i, 1);
+    }
+    for (let i = 0; i < trail.length; i++) drawPoint(trail[i]);
+    texture.needsUpdate = true;
+  };
+  return {
+    canvas,
+    texture,
+    addTouch,
+    update,
+    set radiusScale(v: number) {
+      radius = 0.1 * size * v;
+    },
+    get radiusScale() {
+      return radius / (0.1 * size);
+    },
+    size,
+  };
 }
 
 function createLiquidEffect(
-	texture: THREE.Texture,
-	opts?: { strength?: number; freq?: number }
+  texture: THREE.Texture,
+  opts?: { strength?: number; freq?: number }
 ) {
-	const fragment = `
+  const fragment = `
     uniform sampler2D uTexture;
     uniform float uStrength;
     uniform float uTime;
@@ -295,259 +305,287 @@ function createLiquidEffect(
       uv += vec2(vx, vy) * amt;
     }
     `;
-	return new Effect('LiquidEffect', fragment, {
-		uniforms: new Map([
-			['uTexture', new THREE.Uniform(texture)],
-			['uStrength', new THREE.Uniform(opts?.strength ?? 0.025)],
-			['uTime', new THREE.Uniform(0)],
-			['uFreq', new THREE.Uniform(opts?.freq ?? 4.5)],
-		]),
-	});
+  return new Effect("LiquidEffect", fragment, {
+    uniforms: new Map([
+      ["uTexture", new THREE.Uniform(texture)],
+      ["uStrength", new THREE.Uniform(opts?.strength ?? 0.025)],
+      ["uTime", new THREE.Uniform(0)],
+      ["uFreq", new THREE.Uniform(opts?.freq ?? 4.5)],
+    ]),
+  });
 }
 
 export interface PixelBlastOptions {
-	variant: 'square' | 'circle' | 'triangle' | 'diamond';
-	pixelSize: number;
-	color: string;
-	patternScale: number;
-	patternDensity: number;
-	pixelSizeJitter: number;
-	enableRipples: boolean;
-	rippleSpeed: number;
-	rippleThickness: number;
-	rippleIntensityScale: number;
-	liquid: boolean;
-	liquidStrength: number;
-	liquidRadius: number;
-	liquidWobbleSpeed: number;
-	speed: number;
-	transparent: boolean;
-	edgeFade: number;
-	antialias: boolean;
+  variant: "square" | "circle" | "triangle" | "diamond";
+  pixelSize: number;
+  color: string;
+  patternScale: number;
+  patternDensity: number;
+  pixelSizeJitter: number;
+  enableRipples: boolean;
+  rippleSpeed: number;
+  rippleThickness: number;
+  rippleIntensityScale: number;
+  liquid: boolean;
+  liquidStrength: number;
+  liquidRadius: number;
+  liquidWobbleSpeed: number;
+  speed: number;
+  transparent: boolean;
+  edgeFade: number;
+  antialias: boolean;
 }
 
 const DEFAULT_OPTIONS: PixelBlastOptions = {
-	variant: 'square',
-	pixelSize: 2,
-	color: '#000000',
-	patternScale: 2,
-	patternDensity: 0.5,
-	pixelSizeJitter: 0,
-	enableRipples: true,
-	rippleSpeed: 0.4,
-	rippleThickness: 0.12,
-	rippleIntensityScale: 1.5,
-	liquid: false,
-	liquidStrength: 0.12,
-	liquidRadius: 1.2,
-	liquidWobbleSpeed: 5,
-	speed: 0.5,
-	transparent: true,
-	edgeFade: 0.25,
-	antialias: true,
+  variant: "square",
+  pixelSize: 2,
+  color: "#000000",
+  patternScale: 2,
+  patternDensity: 0.5,
+  pixelSizeJitter: 0,
+  enableRipples: true,
+  rippleSpeed: 0.4,
+  rippleThickness: 0.12,
+  rippleIntensityScale: 1.5,
+  liquid: false,
+  liquidStrength: 0.12,
+  liquidRadius: 1.2,
+  liquidWobbleSpeed: 5,
+  speed: 0.5,
+  transparent: true,
+  edgeFade: 0.25,
+  antialias: true,
 };
 
 export function initPixelBlast(
-	container: HTMLElement,
-	options: Partial<PixelBlastOptions> = {}
+  container: HTMLElement,
+  options: Partial<PixelBlastOptions> = {}
 ): () => void {
-	const opts = { ...DEFAULT_OPTIONS, ...options };
+  const opts = { ...DEFAULT_OPTIONS, ...options };
 
-	const canvas = document.createElement('canvas');
-	const renderer = new THREE.WebGLRenderer({
-		canvas,
-		antialias: opts.antialias,
-		alpha: true,
-		powerPreference: 'high-performance',
-	});
-	renderer.domElement.style.width = '100%';
-	renderer.domElement.style.height = '100%';
-	renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-	container.appendChild(renderer.domElement);
-	if (opts.transparent) renderer.setClearAlpha(0);
-	else renderer.setClearColor(0x000000, 1);
+  const canvas = document.createElement("canvas");
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: opts.antialias,
+    alpha: true,
+    powerPreference: "low-power",
+  });
+  renderer.domElement.style.width = "100%";
+  renderer.domElement.style.height = "100%";
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  container.appendChild(renderer.domElement);
+  if (opts.transparent) renderer.setClearAlpha(0);
+  else renderer.setClearColor(0x000000, 1);
 
-	const uniforms = {
-		uResolution: { value: new THREE.Vector2(0, 0) },
-		uTime: { value: 0 },
-		uColor: { value: new THREE.Color(opts.color) },
-		uClickPos: {
-			value: Array.from({ length: MAX_CLICKS }, () => new THREE.Vector2(-1, -1)),
-		},
-		uClickTimes: { value: new Float32Array(MAX_CLICKS) },
-		uShapeType: { value: SHAPE_MAP[opts.variant] ?? 0 },
-		uPixelSize: { value: opts.pixelSize * renderer.getPixelRatio() },
-		uScale: { value: opts.patternScale },
-		uDensity: { value: opts.patternDensity },
-		uPixelJitter: { value: opts.pixelSizeJitter },
-		uEnableRipples: { value: opts.enableRipples ? 1 : 0 },
-		uRippleSpeed: { value: opts.rippleSpeed },
-		uRippleThickness: { value: opts.rippleThickness },
-		uRippleIntensity: { value: opts.rippleIntensityScale },
-		uEdgeFade: { value: opts.edgeFade },
-	};
+  const uniforms = {
+    uResolution: { value: new THREE.Vector2(0, 0) },
+    uTime: { value: 0 },
+    uColor: { value: new THREE.Color(opts.color) },
+    uClickPos: {
+      value: Array.from(
+        { length: MAX_CLICKS },
+        () => new THREE.Vector2(-1, -1)
+      ),
+    },
+    uClickTimes: { value: new Float32Array(MAX_CLICKS) },
+    uShapeType: { value: SHAPE_MAP[opts.variant] ?? 0 },
+    uPixelSize: { value: opts.pixelSize * renderer.getPixelRatio() },
+    uScale: { value: opts.patternScale },
+    uDensity: { value: opts.patternDensity },
+    uPixelJitter: { value: opts.pixelSizeJitter },
+    uEnableRipples: { value: opts.enableRipples ? 1 : 0 },
+    uRippleSpeed: { value: opts.rippleSpeed },
+    uRippleThickness: { value: opts.rippleThickness },
+    uRippleIntensity: { value: opts.rippleIntensityScale },
+    uEdgeFade: { value: opts.edgeFade },
+  };
 
-	const scene = new THREE.Scene();
-	const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-	const material = new THREE.ShaderMaterial({
-		vertexShader: VERTEX_SRC,
-		fragmentShader: FRAGMENT_SRC,
-		uniforms,
-		transparent: true,
-		depthTest: false,
-		depthWrite: false,
-		glslVersion: THREE.GLSL3,
-	});
-	const quadGeom = new THREE.PlaneGeometry(2, 2);
-	const quad = new THREE.Mesh(quadGeom, material);
-	scene.add(quad);
+  const scene = new THREE.Scene();
+  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  const material = new THREE.ShaderMaterial({
+    vertexShader: VERTEX_SRC,
+    fragmentShader: FRAGMENT_SRC,
+    uniforms,
+    transparent: true,
+    depthTest: false,
+    depthWrite: false,
+    glslVersion: THREE.GLSL3,
+  });
+  const quadGeom = new THREE.PlaneGeometry(2, 2);
+  const quad = new THREE.Mesh(quadGeom, material);
+  scene.add(quad);
 
-	const clock = new THREE.Clock();
-	const timeOffset =
-		typeof window !== 'undefined' && window.crypto?.getRandomValues
-			? (() => {
-					const u32 = new Uint32Array(1);
-					window.crypto!.getRandomValues(u32);
-					return u32[0] / 0xffffffff;
-				})()
-			: Math.random();
+  const clock = new THREE.Clock();
+  const timeOffset =
+    typeof window !== "undefined" && window.crypto?.getRandomValues
+      ? (() => {
+          const u32 = new Uint32Array(1);
+          window.crypto!.getRandomValues(u32);
+          return u32[0] / 0xffffffff;
+        })()
+      : Math.random();
 
-	const setSize = () => {
-		const w = container.clientWidth || 1;
-		const h = container.clientHeight || 1;
-		renderer.setSize(w, h, false);
-		uniforms.uResolution.value.set(renderer.domElement.width, renderer.domElement.height);
-		if (composer) composer.setSize(renderer.domElement.width, renderer.domElement.height);
-		uniforms.uPixelSize.value = opts.pixelSize * renderer.getPixelRatio();
-	};
+  const setSize = () => {
+    const w = container.clientWidth || 1;
+    const h = container.clientHeight || 1;
+    renderer.setSize(w, h, false);
+    uniforms.uResolution.value.set(
+      renderer.domElement.width,
+      renderer.domElement.height
+    );
+    if (composer)
+      composer.setSize(renderer.domElement.width, renderer.domElement.height);
+    uniforms.uPixelSize.value = opts.pixelSize * renderer.getPixelRatio();
+  };
 
-	let isHovering = false;
-	let lastHoverRipple = 0;
-	const HOVER_RIPPLE_INTERVAL = 0.12; // seconds (floaty + soft)
+  let isHovering = false;
+  let lastHoverRipple = 0;
+  const HOVER_RIPPLE_INTERVAL = 0.12; // seconds (floaty + soft)
 
-	let touch: ReturnType<typeof createTouchTexture> | null = null;
-	let liquidEffect: ReturnType<typeof createLiquidEffect> | null = null;
-	let composer: EffectComposer | null = null;
+  let touch: ReturnType<typeof createTouchTexture> | null = null;
+  let liquidEffect: ReturnType<typeof createLiquidEffect> | null = null;
+  let composer: EffectComposer | null = null;
 
-	if (opts.liquid) {
-		touch = createTouchTexture();
-		touch.radiusScale = opts.liquidRadius;
-		composer = new EffectComposer(renderer);
-		composer.addPass(new RenderPass(scene, camera));
-		liquidEffect = createLiquidEffect(touch.texture, {
-			strength: opts.liquidStrength,
-			freq: opts.liquidWobbleSpeed,
-		});
-		const effectPass = new EffectPass(camera, liquidEffect);
-		effectPass.renderToScreen = true;
-		composer.addPass(effectPass);
-	}
+  if (opts.liquid) {
+    touch = createTouchTexture();
+    touch.radiusScale = opts.liquidRadius;
+    composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    liquidEffect = createLiquidEffect(touch.texture, {
+      strength: opts.liquidStrength,
+      freq: opts.liquidWobbleSpeed,
+    });
+    const effectPass = new EffectPass(camera, liquidEffect);
+    effectPass.renderToScreen = true;
+    composer.addPass(effectPass);
+  }
 
-	setSize();
-	const resizeObserver = new ResizeObserver(setSize);
-	resizeObserver.observe(container);
+  setSize();
+  const resizeObserver = new ResizeObserver(setSize);
+  resizeObserver.observe(container);
 
-	const mapToPixels = (e: { clientX: number; clientY: number }) => {
-		const rect = renderer.domElement.getBoundingClientRect();
-		const scaleX = renderer.domElement.width / rect.width;
-		const scaleY = renderer.domElement.height / rect.height;
-		const fx = (e.clientX - rect.left) * scaleX;
-		// WebGL fragCoord has Y origin at bottom; convert from top-down client coords
-		const fy = (rect.height - (e.clientY - rect.top)) * scaleY;
-		return {
-			fx,
-			fy,
-			w: renderer.domElement.width,
-			h: renderer.domElement.height,
-		};
-	};
+  const mapToPixels = (e: { clientX: number; clientY: number }) => {
+    const rect = renderer.domElement.getBoundingClientRect();
+    const scaleX = renderer.domElement.width / rect.width;
+    const scaleY = renderer.domElement.height / rect.height;
+    const fx = (e.clientX - rect.left) * scaleX;
+    // WebGL fragCoord has Y origin at bottom; convert from top-down client coords
+    const fy = (rect.height - (e.clientY - rect.top)) * scaleY;
+    return {
+      fx,
+      fy,
+      w: renderer.domElement.width,
+      h: renderer.domElement.height,
+    };
+  };
 
-	let clickIx = 0;
-	// const emitRipple = (fx: number, fy: number) => {
-	// 	uniforms.uClickPos.value[clickIx].set(fx, fy);
-	// 	uniforms.uClickTimes.value[clickIx] = uniforms.uTime.value;
-	// 	clickIx = (clickIx + 1) % MAX_CLICKS;
-	// };
+  let clickIx = 0;
+  // const emitRipple = (fx: number, fy: number) => {
+  // 	uniforms.uClickPos.value[clickIx].set(fx, fy);
+  // 	uniforms.uClickTimes.value[clickIx] = uniforms.uTime.value;
+  // 	clickIx = (clickIx + 1) % MAX_CLICKS;
+  // };
 
-	const onPointerEnter = () => {
-		isHovering = true;
-	};
-	
-	const onPointerLeave = () => {
-		isHovering = false;
-	};
+  const onPointerEnter = () => {
+    isHovering = true;
+  };
 
-	// renderer.domElement.addEventListener('pointerenter', onPointerEnter);
-	// renderer.domElement.addEventListener('pointerleave', onPointerLeave);
+  const onPointerLeave = () => {
+    isHovering = false;
+  };
 
-	const onPointerDown = (e: PointerEvent) => {
-		const { fx, fy } = mapToPixels(e);
-		uniforms.uClickPos.value[clickIx].set(fx, fy);
-		uniforms.uClickTimes.value[clickIx] = uniforms.uTime.value;
-		clickIx = (clickIx + 1) % MAX_CLICKS;
-	};
-	const onPointerMove = (e: PointerEvent) => {
-		if (!touch) return;
-		const { fx, fy, w, h } = mapToPixels(e);
-		touch.addTouch({ x: fx / w, y: fy / h });
-	};
+  // renderer.domElement.addEventListener('pointerenter', onPointerEnter);
+  // renderer.domElement.addEventListener('pointerleave', onPointerLeave);
 
-	// const onPointerMove = (e: PointerEvent) => {
-	// 	const { fx, fy, w, h } = mapToPixels(e);
-	
-	// 	// liquid effect (keep this)
-	// 	if (touch) {
-	// 		touch.addTouch({ x: fx / w, y: fy / h });
-	// 	}
-	
-	// 	// hover ripples
-	// 	if (!isHovering) return;
-	
-	// 	const t = uniforms.uTime.value;
-	// 	if (t - lastHoverRipple > HOVER_RIPPLE_INTERVAL) {
-	// 		emitRipple(fx, fy);
-	// 		lastHoverRipple = t;
-	// 	}
-	// };
+  const onPointerDown = (e: PointerEvent) => {
+    const { fx, fy } = mapToPixels(e);
+    uniforms.uClickPos.value[clickIx].set(fx, fy);
+    uniforms.uClickTimes.value[clickIx] = uniforms.uTime.value;
+    clickIx = (clickIx + 1) % MAX_CLICKS;
+  };
+  const onPointerMove = (e: PointerEvent) => {
+    if (!touch) return;
+    const { fx, fy, w, h } = mapToPixels(e);
+    touch.addTouch({ x: fx / w, y: fy / h });
+  };
 
-	renderer.domElement.addEventListener('pointerdown', onPointerDown, { passive: true });
-	renderer.domElement.addEventListener('pointermove', onPointerMove, { passive: true });
+  // const onPointerMove = (e: PointerEvent) => {
+  // 	const { fx, fy, w, h } = mapToPixels(e);
 
-	let raf = 0;
-	const animate = () => {
-		uniforms.uTime.value = timeOffset + clock.getElapsedTime() * opts.speed;
-		if (liquidEffect) {
-			liquidEffect.uniforms.get('uTime')!.value = uniforms.uTime.value;
-		}
-		if (composer) {
-			if (touch) touch.update();
-			composer.passes.forEach((p) => {
-				const pass = p as EffectPass & { effects?: Array<{ uniforms?: Map<string, { value: number }> }> };
-				if (pass.effects)
-					pass.effects.forEach((eff) => {
-						const u = eff.uniforms?.get('uTime');
-						if (u) u.value = uniforms.uTime.value;
-					});
-			});
-			composer.render();
-		} else {
-			renderer.render(scene, camera);
-		}
-		raf = requestAnimationFrame(animate);
-	};
-	raf = requestAnimationFrame(animate);
+  // 	// liquid effect (keep this)
+  // 	if (touch) {
+  // 		touch.addTouch({ x: fx / w, y: fy / h });
+  // 	}
 
-	return () => {
-		resizeObserver.disconnect();
-		cancelAnimationFrame(raf);
-		renderer.domElement.removeEventListener('pointerdown', onPointerDown);
-		renderer.domElement.removeEventListener('pointermove', onPointerMove);
-		quadGeom.dispose();
-		material.dispose();
-		composer?.dispose();
-		renderer.dispose();
-		if (renderer.domElement.parentElement === container) {
-			container.removeChild(renderer.domElement);
-		}
-	};
+  // 	// hover ripples
+  // 	if (!isHovering) return;
+
+  // 	const t = uniforms.uTime.value;
+  // 	if (t - lastHoverRipple > HOVER_RIPPLE_INTERVAL) {
+  // 		emitRipple(fx, fy);
+  // 		lastHoverRipple = t;
+  // 	}
+  // };
+
+  renderer.domElement.addEventListener("pointerdown", onPointerDown, {
+    passive: true,
+  });
+  renderer.domElement.addEventListener("pointermove", onPointerMove, {
+    passive: true,
+  });
+
+  // Pause when tab is not active to save energy
+  let isTabVisible = !document.hidden;
+  const handleVisibilityChange = () => {
+    isTabVisible = !document.hidden;
+  };
+  document.addEventListener("visibilitychange", handleVisibilityChange);
+
+  let raf = 0;
+  let stopped = false;
+  const animate = () => {
+    if (stopped) return;
+
+    if (isTabVisible) {
+      uniforms.uTime.value = timeOffset + clock.getElapsedTime() * opts.speed;
+      if (liquidEffect) {
+        liquidEffect.uniforms.get("uTime")!.value = uniforms.uTime.value;
+      }
+      if (composer) {
+        if (touch) touch.update();
+        composer.passes.forEach((p) => {
+          const pass = p as EffectPass & {
+            effects?: Array<{ uniforms?: Map<string, { value: number }> }>;
+          };
+          if (pass.effects)
+            pass.effects.forEach((eff) => {
+              const u = eff.uniforms?.get("uTime");
+              if (u) u.value = uniforms.uTime.value;
+            });
+        });
+        composer.render();
+      } else {
+        renderer.render(scene, camera);
+      }
+    }
+
+    raf = requestAnimationFrame(animate);
+  };
+  raf = requestAnimationFrame(animate);
+
+  return () => {
+    stopped = true;
+    resizeObserver.disconnect();
+    cancelAnimationFrame(raf);
+    document.removeEventListener("visibilitychange", handleVisibilityChange);
+    renderer.domElement.removeEventListener("pointerdown", onPointerDown);
+    renderer.domElement.removeEventListener("pointermove", onPointerMove);
+    quadGeom.dispose();
+    material.dispose();
+    composer?.dispose();
+    renderer.dispose();
+    if (renderer.domElement.parentElement === container) {
+      container.removeChild(renderer.domElement);
+    }
+  };
 }
