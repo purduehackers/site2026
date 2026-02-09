@@ -39,7 +39,7 @@ const shouldEnablePixelCursor =
 				/>
 				<p class="max-w-[36rem] font-inconsolata uppercase sm:text-lg md:text-xl font-semibold leading-relaxed mb-6">
 					A collective of 
-					<span class="text-[#FF00CC]">hobbyists</span>, 
+					<span class="text-[var(--color-accent-2)]">hobbyists</span>, 
 					<span class="text-[var(--color-primary)]">engineers</span>, and 
 					<span class="text-[var(--color-accent)]">artists</span> 
 					who make creative-technical software, hardware, and mixed media projects
@@ -64,9 +64,29 @@ const shouldEnablePixelCursor =
 			style={`background-color: var(--color-bg); background-image: url('${ditherSvg}'); background-size: 8px 256px; background-repeat: repeat-x; image-rendering: pixelated; image-rendering: crisp-edges;`}
 			aria-hidden="true"
 		/>
-		<section data-header-dark class="min-h-screen flex flex-col items-center pt-72 px-8 py-16 bg-black text-[var(--color-bg)] text-center">
+		<section data-header-dark class="relative min-h-screen flex flex-col items-center pt-72 px-8 py-16 bg-black text-[var(--color-bg)] text-center overflow-hidden">
+			<!-- creatura! -->
+			<img
+				src="/angry_man-clear.png"
+				alt=""
+				class="absolute image-rendering-pixelated top-12 -right-8 md:right-8 lg:right-12 w-40 h-auto md:w-56 lg:w-72 object-contain pointer-events-none"
+				aria-hidden="true"
+			/>
+			<img
+				src="/fish_with_legs.png"
+				alt=""
+				class="absolute image-rendering-pixelated -left-12 md:left-8 lg:left-12 top-1/3 md:top-1/2 lg:top-1/2 -translate-y-1/2 w-40 h-auto md:w-56 lg:w-72 object-contain pointer-events-none"
+				aria-hidden="true"
+			/>
+			<img
+				src="/lizard_gun.png"
+				alt=""
+				class="absolute image-rendering-pixelated bottom-1/3 md:bottom-12 lg:bottom-12 -right-12 md:right-8 lg:right-12 w-40 h-auto md:w-56 lg:w-72 object-contain pointer-events-none"
+				aria-hidden="true"
+			/>
+
 			<!-- 1 -->
-			<div class="mb-72">	  
+			<div class="mb-72 relative z-10">	  
 			  <img src="/ph.svg" alt="Purdue Hackers" class="w-6 h-6 mb-6 mx-auto fill-[var(--color-secondary)]" />
 			  <p class="max-w-[36rem] font-inconsolata text-lg uppercase leading-relaxed mt-6">
 				Making something you're proud of is incredibly rewarding. But it's really hard to do alone. Since 2013, Purdue Hackers has been a home to build, ship, and demo creative-technical projects together. We'd love to see you here.
@@ -74,7 +94,7 @@ const shouldEnablePixelCursor =
 			</div>
 			
 			<!-- 2 -->
-			<div id="hack-night" class="mb-72">
+			<div id="hack-night" class="mb-72 relative">
 				<svg
 				xmlns="http://www.w3.org/2000/svg"
 				viewBox="0 0 24 24"
@@ -113,7 +133,7 @@ const shouldEnablePixelCursor =
 			</div>
 
 			<!-- 3 -->
-			<div class="mb-72">
+			<div class="mb-72 relative z-10">
 				<svg
 				xmlns="http://www.w3.org/2000/svg"
 				viewBox="0 0 24 24"
