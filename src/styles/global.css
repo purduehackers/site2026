@@ -67,11 +67,11 @@
   pointer-events: none;
 }
 .join-session-btn__pixel {
-  background: #000;
+  background: var(--color-primary);
   transition: background 0.15s ease calc(var(--i) * 8ms);
 }
 .join-session-btn:hover .join-session-btn__pixel {
-  background: var(--color-primary);
+  background: #000;
 }
 .join-session-btn__label {
   position: relative;
