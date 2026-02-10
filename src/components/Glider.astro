@@ -1,214 +1,236 @@
 ---
 interface Props {
-	gridCols?: number;
-	gridRows?: number;
-	cellSize?: number;
-	speedMs?: number;
-	class?: string;
+  gridCols?: number;
+  gridRows?: number;
+  cellSize?: number;
+  speedMs?: number;
+  class?: string;
 }
 
-const { 
-	gridCols = 80, 
-	gridRows = 50, 
-	cellSize = 10, 
-	speedMs = 100, 
-	class: className = '' 
+const {
+  gridCols = 80,
+  gridRows = 50,
+  cellSize = 10,
+  speedMs = 100,
+  class: className = '',
 } = Astro.props;
 ---
 
 <div class={`glider-wrap ${className}`.trim()}>
-	<canvas id="glider-gun-canvas"></canvas>
+  <canvas id="glider-gun-canvas"></canvas>
 </div>
 
 <script define:vars={{ gridCols, gridRows, cellSize, speedMs }}>
-	// gosper glider gun
-	const GOSPER_GLIDER_GUN = [
-		[1, 5], [1, 6], [2, 5], [2, 6],
-		[11, 5], [11, 6], [11, 7],
-		[12, 4], [12, 8],
-		[13, 3], [13, 9],
-		[14, 3], [14, 9],
-		[15, 6],
-		[16, 4], [16, 8],
-		[17, 5], [17, 6], [17, 7],
-		[18, 6],
-		[21, 3], [21, 4], [21, 5],
-		[22, 3], [22, 4], [22, 5],
-		[23, 2], [23, 6],
-		[25, 1], [25, 2], [25, 6], [25, 7],
-		[35, 3], [35, 4], [36, 3], [36, 4]
-	];
+  // gosper glider gun
+  const GOSPER_GLIDER_GUN = [
+    [1, 5],
+    [1, 6],
+    [2, 5],
+    [2, 6],
+    [11, 5],
+    [11, 6],
+    [11, 7],
+    [12, 4],
+    [12, 8],
+    [13, 3],
+    [13, 9],
+    [14, 3],
+    [14, 9],
+    [15, 6],
+    [16, 4],
+    [16, 8],
+    [17, 5],
+    [17, 6],
+    [17, 7],
+    [18, 6],
+    [21, 3],
+    [21, 4],
+    [21, 5],
+    [22, 3],
+    [22, 4],
+    [22, 5],
+    [23, 2],
+    [23, 6],
+    [25, 1],
+    [25, 2],
+    [25, 6],
+    [25, 7],
+    [35, 3],
+    [35, 4],
+    [36, 3],
+    [36, 4],
+  ];
 
-	// offset to position the gun nicely in the grid
-	const GUN_OFFSET_X = 5;
-	const GUN_OFFSET_Y = 10;
+  // offset to position the gun nicely in the grid
+  const GUN_OFFSET_X = 5;
+  const GUN_OFFSET_Y = 10;
 
-	class GameOfLife {
-		constructor(width, height) {
-			this.width = width;
-			this.height = height;
-			this.grid = this.createGrid();
-			this.nextGrid = this.createGrid();
-		}
+  class GameOfLife {
+    constructor(width, height) {
+      this.width = width;
+      this.height = height;
+      this.grid = this.createGrid();
+      this.nextGrid = this.createGrid();
+    }
 
-		createGrid() {
-			const grid = new Array(this.height);
-			for (let y = 0; y < this.height; y++) {
-				grid[y] = new Uint8Array(this.width);
-			}
-			return grid;
-		}
+    createGrid() {
+      const grid = new Array(this.height);
+      for (let y = 0; y < this.height; y++) {
+        grid[y] = new Uint8Array(this.width);
+      }
+      return grid;
+    }
 
-		setCell(x, y, alive) {
-			if (x >= 0 && x < this.width && y >= 0 && y < this.height) {
-				this.grid[y][x] = alive ? 1 : 0;
-			}
-		}
+    setCell(x, y, alive) {
+      if (x >= 0 && x < this.width && y >= 0 && y < this.height) {
+        this.grid[y][x] = alive ? 1 : 0;
+      }
+    }
 
-		getCell(x, y) {
-			if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
-				return 0;
-			}
-			return this.grid[y][x];
-		}
+    getCell(x, y) {
+      if (x < 0 || x >= this.width || y < 0 || y >= this.height) {
+        return 0;
+      }
+      return this.grid[y][x];
+    }
 
-		countNeighbors(x, y) {
-			let count = 0;
-			for (let dy = -1; dy <= 1; dy++) {
-				for (let dx = -1; dx <= 1; dx++) {
-					if (dx === 0 && dy === 0) continue;
-					count += this.getCell(x + dx, y + dy);
-				}
-			}
-			return count;
-		}
+    countNeighbors(x, y) {
+      let count = 0;
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          if (dx === 0 && dy === 0) continue;
+          count += this.getCell(x + dx, y + dy);
+        }
+      }
+      return count;
+    }
 
-		step() {
-			for (let y = 0; y < this.height; y++) {
-				for (let x = 0; x < this.width; x++) {
-					const neighbors = this.countNeighbors(x, y);
-					const currentlyAlive = this.grid[y][x] === 1;
+    step() {
+      for (let y = 0; y < this.height; y++) {
+        for (let x = 0; x < this.width; x++) {
+          const neighbors = this.countNeighbors(x, y);
+          const currentlyAlive = this.grid[y][x] === 1;
 
-					// 1. any live cell with 2 or 3 neighbors survives
-					// 2. any dead cell with exactly 3 neighbors becomes alive
-					// 3. all other cells die or stay dead
-					if (currentlyAlive) {
-						this.nextGrid[y][x] = (neighbors === 2 || neighbors === 3) ? 1 : 0;
-					} else {
-						this.nextGrid[y][x] = (neighbors === 3) ? 1 : 0;
-					}
-				}
-			}
+          // 1. any live cell with 2 or 3 neighbors survives
+          // 2. any dead cell with exactly 3 neighbors becomes alive
+          // 3. all other cells die or stay dead
+          if (currentlyAlive) {
+            this.nextGrid[y][x] = neighbors === 2 || neighbors === 3 ? 1 : 0;
+          } else {
+            this.nextGrid[y][x] = neighbors === 3 ? 1 : 0;
+          }
+        }
+      }
 
-			const temp = this.grid;
-			this.grid = this.nextGrid;
-			this.nextGrid = temp;
-		}
+      const temp = this.grid;
+      this.grid = this.nextGrid;
+      this.nextGrid = temp;
+    }
 
-		placeGosperGun() {
-			for (const [x, y] of GOSPER_GLIDER_GUN) {
-				this.setCell(GUN_OFFSET_X + x, GUN_OFFSET_Y + y, 1);
-			}
-		}
+    placeGosperGun() {
+      for (const [x, y] of GOSPER_GLIDER_GUN) {
+        this.setCell(GUN_OFFSET_X + x, GUN_OFFSET_Y + y, 1);
+      }
+    }
 
-		clear() {
-			for (let y = 0; y < this.height; y++) {
-				this.grid[y].fill(0);
-			}
-		}
-	}
+    clear() {
+      for (let y = 0; y < this.height; y++) {
+        this.grid[y].fill(0);
+      }
+    }
+  }
 
-	class Renderer {
-		constructor(canvas, game, cellSize) {
-			this.canvas = canvas;
-			this.game = game;
-			this.cellSize = cellSize;
-			
-			const dpr = Math.min(2, window.devicePixelRatio || 1);
-			const width = game.width * cellSize;
-			const height = game.height * cellSize;
-			
-			canvas.width = width * dpr;
-			canvas.height = height * dpr;
-			canvas.style.width = width + 'px';
-			canvas.style.height = height + 'px';
-			
-			this.ctx = canvas.getContext('2d');
-			this.ctx.scale(dpr, dpr);
-			
-			this.ctx.fillStyle = '#000000';
-			this.backgroundColor = 'transparent';
-			this.cellColor = '#000000';
-		}
+  class Renderer {
+    constructor(canvas, game, cellSize) {
+      this.canvas = canvas;
+      this.game = game;
+      this.cellSize = cellSize;
 
-		draw() {
-			const { ctx, game, cellSize, backgroundColor, cellColor } = this;
-			
-			// clear
-			ctx.clearRect(0, 0, game.width * cellSize, game.height * cellSize);
-			
-			// draw alive cells
-			ctx.fillStyle = cellColor;
-			for (let y = 0; y < game.height; y++) {
-				for (let x = 0; x < game.width; x++) {
-					if (game.grid[y][x] === 1) {
-						ctx.fillRect(
-							x * cellSize,
-							y * cellSize,
-							cellSize , // -1 for grid line
-							cellSize // -1 for grid line
-						);
-					}
-				}
-			}
-		}
-	}
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      const width = game.width * cellSize;
+      const height = game.height * cellSize;
 
-	function init() {
-		const canvas = document.getElementById('glider-gun-canvas');
-		if (!canvas || !(canvas instanceof HTMLCanvasElement)) {
-			console.error('Canvas not found');
-			return;
-		}
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
 
-		const game = new GameOfLife(gridCols, gridRows);
-		game.placeGosperGun();
-		const renderer = new Renderer(canvas, game, cellSize);
-		renderer.draw();
+      this.ctx = canvas.getContext('2d');
+      this.ctx.scale(dpr, dpr);
 
-		let generation = 0;
-		setInterval(() => {
-			game.step();
-			renderer.draw();
-			generation++;
-			
-			// if (generation % 30 === 0) {
-			// 	console.log(`Generation: ${generation}`);
-			// }
-		}, speedMs);
-	}
+      this.ctx.fillStyle = '#000000';
+      this.backgroundColor = 'transparent';
+      this.cellColor = '#000000';
+    }
 
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', init);
-	} else {
-		init();
-	}
+    draw() {
+      const { ctx, game, cellSize, backgroundColor, cellColor } = this;
+
+      // clear
+      ctx.clearRect(0, 0, game.width * cellSize, game.height * cellSize);
+
+      // draw alive cells
+      ctx.fillStyle = cellColor;
+      for (let y = 0; y < game.height; y++) {
+        for (let x = 0; x < game.width; x++) {
+          if (game.grid[y][x] === 1) {
+            ctx.fillRect(
+              x * cellSize,
+              y * cellSize,
+              cellSize, // -1 for grid line
+              cellSize // -1 for grid line
+            );
+          }
+        }
+      }
+    }
+  }
+
+  function init() {
+    const canvas = document.getElementById('glider-gun-canvas');
+    if (!canvas || !(canvas instanceof HTMLCanvasElement)) {
+      console.error('Canvas not found');
+      return;
+    }
+
+    const game = new GameOfLife(gridCols, gridRows);
+    game.placeGosperGun();
+    const renderer = new Renderer(canvas, game, cellSize);
+    renderer.draw();
+
+    let generation = 0;
+    setInterval(() => {
+      game.step();
+      renderer.draw();
+      generation++;
+
+      // if (generation % 30 === 0) {
+      // 	console.log(`Generation: ${generation}`);
+      // }
+    }, speedMs);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 </script>
 
 <style>
-	.glider-wrap {
-		display: inline-block;
-		flex-shrink: 0;
-		padding: 0;
-		border-radius: 4px;
-		overflow: hidden;
-		pointer-events: none;
-	}
-	
-	.glider-wrap canvas {
-		display: block;
-		image-rendering: pixelated;
-		image-rendering: crisp-edges;
-		/* border: 1px solid #ccc; */
-	}
+  .glider-wrap {
+    display: inline-block;
+    flex-shrink: 0;
+    padding: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .glider-wrap canvas {
+    display: block;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    /* border: 1px solid #ccc; */
+  }
 </style>

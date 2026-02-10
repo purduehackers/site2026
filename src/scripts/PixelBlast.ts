@@ -2,8 +2,8 @@
  * PixelBlast – interactive Bayer-dithering overlay (inspired by github.com/zavalit/bayer-dithering-webgl-demo).
  * Vanilla TS version for use in Astro; mounts to a container and returns a cleanup function.
  */
-import * as THREE from "three";
-import { EffectComposer, EffectPass, RenderPass, Effect } from "postprocessing";
+import * as THREE from 'three';
+import { EffectComposer, EffectPass, RenderPass, Effect } from 'postprocessing';
 
 const SHAPE_MAP: Record<string, number> = {
   square: 0,
@@ -188,12 +188,12 @@ void main(){
 
 function createTouchTexture() {
   const size = 64;
-  const canvas = document.createElement("canvas");
+  const canvas = document.createElement('canvas');
   canvas.width = size;
   canvas.height = size;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("2D context not available");
-  ctx.fillStyle = "black";
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('2D context not available');
+  ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   const texture = new THREE.Texture(canvas);
   texture.minFilter = THREE.LinearFilter;
@@ -212,10 +212,10 @@ function createTouchTexture() {
   let radius = 0.1 * size;
   const speed = 1 / maxAge;
   const clear = () => {
-    ctx.fillStyle = "black";
+    ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   };
-  const drawPoint = (p: typeof trail[0]) => {
+  const drawPoint = (p: (typeof trail)[0]) => {
     const pos = { x: p.x * size, y: (1 - p.y) * size };
     let intensity = 1;
     const easeOutSine = (t: number) => Math.sin((t * Math.PI) / 2);
@@ -233,7 +233,7 @@ function createTouchTexture() {
     ctx.shadowBlur = radius;
     ctx.shadowColor = `rgba(${color},${0.22 * intensity})`;
     ctx.beginPath();
-    ctx.fillStyle = "rgba(255,0,0,1)";
+    ctx.fillStyle = 'rgba(255,0,0,1)';
     ctx.arc(pos.x - offset, pos.y - offset, radius, 0, Math.PI * 2);
     ctx.fill();
   };
@@ -305,18 +305,18 @@ function createLiquidEffect(
       uv += vec2(vx, vy) * amt;
     }
     `;
-  return new Effect("LiquidEffect", fragment, {
+  return new Effect('LiquidEffect', fragment, {
     uniforms: new Map([
-      ["uTexture", new THREE.Uniform(texture)],
-      ["uStrength", new THREE.Uniform(opts?.strength ?? 0.025)],
-      ["uTime", new THREE.Uniform(0)],
-      ["uFreq", new THREE.Uniform(opts?.freq ?? 4.5)],
+      ['uTexture', new THREE.Uniform(texture)],
+      ['uStrength', new THREE.Uniform(opts?.strength ?? 0.025)],
+      ['uTime', new THREE.Uniform(0)],
+      ['uFreq', new THREE.Uniform(opts?.freq ?? 4.5)],
     ]),
   });
 }
 
 export interface PixelBlastOptions {
-  variant: "square" | "circle" | "triangle" | "diamond";
+  variant: 'square' | 'circle' | 'triangle' | 'diamond';
   pixelSize: number;
   color: string;
   patternScale: number;
@@ -337,9 +337,9 @@ export interface PixelBlastOptions {
 }
 
 const DEFAULT_OPTIONS: PixelBlastOptions = {
-  variant: "square",
+  variant: 'square',
   pixelSize: 2,
-  color: "#000000",
+  color: '#000000',
   patternScale: 2,
   patternDensity: 0.5,
   pixelSizeJitter: 0,
@@ -363,15 +363,15 @@ export function initPixelBlast(
 ): () => void {
   const opts = { ...DEFAULT_OPTIONS, ...options };
 
-  const canvas = document.createElement("canvas");
+  const canvas = document.createElement('canvas');
   const renderer = new THREE.WebGLRenderer({
     canvas,
     antialias: opts.antialias,
     alpha: true,
-    powerPreference: "low-power",
+    powerPreference: 'low-power',
   });
-  renderer.domElement.style.width = "100%";
-  renderer.domElement.style.height = "100%";
+  renderer.domElement.style.width = '100%';
+  renderer.domElement.style.height = '100%';
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   container.appendChild(renderer.domElement);
   if (opts.transparent) renderer.setClearAlpha(0);
@@ -417,7 +417,7 @@ export function initPixelBlast(
 
   const clock = new THREE.Clock();
   const timeOffset =
-    typeof window !== "undefined" && window.crypto?.getRandomValues
+    typeof window !== 'undefined' && window.crypto?.getRandomValues
       ? (() => {
           const u32 = new Uint32Array(1);
           window.crypto!.getRandomValues(u32);
@@ -527,10 +527,10 @@ export function initPixelBlast(
   // 	}
   // };
 
-  renderer.domElement.addEventListener("pointerdown", onPointerDown, {
+  renderer.domElement.addEventListener('pointerdown', onPointerDown, {
     passive: true,
   });
-  renderer.domElement.addEventListener("pointermove", onPointerMove, {
+  renderer.domElement.addEventListener('pointermove', onPointerMove, {
     passive: true,
   });
 
@@ -539,7 +539,7 @@ export function initPixelBlast(
   const handleVisibilityChange = () => {
     isTabVisible = !document.hidden;
   };
-  document.addEventListener("visibilitychange", handleVisibilityChange);
+  document.addEventListener('visibilitychange', handleVisibilityChange);
 
   let raf = 0;
   let stopped = false;
@@ -549,7 +549,7 @@ export function initPixelBlast(
     if (isTabVisible) {
       uniforms.uTime.value = timeOffset + clock.getElapsedTime() * opts.speed;
       if (liquidEffect) {
-        liquidEffect.uniforms.get("uTime")!.value = uniforms.uTime.value;
+        liquidEffect.uniforms.get('uTime')!.value = uniforms.uTime.value;
       }
       if (composer) {
         if (touch) touch.update();
@@ -559,7 +559,7 @@ export function initPixelBlast(
           };
           if (pass.effects)
             pass.effects.forEach((eff) => {
-              const u = eff.uniforms?.get("uTime");
+              const u = eff.uniforms?.get('uTime');
               if (u) u.value = uniforms.uTime.value;
             });
         });
@@ -577,9 +577,9 @@ export function initPixelBlast(
     stopped = true;
     resizeObserver.disconnect();
     cancelAnimationFrame(raf);
-    document.removeEventListener("visibilitychange", handleVisibilityChange);
-    renderer.domElement.removeEventListener("pointerdown", onPointerDown);
-    renderer.domElement.removeEventListener("pointermove", onPointerMove);
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
+    renderer.domElement.removeEventListener('pointerdown', onPointerDown);
+    renderer.domElement.removeEventListener('pointermove', onPointerMove);
     quadGeom.dispose();
     material.dispose();
     composer?.dispose();

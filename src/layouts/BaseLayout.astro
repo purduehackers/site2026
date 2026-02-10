@@ -3,85 +3,131 @@ import '../styles/global.css';
 import { Font } from 'astro:assets';
 
 interface Props {
-	title?: string;
+  title?: string;
 }
 
 const { title = 'Purdue Hackers' } = Astro.props;
 ---
+
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/glider.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/glider.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
 
-		<Font cssVariable="--font-whyte" preload />
-		<Font cssVariable="--font-inconsolata" preload />
+    <Font cssVariable="--font-whyte" preload />
+    <Font cssVariable="--font-inconsolata" preload />
+    <Font cssVariable="--font-silkscreen" preload />
 
-		<title>{title}</title>
-		<style is:global>
-			.header-over-dark .nav-link { color: var(--color-bg) !important; }
-			.header-over-dark .nav-link:hover {
-				background: var(--color-bg) !important;
-				color: #7D3BFF !important;
-			}
-			.header-over-dark .mobile-menu-btn__line { background-color: var(--color-bg); }
-		</style>
-	</head>
-	<body>
-		<header id="site-header" class="fixed top-0 left-0 right-0 z-30 px-6 py-5 md:px-8 md:py-6 font-inconsolata">
-			<div class="flex items-center justify-between">
-				<!-- toggle cursor trail -->
-				<button
-					type="button"
-					id="pixel-trail-toggle"
-					class="pixel-trail-toggle is-active hidden md:inline-flex text-base uppercase tracking-wide font-semibold px-2 py-1"
-					aria-pressed="true"
-					aria-label="Toggle pixel trail"
-				>
-				toggle trail
-				</button>
+    <title>{title}</title>
+    <style is:global>
+      .header-over-dark .nav-link {
+        color: var(--color-bg) !important;
+      }
+      .header-over-dark .nav-link:hover {
+        background: var(--color-bg) !important;
+        color: #7d3bff !important;
+      }
+      .header-over-dark .mobile-menu-btn__line {
+        background-color: var(--color-bg);
+      }
+    </style>
+  </head>
+  <body>
+    <header
+      id="site-header"
+      class="fixed top-0 left-0 right-0 z-30 px-6 py-5 md:px-8 md:py-6 font-inconsolata"
+    >
+      <div class="flex items-center justify-between">
+        <!-- toggle cursor trail -->
+        <button
+          type="button"
+          id="pixel-trail-toggle"
+          class="pixel-trail-toggle is-active hidden md:inline-flex text-base uppercase tracking-wide font-semibold px-2 py-1"
+          aria-pressed="true"
+          aria-label="Toggle pixel trail"
+        >
+          toggle trail
+        </button>
 
+        <!-- desktopn nav -->
+        <nav class="hidden md:flex gap-8 header-links">
+          <a
+            href="https://puhack.horse/discord"
+            target="_blank"
+            class="nav-link text-base text-black tracking-wide font-semibold"
+            >DISCORD</a
+          >
+          <a
+            href="https://luma.com/user/purduehackers/"
+            target="_blank"
+            class="nav-link text-base text-black tracking-wide font-semibold"
+            >EVENTS</a
+          >
+          <a
+            href="https://blog.purduehackers.com/"
+            target="_blank"
+            class="nav-link text-base text-black tracking-wide font-semibold"
+            >BLOG</a
+          >
+          <a
+            href="https://grants.purduehackers.com/"
+            target="_blank"
+            class="nav-link text-base text-black tracking-wide font-semibold"
+            >MICROGRANTS</a
+          >
+        </nav>
 
-				<!-- desktopn nav -->
-				<nav class="hidden md:flex gap-8 header-links">
-					<a href="https://puhack.horse/discord" target="_blank" class="nav-link text-base text-black tracking-wide font-semibold">DISCORD</a>
-					<a href="https://luma.com/user/purduehackers/" target="_blank" class="nav-link text-base text-black tracking-wide font-semibold">EVENTS</a>
-					<a href="https://blog.purduehackers.com/" target="_blank" class="nav-link text-base text-black tracking-wide font-semibold">BLOG</a>
-					<a href="https://grants.purduehackers.com/" target="_blank" class="nav-link text-base text-black tracking-wide font-semibold">MICROGRANTS</a>
-				</nav>
-
-				<!-- mobile hanburger -->
-				<button
-					type="button"
-					id="menu-toggle"
-					class="mobile-menu-btn md:hidden ml-auto flex flex-col justify-center items-center w-10 h-10 gap-1.5 text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black"
-					aria-expanded="false"
-					aria-label="Open menu"
-					aria-controls="mobile-menu"
-				>
-					<span class="mobile-menu-btn__line" aria-hidden="true"></span>
-					<span class="mobile-menu-btn__line" aria-hidden="true"></span>
-					<span class="mobile-menu-btn__line" aria-hidden="true"></span>
-				</button>
-			</div>
-		</header>
-		<!-- mobile menu overlay -->
-		<div
-			id="mobile-menu"
-			class="mobile-menu fixed inset-0 z-20 bg-black font-inconsolata"
-			aria-hidden="true"
-			role="dialog"
-			aria-label="Main menu"
-		>
-			<nav class="mobile-menu__nav flex flex-col justify-center min-h-full px-8 py-24 gap-6">
-				<a href="https://puhack.horse/discord" target="_blank" class="mobile-menu__link">DISCORD</a>
-				<a href="https://luma.com/user/purduehackers/" target="_blank" class="mobile-menu__link">EVENTS</a>
-				<a href="https://blog.purduehackers.com/" target="_blank" class="mobile-menu__link">BLOG</a>
-				<a href="https://grants.purduehackers.com/" target="_blank" class="mobile-menu__link">MICROGRANTS</a>
-			</nav>
-		</div>
-		<slot />
-		<script src="../scripts/header.ts"></script>
-	</body>
+        <!-- mobile hanburger -->
+        <button
+          type="button"
+          id="menu-toggle"
+          class="mobile-menu-btn md:hidden ml-auto flex flex-col justify-center items-center w-10 h-10 gap-1.5 text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black"
+          aria-expanded="false"
+          aria-label="Open menu"
+          aria-controls="mobile-menu"
+        >
+          <span class="mobile-menu-btn__line" aria-hidden="true"></span>
+          <span class="mobile-menu-btn__line" aria-hidden="true"></span>
+          <span class="mobile-menu-btn__line" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+    <!-- mobile menu overlay -->
+    <div
+      id="mobile-menu"
+      class="mobile-menu fixed inset-0 z-20 bg-black font-inconsolata"
+      aria-hidden="true"
+      role="dialog"
+      aria-label="Main menu"
+    >
+      <nav
+        class="mobile-menu__nav flex flex-col justify-center min-h-full px-8 py-24 gap-6"
+      >
+        <a
+          href="https://puhack.horse/discord"
+          target="_blank"
+          class="mobile-menu__link">DISCORD</a
+        >
+        <a
+          href="https://luma.com/user/purduehackers/"
+          target="_blank"
+          class="mobile-menu__link">EVENTS</a
+        >
+        <a
+          href="https://blog.purduehackers.com/"
+          target="_blank"
+          class="mobile-menu__link">BLOG</a
+        >
+        <a
+          href="https://grants.purduehackers.com/"
+          target="_blank"
+          class="mobile-menu__link">MICROGRANTS</a
+        >
+      </nav>
+    </div>
+    <slot />
+    <script src="../scripts/header.ts"></script>
+  </body>
 </html>

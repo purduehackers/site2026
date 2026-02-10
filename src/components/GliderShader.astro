@@ -1,90 +1,90 @@
 ---
 interface Props {
-	gridCols?: number;
-	gridRows?: number;
-	cellSize?: number;
-	speedMs?: number;
-	class?: string;
+  gridCols?: number;
+  gridRows?: number;
+  cellSize?: number;
+  speedMs?: number;
+  class?: string;
 }
 
 const {
-	gridCols = 80,
-	gridRows = 100,
-	cellSize = 10,
-	speedMs = 100,
-	class: className = '',
+  gridCols = 80,
+  gridRows = 100,
+  cellSize = 10,
+  speedMs = 100,
+  class: className = '',
 } = Astro.props;
 ---
 
 <div class={`glider-wrap ${className}`.trim()}>
-	<canvas data-glider-shader></canvas>
+  <canvas data-glider-shader></canvas>
 </div>
 
 <script>
-	import { initGliderShader } from '../scripts/gliderShader';
+  import { initGliderShader } from '../scripts/gliderShader';
 
-	function init() {
-		const canvases = document.querySelectorAll('canvas[data-glider-shader]');
-		canvases.forEach((canvas) => {
-			if (!(canvas instanceof HTMLCanvasElement)) return;
-			if (canvas.dataset.initialized) return; // prevent double-init
-			
-			canvas.dataset.initialized = 'true';
-			
-			// Read config from data attributes
-			const gridCols = parseInt(canvas.dataset.gridCols || '80');
-			const gridRows = parseInt(canvas.dataset.gridRows || '100');
-			const cellSize = parseInt(canvas.dataset.cellSize || '10');
-			const speedMs = parseInt(canvas.dataset.speedMs || '100');
+  function init() {
+    const canvases = document.querySelectorAll('canvas[data-glider-shader]');
+    canvases.forEach((canvas) => {
+      if (!(canvas instanceof HTMLCanvasElement)) return;
+      if (canvas.dataset.initialized) return; // prevent double-init
 
-			const cleanup = initGliderShader(canvas, {
-				gridCols,
-				gridRows,
-				cellSize,
-				speedMs,
-				cellColor: [0, 0, 0],
-			});
+      canvas.dataset.initialized = 'true';
 
-			// Astro view transitions safety
-			document.addEventListener('astro:before-swap', cleanup, { once: true });
-		});
-	}
+      // Read config from data attributes
+      const gridCols = parseInt(canvas.dataset.gridCols || '80');
+      const gridRows = parseInt(canvas.dataset.gridRows || '100');
+      const cellSize = parseInt(canvas.dataset.cellSize || '10');
+      const speedMs = parseInt(canvas.dataset.speedMs || '100');
 
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', init);
-	} else {
-		init();
-	}
+      const cleanup = initGliderShader(canvas, {
+        gridCols,
+        gridRows,
+        cellSize,
+        speedMs,
+        cellColor: [0, 0, 0],
+      });
+
+      // Astro view transitions safety
+      document.addEventListener('astro:before-swap', cleanup, { once: true });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 </script>
 
 <script define:vars={{ gridCols, gridRows, cellSize, speedMs }}>
-	// Pass config via data attributes
-	const script = document.currentScript;
-	const wrap = script?.closest('.glider-wrap');
-	const canvas = wrap?.querySelector('canvas[data-glider-shader]');
-	if (canvas) {
-		canvas.dataset.gridCols = String(gridCols);
-		canvas.dataset.gridRows = String(gridRows);
-		canvas.dataset.cellSize = String(cellSize);
-		canvas.dataset.speedMs = String(speedMs);
-	}
+  // Pass config via data attributes
+  const script = document.currentScript;
+  const wrap = script?.closest('.glider-wrap');
+  const canvas = wrap?.querySelector('canvas[data-glider-shader]');
+  if (canvas) {
+    canvas.dataset.gridCols = String(gridCols);
+    canvas.dataset.gridRows = String(gridRows);
+    canvas.dataset.cellSize = String(cellSize);
+    canvas.dataset.speedMs = String(speedMs);
+  }
 </script>
 
 <style>
-	.glider-wrap {
-		display: inline-block;
-		flex-shrink: 0;
-		padding: 0;
-		border-radius: 0px;
-		overflow: hidden;
-		pointer-events: none;
-	}
+  .glider-wrap {
+    display: inline-block;
+    flex-shrink: 0;
+    padding: 0;
+    border-radius: 0px;
+    overflow: hidden;
+    pointer-events: none;
+  }
 
-	.glider-wrap canvas {
-		display: block;
-		image-rendering: pixelated;
-		image-rendering: crisp-edges;
-		/* border-radius: 5px;
+  .glider-wrap canvas {
+    display: block;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    /* border-radius: 5px;
 		border: 1px solid #000; */
-	}
+  }
 </style>

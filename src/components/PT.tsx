@@ -22,7 +22,7 @@ export default function PT(props) {
     );
 
     observer.observe(darkSection);
-    
+
     return () => observer.disconnect();
   }, []);
 

@@ -134,11 +134,11 @@ void main() {
 
 function compileShader(gl: WebGL2RenderingContext, type: number, src: string) {
   const sh = gl.createShader(type);
-  if (!sh) throw new Error("Failed to create shader");
+  if (!sh) throw new Error('Failed to create shader');
   gl.shaderSource(sh, src);
   gl.compileShader(sh);
   if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
-    const log = gl.getShaderInfoLog(sh) ?? "Unknown shader compile error";
+    const log = gl.getShaderInfoLog(sh) ?? 'Unknown shader compile error';
     gl.deleteShader(sh);
     throw new Error(log);
   }
@@ -153,14 +153,14 @@ function createProgram(
   const vs = compileShader(gl, gl.VERTEX_SHADER, vsSrc);
   const fs = compileShader(gl, gl.FRAGMENT_SHADER, fsSrc);
   const prog = gl.createProgram();
-  if (!prog) throw new Error("Failed to create program");
+  if (!prog) throw new Error('Failed to create program');
   gl.attachShader(prog, vs);
   gl.attachShader(prog, fs);
   gl.linkProgram(prog);
   gl.deleteShader(vs);
   gl.deleteShader(fs);
   if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-    const log = gl.getProgramInfoLog(prog) ?? "Unknown program link error";
+    const log = gl.getProgramInfoLog(prog) ?? 'Unknown program link error';
     gl.deleteProgram(prog);
     throw new Error(log);
   }
@@ -174,7 +174,7 @@ function createStateTexture(
   initial?: Uint8Array
 ) {
   const tex = gl.createTexture();
-  if (!tex) throw new Error("Failed to create texture");
+  if (!tex) throw new Error('Failed to create texture');
   gl.bindTexture(gl.TEXTURE_2D, tex);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -198,7 +198,7 @@ function createStateTexture(
 
 function createFramebuffer(gl: WebGL2RenderingContext, tex: WebGLTexture) {
   const fbo = gl.createFramebuffer();
-  if (!fbo) throw new Error("Failed to create framebuffer");
+  if (!fbo) throw new Error('Failed to create framebuffer');
   gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
   gl.framebufferTexture2D(
     gl.FRAMEBUFFER,
@@ -235,17 +235,17 @@ export function initGliderShader(
   const { gridCols: cols, gridRows: rows, cellSize, speedMs } = opts;
   const cellColor = opts.cellColor ?? [0, 0, 0];
 
-  const gl = canvas.getContext("webgl2", {
+  const gl = canvas.getContext('webgl2', {
     alpha: true,
     antialias: false,
     depth: false,
     stencil: false,
     premultipliedAlpha: false,
-    powerPreference: "low-power",
+    powerPreference: 'low-power',
   });
   if (!gl) {
     throw new Error(
-      "WebGL2 not available (needed for shader-based Game of Life)."
+      'WebGL2 not available (needed for shader-based Game of Life).'
     );
   }
 
@@ -272,7 +272,7 @@ export function initGliderShader(
 
   // A dummy VAO is required in WebGL2 even for gl_VertexID tricks
   const vao = gl.createVertexArray();
-  if (!vao) throw new Error("Failed to create VAO");
+  if (!vao) throw new Error('Failed to create VAO');
   gl.bindVertexArray(vao);
   gl.bindVertexArray(null);
 
@@ -285,7 +285,7 @@ export function initGliderShader(
   function step() {
     setCommonState();
     if (gl === null) {
-      console.error("WebGL not supported or context is null");
+      console.error('WebGL not supported or context is null');
       return;
     }
     gl.bindFramebuffer(gl.FRAMEBUFFER, fboB);
@@ -294,8 +294,8 @@ export function initGliderShader(
     gl.useProgram(progStep);
     gl.bindVertexArray(vao);
 
-    const uState = gl.getUniformLocation(progStep, "uState");
-    const uGridSize = gl.getUniformLocation(progStep, "uGridSize");
+    const uState = gl.getUniformLocation(progStep, 'uState');
+    const uGridSize = gl.getUniformLocation(progStep, 'uGridSize');
 
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, texA);
@@ -315,7 +315,7 @@ export function initGliderShader(
 
   function render() {
     if (gl === null) {
-      console.error("WebGL not supported or context is null");
+      console.error('WebGL not supported or context is null');
       return;
     }
     setCommonState();
@@ -330,11 +330,11 @@ export function initGliderShader(
     gl.useProgram(progRender);
     gl.bindVertexArray(vao);
 
-    const uState = gl.getUniformLocation(progRender, "uState");
-    const uGridSize = gl.getUniformLocation(progRender, "uGridSize");
-    const uCellPx = gl.getUniformLocation(progRender, "uCellPx");
-    const uCellColor = gl.getUniformLocation(progRender, "uCellColor");
-    const uDpr = gl.getUniformLocation(progRender, "uDpr");
+    const uState = gl.getUniformLocation(progRender, 'uState');
+    const uGridSize = gl.getUniformLocation(progRender, 'uGridSize');
+    const uCellPx = gl.getUniformLocation(progRender, 'uCellPx');
+    const uCellColor = gl.getUniformLocation(progRender, 'uCellColor');
+    const uDpr = gl.getUniformLocation(progRender, 'uDpr');
 
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, texA);
@@ -363,7 +363,7 @@ export function initGliderShader(
   const handleVisibilityChange = () => {
     isTabVisible = !document.hidden;
   };
-  document.addEventListener("visibilitychange", handleVisibilityChange);
+  document.addEventListener('visibilitychange', handleVisibilityChange);
 
   const loop = (timestamp: number) => {
     if (stopped) return;
@@ -386,7 +386,7 @@ export function initGliderShader(
     if (animationId !== null) {
       cancelAnimationFrame(animationId);
     }
-    document.removeEventListener("visibilitychange", handleVisibilityChange);
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
     gl.deleteVertexArray(vao);
     gl.deleteFramebuffer(fboA);
     gl.deleteFramebuffer(fboB);
