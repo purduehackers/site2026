@@ -10,7 +10,8 @@ import {
 
 const ditherSvg = getHeroDitherSvg();
 const footerDitherSvg = getFooterDitherSvg();
-const pixelIndices = getPixelIndices();
+const buildPixels = getPixelIndices(50);
+const joinPixels = getPixelIndices(40);
 const ENABLE_PIXEL_CURSOR = true;
 const shouldEnablePixelCursor =
   (typeof window !== 'undefined' &&
@@ -29,13 +30,17 @@ const shouldEnablePixelCursor =
           client:load
           gridSize={85}
           trailSize={0.05}
-          maxAge={150}
-          interpolate={5}
+          maxAge={220}
+          interpolate={3}
           gooeyFilter={{ id: 'custom-goo-filter', strength: 0 }}
         />
       </div>
     )
   }
+  <div
+    id="pixel-cursor-container"
+    style="position: fixed; inset: 0; z-index: 10; pointer-events: none; display: none;"
+  ></div>
   <main>
     <section
       class="relative min-h-[90vh] flex items-center md:items-center gap-16 px-4 pt-40 sm:px-10 md:px-40 md:pt-20 overflow-hidden"
@@ -60,10 +65,11 @@ const shouldEnablePixelCursor =
           href="https://luma.com/user/purduehackers"
           target="_blank"
           class="join-session-btn"
+          style="--pixel-cols: 10; --pixel-color: var(--color-primary);"
         >
           <span class="join-session-btn__pixels" aria-hidden="true">
             {
-              pixelIndices.map((delayIndex) => (
+              buildPixels.map((delayIndex) => (
                 <span
                   class="join-session-btn__pixel"
                   style={`--i: ${delayIndex}`}
@@ -235,21 +241,34 @@ const shouldEnablePixelCursor =
             class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 whitespace-nowrap"
             >a journal of projects done over summer</a
           >, and more.
-        </p>
-        <br />
-        <p class="max-w-[32rem] font-whyte text-l leading-relaxed">
-          Want to see what community projects need taking up on? <br/> Check out our <a
+          Interested in what community projects need taking up on? Come check out our <a
             href="https://shelter.purduehackers.com/"
             target="_blank"
             class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 whitespace-nowrap"
             >Shelter</a
-          > or our <a
-            href="https://discord.gg/ncJ3xmhV85"
-            target="_blank"
-            class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300"
-            >Discord</a
-          >!
+          >.
         </p>
+        <!-- <a
+          href="https://discord.gg/purduehackers"
+          target="_blank"
+          class="join-session-btn"
+          style="--pixel-cols: 10; --pixel-color: var(--color-primary); --pixel-color-hover: var(--color-secondary); --label-color: white;"
+        >
+          <span class="join-session-btn__pixels" aria-hidden="true">
+            {
+              joinPixels.map((delayIndex) => (
+                <span
+                  class="join-session-btn__pixel"
+                  style={`--i: ${delayIndex}`}
+                />
+              ))
+            }
+          </span>
+          <span
+            class="join-session-btn__label pointer-events-none font-semibold"
+            >join us</span
+          >
+        </a> -->
       </div>
 
       <!-- 4 -->

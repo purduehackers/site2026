@@ -41,8 +41,8 @@ export function getFooterDitherSvg(width = 4, height = 128): string {
   return 'data:image/svg+xml,' + encodeURIComponent(svg);
 }
 
-export function getPixelIndices(): number[] {
-  const pixelIndices = Array.from({ length: 120 }, (_, i) => i);
+export function getPixelIndices(count: number = 30): number[] {
+  const pixelIndices = Array.from({ length: count }, (_, i) => i);
   for (let i = pixelIndices.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [pixelIndices[i], pixelIndices[j]] = [pixelIndices[j], pixelIndices[i]];

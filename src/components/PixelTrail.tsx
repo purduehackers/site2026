@@ -120,7 +120,7 @@ export default function PixelTrail({
   gridSize = 40,
   trailSize = 0.1,
   maxAge = 250,
-  interpolate = 5,
+  interpolate = 1,
   easingFunction = (x) => x,
   canvasProps = {},
   glProps = {

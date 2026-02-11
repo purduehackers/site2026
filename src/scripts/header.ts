@@ -49,14 +49,83 @@ if (menuToggle && mobileMenu) {
   });
 }
 
-// pixel trail toggle
-const pixelTrailToggle = document.getElementById('pixel-trail-toggle');
-const pixelTrailContainer = document.getElementById('pixel-trail-container');
-if (pixelTrailToggle && pixelTrailContainer) {
-  pixelTrailToggle.addEventListener('click', () => {
-    const isActive = pixelTrailToggle.classList.toggle('is-active');
-    pixelTrailToggle.setAttribute('aria-pressed', String(isActive));
-    pixelTrailContainer.style.display = isActive ? '' : 'none';
+// pixel trail / pixel cursor toggle cycles: gooey trail -> pixel trail -> off
+import { initPixelCursor, type PixelCursorInstance } from './PixelCursor';
+
+type CursorMode = 'gooey' | 'pixel' | 'off';
+const CURSOR_MODES: CursorMode[] = ['gooey', 'pixel', 'off'];
+const CURSOR_LABELS: Record<CursorMode, string> = {
+  gooey: 'gooey',
+  pixel: 'pixel',
+  off: 'off',
+};
+
+const cursorToggle = document.getElementById('pixel-trail-toggle');
+const trailContainer = document.getElementById('pixel-trail-container');
+const pixelCursorContainer = document.getElementById('pixel-cursor-container');
+
+if (cursorToggle) {
+  let modeIndex = 0; // starts on gooey
+  let pixelCursorInstance: PixelCursorInstance | null = null;
+
+  function getCurrentCursorColor(): string {
+    const dark = document.querySelector('[data-header-dark]');
+    if (!dark) return '#000000';
+    const rect = dark.getBoundingClientRect();
+    // if dark section is visible in the upper portion of the viewport
+    return rect.top <= window.innerHeight * 0.5 && rect.bottom > 0
+      ? '#FFEE00'
+      : '#000000';
+  }
+
+  function applyMode(mode: CursorMode) {
+    // trail container
+    if (trailContainer) {
+      trailContainer.style.display = mode === 'gooey' ? '' : 'none';
+    }
+
+    // pixel cursor
+    if (pixelCursorContainer) {
+      if (mode === 'pixel') {
+        pixelCursorContainer.style.display = '';
+        if (!pixelCursorInstance) {
+          pixelCursorInstance = initPixelCursor(pixelCursorContainer, {
+            columns: 100,
+            color: getCurrentCursorColor(),
+            fadeMs: 100,
+          });
+        }
+      } else {
+        pixelCursorContainer.style.display = 'none';
+        if (pixelCursorInstance) {
+          pixelCursorInstance.destroy();
+          pixelCursorInstance = null;
+        }
+      }
+    }
+
+    if (cursorToggle) {
+      cursorToggle.textContent = CURSOR_LABELS[mode];
+      const isActive = mode !== 'off';
+      cursorToggle.classList.toggle('is-active', isActive);
+      cursorToggle.setAttribute('aria-pressed', String(isActive));
+    }
+  }
+
+  // keep pixel cursor color in sync when scrolling through dark/light sections
+  function onScroll() {
+    if (pixelCursorInstance) {
+      pixelCursorInstance.setColor(getCurrentCursorColor());
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // initialise
+  applyMode(CURSOR_MODES[modeIndex]);
+
+  cursorToggle.addEventListener('click', () => {
+    modeIndex = (modeIndex + 1) % CURSOR_MODES.length;
+    applyMode(CURSOR_MODES[modeIndex]);
   });
 }
 

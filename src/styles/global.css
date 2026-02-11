@@ -62,21 +62,27 @@
   position: absolute;
   inset: 0;
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(var(--pixel-cols, 10), 1fr);
+  align-content: center;
   pointer-events: none;
 }
 .join-session-btn__pixel {
-  background: var(--color-primary);
-  transition: background 0.15s ease calc(var(--i) * 8ms);
+  aspect-ratio: 1;
+  background: var(--pixel-color, var(--color-primary));
+  transition: background 0s calc(var(--i) * 18ms);
 }
 .join-session-btn:hover .join-session-btn__pixel {
-  background: #000;
+  background: var(--pixel-color-hover, #000);
 }
 .join-session-btn__label {
   position: relative;
   z-index: 1;
   pointer-events: none;
+  color: var(--label-color, var(--color-bg));
+  transition: color 0.2s ease;
+}
+.join-session-btn:hover .join-session-btn__label {
+  color: var(--label-color-hover, var(--label-color, var(--color-bg)));
 }
 
 /* male hanburger */
@@ -150,9 +156,9 @@ body.menu-open .mobile-menu-btn {
   color: #000;
 }
 
-/* ensure the pixel-trail overlay never blocks interaction */
-#pixel-trail-container,
-#pixel-trail-container * {
+/* ensure the pixel-cursor overlay never blocks interaction */
+#pixel-cursor-container,
+#pixel-cursor-container * {
   pointer-events: none !important;
 }
 
