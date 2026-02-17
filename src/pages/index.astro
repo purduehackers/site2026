@@ -6,6 +6,17 @@ import {
   getHeroDitherSvg,
   getPixelIndices,
 } from '../utils/dither';
+import LogoSoup from '../components/LogoSoup';
+
+const logoUrls = [
+  '/logos/cloudflare.svg',
+  '/logos/kp.svg',
+  '/logos/million.svg',
+  '/logos/neuralink.svg',
+  '/logos/sentry.svg',
+  '/logos/spacex.svg',
+  '/logos/vercel.svg',
+];
 
 const ditherSvg = getHeroDitherSvg();
 const buildPixels = getPixelIndices(50);
@@ -15,6 +26,8 @@ const shouldEnablePixelCursor =
   (typeof window !== 'undefined' &&
     !window.matchMedia('(prefers-reduced-motion: reduce)').matches) ||
   ENABLE_PIXEL_CURSOR;
+  
+  
 ---
 
 <BaseLayout>
@@ -154,7 +167,7 @@ const shouldEnablePixelCursor =
         >
           hack night
         </p>
-        <p class="max-w-[32rem] font-whyte text-l leading-relaxed">
+        <p class="max-w-[32rem] font-polysans text-l leading-relaxed">
           Hack Night happens <span class="highlight"
             >every Friday night at 8pm</span
           >, second floor of <a
@@ -171,7 +184,7 @@ const shouldEnablePixelCursor =
           >. Ends when the last person leaves (often until 6am or later).
         </p>
         <br />
-        <p class="max-w-[36rem] font-whyte text-l leading-relaxed mb-4">
+        <p class="max-w-[36rem] font-polysans text-l leading-relaxed mb-4">
           A typical Hack Night schedule looks something like this:
         </p>
         <table class="font-inconsolata text-xl mx-auto">
@@ -194,7 +207,7 @@ const shouldEnablePixelCursor =
             </tr>
           </tbody>
         </table>
-        <p class="max-w-[32rem] pt-6 font-whyte text-l leading-relaxed">
+        <p class="max-w-[32rem] pt-6 font-polysans text-l leading-relaxed">
           If you go to Purdue - whether you've never written code before or are
           highly technical, whether you're an art major or a CS major - <br />
           <span class="highlight">you're invited.</span>
@@ -218,7 +231,7 @@ const shouldEnablePixelCursor =
         >
           community
         </p>
-        <p class="max-w-[32rem] font-whyte text-l leading-relaxed">
+        <p class="max-w-[32rem] font-polysans text-l leading-relaxed">
           The heart of Purdue Hackers is our <a
           href="https://discord.gg/ncJ3xmhV85"
           target="_blank"
@@ -227,7 +240,7 @@ const shouldEnablePixelCursor =
         > community with 3000+ people. Share what you've made in <span class="highlight font-inconsolata">#ship</span>, chat about rainbows in <span class="highlight font-inconsolata">#lounge</span>, and get technical help in <span class="highlight font-inconsolata">#code</span>. Find people who push you to be your best, and make awesome things together.
         </p>
         <br />
-        <p class="max-w-[32rem] font-whyte text-l leading-relaxed">
+        <p class="max-w-[32rem] font-polysans text-l leading-relaxed">
           We have lots of cool artifacts too, including <a
             href="https://passports.purduehackers.com/"
             target="_blank"
@@ -290,7 +303,7 @@ const shouldEnablePixelCursor =
         >
           the show
         </p>
-        <p class="max-w-[32rem] font-whyte text-l leading-relaxed">
+        <p class="max-w-[32rem] font-polysans text-l leading-relaxed">
           At the end-of-semester, we hold the Show, an exhibit where our
           community comes together to share projects made throughout the
           semester at Hack Night and beyond.
@@ -332,6 +345,17 @@ const shouldEnablePixelCursor =
         aria-hidden="true"
       >
       </div>
+      <!-- <div class="absolute left-0 top-1/2 -translate-y-1/2 z-10 px-8 md:px-12">
+        <p class="text-left text-xl md:text-2xl font-semibold font-inconsolata uppercase tracking-wide text-[var(--color-accent-3)] pb-6">
+          friends of purdue hackers
+        </p>
+        <LogoSoup
+          client:load
+          logos={logoUrls}
+          baseSize={72}
+          className="text-left max-w-xs brightness-0 invert opacity-100 scale-50 md:scale-100"
+        />
+      </div> -->
       <div
         class="relative z-10 flex flex-wrap items-end justify-between gap-8 px-8 py-8 md:px-12 md:py-12 pointer-events-none"
       >
