@@ -4,12 +4,10 @@ import PT from '../components/PT';
 import Glider from '../components/GliderShader.astro';
 import {
   getHeroDitherSvg,
-  getFooterDitherSvg,
   getPixelIndices,
 } from '../utils/dither';
 
 const ditherSvg = getHeroDitherSvg();
-const footerDitherSvg = getFooterDitherSvg();
 const buildPixels = getPixelIndices(50);
 const joinPixels = getPixelIndices(40);
 const ENABLE_PIXEL_CURSOR = true;
@@ -321,12 +319,6 @@ const shouldEnablePixelCursor =
       class="relative min-h-screen w-full bg-cover bg-center bg-no-repeat flex flex-col justify-end"
       style="background-image: url('/pic.png'); image-rendering: pixelated;"
     >
-      <div
-        class="absolute top-0 left-0 right-0 h-[256px] pointer-events-none"
-        style={`background-image: url('${footerDitherSvg}'); background-size: 8px 256px; background-repeat: repeat-x; image-rendering: pixelated; image-rendering: crisp-edges;`}
-        aria-hidden="true"
-      >
-      </div>
       <div class="absolute inset-0 z-[1] w-full h-full" aria-hidden="true">
         <div
           id="pixel-blast-root"
@@ -461,7 +453,7 @@ const shouldEnablePixelCursor =
           variant: 'square',
           pixelSize: 2,
           color: '#000000',
-          patternScale: 2.5,
+          patternScale: 4.5,
           patternDensity: 1.5,
           pixelSizeJitter: 0,
           enableRipples: true,
@@ -474,6 +466,7 @@ const shouldEnablePixelCursor =
           liquidWobbleSpeed: 5,
           speed: 0.5,
           edgeFade: 0,
+          topFade: 0.25,
           transparent: true,
         });
         document.addEventListener('astro:before-swap', cleanup, { once: true });

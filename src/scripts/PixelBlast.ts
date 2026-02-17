@@ -35,6 +35,7 @@ uniform float uRippleSpeed;
 uniform float uRippleThickness;
 uniform float uRippleIntensity;
 uniform float uEdgeFade;
+uniform float uTopFade;
 
 uniform int   uShapeType;
 const int SHAPE_SQUARE   = 0;
@@ -135,6 +136,12 @@ void main(){
 
   float feed = base + (uDensity - 0.5) * 0.3;
 
+  float topBlend = 0.0;
+  if (uTopFade > 0.0) {
+    float topNorm = (uResolution.y - gl_FragCoord.y) / uResolution.y;
+    topBlend = 1.0 - smoothstep(0.0, uTopFade, topNorm);
+  }
+
   float speed     = uRippleSpeed;
   float thickness = uRippleThickness;
   const float dampT     = 1.0;
@@ -151,9 +158,11 @@ void main(){
       float waveR = speed * t;
       float ring  = exp(-pow((r - waveR) / thickness, 2.0));
       float atten = exp(-dampT * t) * exp(-dampR * r);
-      feed = max(feed, ring * atten * uRippleIntensity);
+      feed = max(feed, ring * atten * uRippleIntensity * (1.0 - topBlend));
     }
   }
+
+  feed = max(feed, topBlend);
 
   float bayer = Bayer8(fragCoord / uPixelSize) - 0.5;
   float bw = step(0.5, feed + bayer);
@@ -333,6 +342,7 @@ export interface PixelBlastOptions {
   speed: number;
   transparent: boolean;
   edgeFade: number;
+  topFade: number;
   antialias: boolean;
 }
 
@@ -354,6 +364,7 @@ const DEFAULT_OPTIONS: PixelBlastOptions = {
   speed: 0.5,
   transparent: true,
   edgeFade: 0.25,
+  topFade: 0,
   antialias: true,
 };
 
@@ -398,6 +409,7 @@ export function initPixelBlast(
     uRippleThickness: { value: opts.rippleThickness },
     uRippleIntensity: { value: opts.rippleIntensityScale },
     uEdgeFade: { value: opts.edgeFade },
+    uTopFade: { value: opts.topFade },
   };
 
   const scene = new THREE.Scene();
