@@ -141,11 +141,11 @@ const shouldEnablePixelCursor =
           class="w-8 h-8 mb-6 mx-auto fill-[var(--color-secondary)]"
         />
         <p
-          class="max-w-[36rem] font-inconsolata text-lg uppercase font-semibold leading-relaxed mt-6"
+          class="max-w-[36rem] font-inconsolata text-l md:text-xl uppercase font-semibold leading-relaxed mt-6"
         >
           Making something you're proud of is incredibly rewarding. But it's
           really hard to do alone. Since 2013, Purdue Hackers has been a home to
-          build, ship, and demo creative-technical projects together. Here's how
+          build, ship, and demo creative-technical projects together. <br> <br> Here's how
           we do it:
         </p>
       </div>
@@ -318,32 +318,32 @@ const shouldEnablePixelCursor =
         >
           friends
         </p>
-        <p class="font-inconsolata text-xl font-semibold uppercase">
+        <p class="font-inconsolata text-l md:text-xl font-semibold uppercase">
           <a
             href="https://mitchellh.com/"
             target="_blank"
-            class="font-inconsolata text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300"
+            class="font-inconsolata text-l md:text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300"
             >mitchell hashimoto</a
           >
           *
           <a
             href="https://www.paulgraham.com/"
             target="_blank"
-            class="font-inconsolata text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300"
+            class="font-inconsolata text-l md:text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300"
             >paul graham</a
           > 
           *
           <a
             href="https://x.com/aidenybai"
             target="_blank"
-            class="font-inconsolata text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300"
+            class="font-inconsolata text-l md:text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300"
             >aiden bai</a
           >
           *
           <a
             href="https://x.com/jnnnthnn"
             target="_blank"
-            class="font-inconsolata text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300"
+            class="font-inconsolata text-l md:text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300"
             >jonathan unikowski</a
           >
         </p>
@@ -374,7 +374,7 @@ const shouldEnablePixelCursor =
       >
         <div id="footer-made-with" class="font-inconsolata text-[var(--color-bg)] text-left pointer-events-auto">
           <p class="text-sm font-semibold md:text-base uppercase tracking-wide opacity-90">
-            made with <span id="made-with-rotate">spills</span> <br> <a
+            made with <span id="made-with-rotate" style="display:inline-block;transition:opacity 0.2s ease;">spills</span> <br> <a
             href="https://hcb.hackclub.com/donations/start/purdue-hackers"
             target="_blank"
             class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
@@ -390,7 +390,7 @@ const shouldEnablePixelCursor =
             >
               more from us
             </p>
-            <p class="mt-2 text-lg md:text-xl text-[var(--color-bg)]">
+            <p class="mt-2 text-lg md:text-xl uppercase text-[var(--color-bg)]">
               <a
                 href="https://sig.horse/"
                 target="_blank"
@@ -433,7 +433,7 @@ const shouldEnablePixelCursor =
             >
               find us on
             </p>
-            <p class="mt-2 text-lg md:text-xl text-[var(--color-bg)]">
+            <p class="mt-2 text-lg md:text-xl uppercase text-[var(--color-bg)]">
               <a
                 href="https://discord.gg/purduehackers"
                 target="_blank"
@@ -506,11 +506,19 @@ const shouldEnablePixelCursor =
       let intervalId: ReturnType<typeof setInterval> | null = null;
       const slowMs = 2500;
       const fastMs = 400;
+      const fadeDuration = 200;
+      let fading = false;
       function update() {
         const el = document.getElementById('made-with-rotate');
-        if (!el) return;
-        index = (index + 1) % MADE_WITH_OPTIONS.length;
-        el.textContent = MADE_WITH_OPTIONS[index];
+        if (!el || fading) return;
+        fading = true;
+        el.style.opacity = '0';
+        setTimeout(() => {
+          index = (index + 1) % MADE_WITH_OPTIONS.length;
+          el.textContent = MADE_WITH_OPTIONS[index];
+          el.style.opacity = '1';
+          fading = false;
+        }, fadeDuration);
       }
       function startInterval(ms: number) {
         if (intervalId) clearInterval(intervalId);
