@@ -6,16 +6,16 @@ import {
   getHeroDitherSvg,
   getPixelIndices,
 } from '../utils/dither';
-import LogoSoup from '../components/LogoSoup';
+import LogoGrid from '../components/LogoSoup';
 
 const logoUrls = [
-  '/logos/cloudflare.svg',
-  '/logos/kp.svg',
-  '/logos/million.svg',
-  '/logos/neuralink.svg',
-  '/logos/sentry.svg',
-  '/logos/spacex.svg',
-  '/logos/vercel.svg',
+  '/logos/cloudflare-color.svg',
+  '/logos/kp-color.svg',
+  '/logos/million-color.svg',
+  '/logos/neuralink-color.svg',
+  '/logos/sentry-color.svg',
+  '/logos/spacex-color.svg',
+  '/logos/vercel-color.svg',
 ];
 
 const ditherSvg = getHeroDitherSvg();
@@ -163,7 +163,7 @@ const shouldEnablePixelCursor =
           ></polygon>
         </svg>
         <p
-          class="max-w-[32rem] uppercase font-silkscreen text-4xl md:text-6xl font-semibold leading-relaxed"
+          class="max-w-[32rem] uppercase font-silkscreen text-4xl md:text-6xl font-semibold leading-relaxed pb-6 pt-6"
         >
           hack night
         </p>
@@ -190,20 +190,20 @@ const shouldEnablePixelCursor =
         <table class="font-inconsolata text-xl mx-auto">
           <tbody>
             <tr>
-              <td class="highlight pr-4 py-1 text-right">D~5~5|5 (8:00pm):</td>
-              <td class="py-1 uppercase">Hacking begins</td>
+              <td class="highlight pr-4 py-1 text-right">D~5~5|5 (8 pm):</td>
+              <td class="py-1 uppercase text-left">Hacking begins</td>
             </tr>
             <tr>
-              <td class="highlight pr-4 py-1 text-right">E~0~0|0 (9:00pm):</td>
-              <td class="py-1 uppercase">Session 1</td>
+              <td class="highlight pr-4 py-1 text-right">E~0~0|0 (9 pm):</td>
+              <td class="py-1 uppercase text-left">Session 1</td>
             </tr>
             <tr>
-              <td class="highlight pr-4 py-1 text-right">E~A~A|A (10:00pm):</td>
-              <td class="py-1 uppercase">Session 2</td>
+              <td class="highlight pr-4 py-1 text-right">E~A~A|A (10 pm):</td>
+              <td class="py-1 uppercase text-left">Session 2</td>
             </tr>
             <tr>
-              <td class="highlight pr-4 py-1 text-right">0~0~0 (12:00am):</td>
-              <td class="py-1 uppercase">Checkpoints</td>
+              <td class="highlight pr-4 py-1 text-right">0~0~0 (12 am):</td>
+              <td class="py-1 uppercase text-left">Checkpoints</td>
             </tr>
           </tbody>
         </table>
@@ -227,7 +227,7 @@ const shouldEnablePixelCursor =
         <polygon points="3 17 4 17 4 18 3 18 3 20 1 20 1 17 2 17 2 16 3 16 3 17"/><polygon points="4 5 3 5 3 3 4 3 4 2 6 2 6 3 7 3 7 5 6 5 6 6 4 6 4 5"/><polygon points="23 17 23 20 21 20 21 18 20 18 20 17 21 17 21 16 22 16 22 17 23 17"/><polygon points="20 16 19 16 19 20 18 20 18 21 17 21 17 20 16 20 16 17 17 17 17 14 18 14 18 12 17 12 17 13 16 13 16 14 8 14 8 13 7 13 7 12 6 12 6 14 7 14 7 17 8 17 8 20 7 20 7 21 6 21 6 20 5 20 5 16 4 16 4 15 3 15 3 14 2 14 2 11 3 11 3 8 4 8 4 7 6 7 6 8 7 8 7 10 8 10 8 11 9 11 9 7 15 7 15 11 16 11 16 10 17 10 17 8 18 8 18 7 20 7 20 8 21 8 21 11 22 11 22 14 21 14 21 15 20 15 20 16"/><polygon points="18 5 17 5 17 3 18 3 18 2 20 2 20 3 21 3 21 5 20 5 20 6 18 6 18 5"/>
         </svg>
         <p
-          class="max-w-[32rem] uppercase font-silkscreen text-4xl md:text-6xl font-semibold leading-relaxed"
+          class="max-w-[32rem] uppercase font-silkscreen text-4xl md:text-6xl font-semibold leading-relaxed pb-6 pt-6"
         >
           community
         </p>
@@ -259,27 +259,6 @@ const shouldEnablePixelCursor =
             >Shelter</a
           >.
         </p>
-        <!-- <a
-          href="https://discord.gg/purduehackers"
-          target="_blank"
-          class="join-session-btn"
-          style="--pixel-cols: 10; --pixel-color: var(--color-primary); --pixel-color-hover: var(--color-secondary); --label-color: white;"
-        >
-          <span class="join-session-btn__pixels" aria-hidden="true">
-            {
-              joinPixels.map((delayIndex) => (
-                <span
-                  class="join-session-btn__pixel"
-                  style={`--i: ${delayIndex}`}
-                />
-              ))
-            }
-          </span>
-          <span
-            class="join-session-btn__label pointer-events-none font-semibold"
-            >join us</span
-          >
-        </a> -->
       </div>
 
       <!-- 4 -->
@@ -299,7 +278,7 @@ const shouldEnablePixelCursor =
           ></polygon>
         </svg>
         <p
-          class="max-w-[32rem] uppercase font-silkscreen text-4xl md:text-6xl font-semibold leading-relaxed"
+          class="max-w-[32rem] uppercase font-silkscreen text-4xl md:text-6xl font-semibold leading-relaxed pb-6 pt-6"
         >
           the show
         </p>
@@ -326,6 +305,51 @@ const shouldEnablePixelCursor =
           >BURST ✷: Fall 2024 Show</a
         >
       </div>
+      <div class="mb-72 relative w-full max-w-2xl">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          class="w-8 h-8 mx-auto text-[var(--color-secondary)]"
+          fill="currentColor"
+        >
+        <polygon points="23 6 23 11 22 11 22 12 21 12 21 13 20 13 20 14 19 14 19 15 18 15 18 16 17 16 17 17 16 17 16 18 15 18 15 19 14 19 14 20 13 20 13 21 11 21 11 20 10 20 10 19 9 19 9 18 8 18 8 17 7 17 7 16 6 16 6 15 5 15 5 14 4 14 4 13 3 13 3 12 2 12 2 11 1 11 1 6 2 6 2 5 3 5 3 4 4 4 4 3 10 3 10 4 11 4 11 5 13 5 13 4 14 4 14 3 20 3 20 4 21 4 21 5 22 5 22 6 23 6"/></svg>
+        <p
+          class="max-w-[32rem] uppercase mx-auto text-center font-silkscreen text-4xl md:text-6xl font-semibold leading-relaxed pb-6 pt-6"
+        >
+          friends
+        </p>
+        <p class="font-inconsolata text-xl font-semibold uppercase">
+          <a
+            href="https://mitchellh.com/"
+            target="_blank"
+            class="font-inconsolata text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300"
+            >mitchell hashimoto</a
+          >
+          *
+          <a
+            href="https://www.paulgraham.com/"
+            target="_blank"
+            class="font-inconsolata text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300"
+            >paul graham</a
+          > 
+          *
+          <a
+            href="https://x.com/aidenybai"
+            target="_blank"
+            class="font-inconsolata text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300"
+            >aiden bai</a
+          >
+          *
+          <a
+            href="https://x.com/jnnnthnn"
+            target="_blank"
+            class="font-inconsolata text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300"
+            >jonathan unikowski</a
+          >
+        </p>
+        <br>
+        <LogoGrid logos={logoUrls} showGrid={false} />
+      </div>
     </section>
 
     <section
@@ -345,23 +369,12 @@ const shouldEnablePixelCursor =
         aria-hidden="true"
       >
       </div>
-      <!-- <div class="absolute left-0 top-1/2 -translate-y-1/2 z-10 px-8 md:px-12">
-        <p class="text-left text-xl md:text-2xl font-semibold font-inconsolata uppercase tracking-wide text-[var(--color-accent-3)] pb-6">
-          friends of purdue hackers
-        </p>
-        <LogoSoup
-          client:load
-          logos={logoUrls}
-          baseSize={72}
-          className="text-left max-w-xs brightness-0 invert opacity-100 scale-50 md:scale-100"
-        />
-      </div> -->
       <div
         class="relative z-10 flex flex-col-reverse md:flex-row flex-wrap items-start md:items-end justify-between gap-8 px-8 py-8 md:px-12 md:py-12 pointer-events-none"
       >
-        <div class="font-inconsolata text-[var(--color-bg)] text-left">
+        <div id="footer-made-with" class="font-inconsolata text-[var(--color-bg)] text-left pointer-events-auto">
           <p class="text-sm font-semibold md:text-base uppercase tracking-wide opacity-90">
-            made with spills & powered by vercel <br> <a
+            made with <span id="made-with-rotate">spills</span> <br> <a
             href="https://hcb.hackclub.com/donations/start/purdue-hackers"
             target="_blank"
             class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
@@ -470,6 +483,43 @@ const shouldEnablePixelCursor =
   </main>
   <script>
     import { initPixelBlast } from '../scripts/PixelBlast';
+    const MADE_WITH_OPTIONS = [
+      'astro',
+      'bees',
+      'spills',
+      'bursts',
+      'the abyss...',
+      'friendship and love',
+      'the power of awestruck',
+      'horse feed electrolytes',
+      'vercel',
+      'eggz',
+      'kiwis',
+      'one william dollars',
+      'acrylic from canal plastics',
+    ];
+    function initMadeWith() {
+      const span = document.getElementById('made-with-rotate');
+      const container = document.getElementById('footer-made-with');
+      if (!span || !container) return;
+      let index = 2; // start at "spills"
+      let intervalId: ReturnType<typeof setInterval> | null = null;
+      const slowMs = 2500;
+      const fastMs = 400;
+      function update() {
+        const el = document.getElementById('made-with-rotate');
+        if (!el) return;
+        index = (index + 1) % MADE_WITH_OPTIONS.length;
+        el.textContent = MADE_WITH_OPTIONS[index];
+      }
+      function startInterval(ms: number) {
+        if (intervalId) clearInterval(intervalId);
+        intervalId = setInterval(update, ms);
+      }
+      startInterval(slowMs);
+      container.addEventListener('mouseenter', () => startInterval(fastMs));
+      container.addEventListener('mouseleave', () => startInterval(slowMs));
+    }
     function init() {
       const root = document.getElementById('pixel-blast-root');
       if (root) {
@@ -495,6 +545,7 @@ const shouldEnablePixelCursor =
         });
         document.addEventListener('astro:before-swap', cleanup, { once: true });
       }
+      initMadeWith();
     }
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);

@@ -166,3 +166,15 @@ body.menu-open .mobile-menu-btn {
 .image-rendering-pixelated {
   image-rendering: pixelated;
 }
+
+/* logo grid */
+.logo-grid-line {
+  outline: 1px solid white;
+}
+.logo-grid-img {
+  filter: brightness(0) invert(1);
+  transition: filter 0.2s ease;
+}
+.logo-grid-cell:hover .logo-grid-img {
+  filter: none;
+}
