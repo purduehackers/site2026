@@ -20,6 +20,7 @@ const logoUrls = [
 
 const ditherSvg = getHeroDitherSvg();
 const buildPixels = getPixelIndices(50);
+const backPixels = getPixelIndices(40);
 const joinPixels = getPixelIndices(40);
 const ENABLE_PIXEL_CURSOR = true;
 const shouldEnablePixelCursor =
@@ -240,7 +241,7 @@ const shouldEnablePixelCursor =
         > community with 3000+ people. Share what you've made in <span class="highlight font-inconsolata">#ship</span>, chat about rainbows in <span class="highlight font-inconsolata">#lounge</span>, and get technical help in <span class="highlight font-inconsolata">#code</span>. Find people who push you to be your best, and make awesome things together.
         </p>
         <br />
-        <p class="max-w-[32rem] font-polysans text-l leading-relaxed">
+        <p class="max-w-[32rem] font-polysans text-l leading-relaxed pb-6">
           We have lots of cool artifacts too, including <a
             href="https://passports.purduehackers.com/"
             target="_blank"
@@ -259,6 +260,27 @@ const shouldEnablePixelCursor =
             >Shelter</a
           >.
         </p>
+        <!-- <a
+          href="https://hcb.hackclub.com/donations/start/purdue-hackers"
+          target="_blank"
+          class="join-session-btn"
+          style="background: var(--color-bg); --pixel-cols: 6; --pixel-color: var(--color-bg); --pixel-color-hover: var(--color-secondary); --label-color: black;"
+        >
+          <span class="join-session-btn__pixels" aria-hidden="true">
+            {
+              joinPixels.map((delayIndex) => (
+                <span
+                  class="join-session-btn__pixel"
+                  style={`--i: ${delayIndex}`}
+                />
+              ))
+            }
+          </span>
+          <span
+            class="join-session-btn__label pointer-events-none"
+            >join us</span
+          >
+        </a> -->
       </div>
 
       <!-- 4 -->
@@ -349,6 +371,30 @@ const shouldEnablePixelCursor =
         </p>
         <br>
         <LogoGrid logos={logoUrls} showGrid={false} />
+        <p class="max-w-[32rem] font-polysans text-l mx-auto text-center leading-relaxed pt-6 pb-6">
+          Want to help us keep making? 
+        </p>
+        <a
+          href="https://hcb.hackclub.com/donations/start/purdue-hackers"
+          target="_blank"
+          class="join-session-btn"
+          style="background: var(--color-bg); --pixel-cols: 6; --pixel-color: var(--color-bg); --pixel-color-hover: var(--color-secondary); --label-color: black;"
+        >
+          <span class="join-session-btn__pixels" aria-hidden="true">
+            {
+              backPixels.map((delayIndex) => (
+                <span
+                  class="join-session-btn__pixel"
+                  style={`--i: ${delayIndex}`}
+                />
+              ))
+            }
+          </span>
+          <span
+            class="join-session-btn__label pointer-events-none"
+            >back us</span
+          >
+        </a>
       </div>
     </section>
 
@@ -374,7 +420,7 @@ const shouldEnablePixelCursor =
       >
         <div id="footer-made-with" class="font-inconsolata text-[var(--color-bg)] text-left pointer-events-auto">
           <p class="text-sm font-semibold md:text-base uppercase tracking-wide opacity-90">
-            made with <span id="made-with-rotate" style="display:inline-block;transition:opacity 0.2s ease;">spills</span> <br> <a
+            made with <span id="made-with-rotate" style="display:inline-block;transition:opacity 0.3s ease;">spills</span> <br> <a
             href="https://hcb.hackclub.com/donations/start/purdue-hackers"
             target="_blank"
             class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
@@ -505,7 +551,7 @@ const shouldEnablePixelCursor =
       let index = 2; // start at "spills"
       let intervalId: ReturnType<typeof setInterval> | null = null;
       const slowMs = 2500;
-      const fastMs = 400;
+      const fastMs = 500;
       const fadeDuration = 200;
       let fading = false;
       function update() {
