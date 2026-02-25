@@ -70,10 +70,18 @@
 .join-session-btn__pixel {
   aspect-ratio: 1;
   background: var(--pixel-color, var(--color-primary));
-  transition: background 0s calc(var(--i) * 18ms);
+  position: relative;
 }
-.join-session-btn:hover .join-session-btn__pixel {
+.join-session-btn__pixel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
   background: var(--pixel-color-hover, #000);
+  opacity: 0;
+  transition: opacity 0s calc(var(--i) * 18ms);
+}
+.join-session-btn:hover .join-session-btn__pixel::after {
+  opacity: 1;
 }
 .join-session-btn__label {
   position: relative;
