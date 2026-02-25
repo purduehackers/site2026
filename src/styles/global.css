@@ -186,3 +186,30 @@ body.menu-open .mobile-menu-btn {
 .logo-grid-cell:hover .logo-grid-img {
   filter: none;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-link {
+    transition: none;
+  }
+  .join-session-btn__pixel::after {
+    transition: none;
+  }
+  .join-session-btn__label {
+    transition: none;
+  }
+  .mobile-menu-btn__line {
+    transition: none;
+  }
+  .mobile-menu {
+    transition: none;
+  }
+  .mobile-menu__link {
+    transition: none;
+  }
+  .pixel-trail-toggle {
+    transition: none;
+  }
+  .logo-grid-img {
+    transition: none;
+  }
+}
