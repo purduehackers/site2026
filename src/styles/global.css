@@ -22,10 +22,6 @@
   html {
     overscroll-behavior: none;
   }
-  /* fallback smooth scroll when Lenis hasn’t loaded yet */
-  html:not(.lenis) {
-    scroll-behavior: smooth;
-  }
   body {
     background-color: var(--color-bg);
     @apply text-black font-sans antialiased;
@@ -189,8 +185,8 @@ body.menu-open .mobile-menu-btn {
 
 @media (min-aspect-ratio: 2/3) and (max-aspect-ratio: 4/3) {
   .glider {
-    top: 5% !important;
-    left: 50% !important;
+    top: 0% !important;
+    left: 70% !important;
     right: auto !important;
     transform: translateX(-50%) !important;
   }

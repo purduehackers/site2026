@@ -128,35 +128,3 @@ if (cursorToggle) {
     applyMode(CURSOR_MODES[modeIndex]);
   });
 }
-
-let lastHackNightScroll = 0;
-function scrollToHackNight() {
-  const el = document.getElementById('hack-night');
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    lastHackNightScroll = Date.now();
-  }
-}
-
-document.addEventListener(
-  'click',
-  (e: MouseEvent) => {
-    if (!(e.target as HTMLElement | null)?.closest?.('a[href="#hack-night"]'))
-      return;
-    e.preventDefault();
-    if (Date.now() - lastHackNightScroll < 500) return; // avoid double scroll on mobile
-    scrollToHackNight();
-  },
-  true
-);
-
-document.addEventListener(
-  'touchend',
-  (e: TouchEvent) => {
-    if (!(e.target as HTMLElement | null)?.closest?.('a[href="#hack-night"]'))
-      return;
-    e.preventDefault();
-    scrollToHackNight();
-  },
-  { passive: false }
-);
