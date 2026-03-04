@@ -34,6 +34,20 @@ export default defineConfig({
       },
       {
         provider: fontProviders.local(),
+        name: 'PixelHackers',
+        cssVariable: '--font-pixel-hackers',
+        options: {
+          variants: [
+            {
+              weight: 400,
+              style: 'normal',
+              src: ['./src/assets/fonts/PixelHackers.woff2'],
+            },
+          ],
+        },
+      },
+      {
+        provider: fontProviders.local(),
         name: 'PolySans',
         cssVariable: '--font-polysans',
         options: {

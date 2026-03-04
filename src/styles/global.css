@@ -187,6 +187,15 @@ body.menu-open .mobile-menu-btn {
   filter: none;
 }
 
+@media (min-aspect-ratio: 2/3) and (max-aspect-ratio: 4/3) {
+  .glider {
+    top: 5% !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nav-link {
     transition: none;

@@ -14,6 +14,7 @@ export default {
         inconsolata: ['var(--font-inconsolata)', 'monospace'],
         silkscreen: ['var(--font-silkscreen)', 'sans-serif'],
         polysans: ['var(--font-polysans)', 'sans-serif'],
+        'pixel-hackers': ['var(--font-pixel-hackers)', 'fantasy'],
       },
     },
   },
