@@ -4,7 +4,11 @@ interface LogoGridProps {
   className?: string;
 }
 
-export default function LogoGrid({ logos, showGrid = true, className = '' }: LogoGridProps) {
+export default function LogoGrid({
+  logos,
+  showGrid = true,
+  className = '',
+}: LogoGridProps) {
   const gridLine = showGrid ? 'logo-grid-line' : '';
 
   return (
