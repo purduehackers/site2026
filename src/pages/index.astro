@@ -9,9 +9,6 @@ import {
 import LogoGrid from '../components/LogoSoup';
 import Sprite from '../components/Sprite.astro';
 
-import angryDudeSpriteSheet from "/sprites/angry_dude_sprite_yellow.png";
-import fishSpriteSheet from "/sprites/fish_with_legs_sprite_purple.png";
-
 const logoUrls = [
   '/logos/cloudflare-color.svg',
   '/logos/kp-color.svg',
@@ -119,18 +116,12 @@ const shouldEnablePixelCursor =
       class="relative min-h-screen flex flex-col items-center pt-72 px-8 py-16 bg-black text-[var(--color-bg)] text-center overflow-hidden"
     >
       <!-- creatura! -->
-      <img
-        src="/angry_man-clear.png"
-        alt=""
-        class="absolute image-rendering-pixelated top-12 -right-8 md:right-8 lg:right-12 w-40 h-auto md:w-56 lg:w-72 object-contain pointer-events-none"
-        aria-hidden="true"
-      />
-      <div class="hidden absolute top-12 -right-8 md:right-8 lg:right-12 scale-90 sm:scale-120 md:scale-140 lg:scale-200 2xl:scale-240">
+      <div class="absolute top-8 md:top-12 lg:top-20 -right-16 md:right-8 lg:right-24 scale-90 sm:scale-[1] md:scale-[1.35] lg:scale-[1.65]">
         <Sprite
           id="angry-guy-sprite"
           className=""
-          backgroundImage="/sprites/angry_dude_sprite_yellow.png"
-          spriteSize={224 * 2}
+          backgroundImage="/sprites/angry_dude_sprite_pink.png"
+          spriteSize={224}
           numRows={1}
           numCols={2}
           numFrames={2}
@@ -141,7 +132,7 @@ const shouldEnablePixelCursor =
         <Sprite
           id="fish-with-legs-sprite"
           className=""
-          backgroundImage="/sprites/fish_with_legs_sprite_purple.png"
+          backgroundImage="/sprites/fish_with_legs_sprite_indigo.png"
           spriteSize={124}
           numRows={1}
           numCols={2}
