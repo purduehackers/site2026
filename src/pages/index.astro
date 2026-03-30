@@ -2,10 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PT from '../components/PT';
 import Glider from '../components/GliderShader.astro';
-import {
-  getHeroDitherSvg,
-  getPixelIndices,
-} from '../utils/dither';
+import { getHeroDitherSvg, getPixelIndices } from '../utils/dither';
 import LogoGrid from '../components/LogoSoup';
 import Sprite from '../components/Sprite.astro';
 
@@ -28,8 +25,6 @@ const shouldEnablePixelCursor =
   (typeof window !== 'undefined' &&
     !window.matchMedia('(prefers-reduced-motion: reduce)').matches) ||
   ENABLE_PIXEL_CURSOR;
-  
-  
 ---
 
 <BaseLayout>
@@ -53,7 +48,8 @@ const shouldEnablePixelCursor =
   <div
     id="pixel-cursor-container"
     style="position: fixed; inset: 0; z-index: 10; pointer-events: none; display: none;"
-  ></div>
+  >
+  </div>
   <main>
     <section
       class="relative min-h-[90vh] flex items-center md:items-center gap-16 px-4 pt-40 sm:px-10 md:px-40 md:pt-20 overflow-hidden"
@@ -159,8 +155,8 @@ const shouldEnablePixelCursor =
         >
           Making something you're proud of is incredibly rewarding. But it's
           really hard to do alone. Since 2013, Purdue Hackers has been a home to
-          build, ship, and demo creative-technical projects together. <br> <br> Here's how
-          we do it:
+          build, ship, and demo creative-technical projects together. <br />
+          <br /> Here's how we do it:
         </p>
       </div>
 
@@ -222,8 +218,9 @@ const shouldEnablePixelCursor =
           </tbody>
         </table>
         <p class="max-w-[32rem] pt-6 font-polysans text-l leading-relaxed">
-          If you go to Purdue &mdash; whether you've never written code before or are
-          highly technical, whether you're an art major or a CS major &mdash; <br />
+          If you go to Purdue &mdash; whether you've never written code before
+          or are highly technical, whether you're an art major or a CS major
+          &mdash; <br />
           <span class="highlight">you're invited.</span>
         </p>
       </div>
@@ -238,7 +235,17 @@ const shouldEnablePixelCursor =
           fill="currentColor"
           xmlns="http://www.w3.org/2000/svg"
         >
-        <polygon points="3 17 4 17 4 18 3 18 3 20 1 20 1 17 2 17 2 16 3 16 3 17"/><polygon points="4 5 3 5 3 3 4 3 4 2 6 2 6 3 7 3 7 5 6 5 6 6 4 6 4 5"/><polygon points="23 17 23 20 21 20 21 18 20 18 20 17 21 17 21 16 22 16 22 17 23 17"/><polygon points="20 16 19 16 19 20 18 20 18 21 17 21 17 20 16 20 16 17 17 17 17 14 18 14 18 12 17 12 17 13 16 13 16 14 8 14 8 13 7 13 7 12 6 12 6 14 7 14 7 17 8 17 8 20 7 20 7 21 6 21 6 20 5 20 5 16 4 16 4 15 3 15 3 14 2 14 2 11 3 11 3 8 4 8 4 7 6 7 6 8 7 8 7 10 8 10 8 11 9 11 9 7 15 7 15 11 16 11 16 10 17 10 17 8 18 8 18 7 20 7 20 8 21 8 21 11 22 11 22 14 21 14 21 15 20 15 20 16"/><polygon points="18 5 17 5 17 3 18 3 18 2 20 2 20 3 21 3 21 5 20 5 20 6 18 6 18 5"/>
+          <polygon
+            points="3 17 4 17 4 18 3 18 3 20 1 20 1 17 2 17 2 16 3 16 3 17"
+          ></polygon><polygon
+            points="4 5 3 5 3 3 4 3 4 2 6 2 6 3 7 3 7 5 6 5 6 6 4 6 4 5"
+          ></polygon><polygon
+            points="23 17 23 20 21 20 21 18 20 18 20 17 21 17 21 16 22 16 22 17 23 17"
+          ></polygon><polygon
+            points="20 16 19 16 19 20 18 20 18 21 17 21 17 20 16 20 16 17 17 17 17 14 18 14 18 12 17 12 17 13 16 13 16 14 8 14 8 13 7 13 7 12 6 12 6 14 7 14 7 17 8 17 8 20 7 20 7 21 6 21 6 20 5 20 5 16 4 16 4 15 3 15 3 14 2 14 2 11 3 11 3 8 4 8 4 7 6 7 6 8 7 8 7 10 8 10 8 11 9 11 9 7 15 7 15 11 16 11 16 10 17 10 17 8 18 8 18 7 20 7 20 8 21 8 21 11 22 11 22 14 21 14 21 15 20 15 20 16"
+          ></polygon><polygon
+            points="18 5 17 5 17 3 18 3 18 2 20 2 20 3 21 3 21 5 20 5 20 6 18 6 18 5"
+          ></polygon>
         </svg>
         <p
           class="max-w-[32rem] font-pixel-hackers text-4xl md:text-6xl leading-relaxed pb-6 pt-6"
@@ -247,11 +254,18 @@ const shouldEnablePixelCursor =
         </p>
         <p class="max-w-[32rem] font-polysans text-l leading-relaxed">
           The heart of Purdue Hackers is our <a
-          href="https://discord.gg/ncJ3xmhV85"
-          target="_blank"
-          class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 motion-reduce:transition-none"
-          >Discord</a
-        > community with 3000+ people. Share what you've made in <span class="highlight font-inconsolata">#ship</span>, chat about rainbows in <span class="highlight font-inconsolata">#lounge</span>, and get technical help in <span class="highlight font-inconsolata">#code</span>. Find people who push you to be your best, and make awesome things together.
+            href="https://discord.gg/ncJ3xmhV85"
+            target="_blank"
+            class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 motion-reduce:transition-none"
+            >Discord</a
+          > community with 3000+ people. Share what you've made in <span
+            class="highlight font-inconsolata">#ship</span
+          >, chat about rainbows in <span class="highlight font-inconsolata"
+            >#lounge</span
+          >, and get technical help in <span class="highlight font-inconsolata"
+            >#code</span
+          >. Find people who push you to be your best, and make awesome things
+          together.
         </p>
         <br />
         <p class="max-w-[32rem] font-polysans text-l leading-relaxed pb-6">
@@ -265,8 +279,8 @@ const shouldEnablePixelCursor =
             target="_blank"
             class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 motion-reduce:transition-none md:whitespace-nowrap"
             >a journal of projects done over summer</a
-          >, and more.
-          Interested in what community projects need taking up on? Come check out our <a
+          >, and more. Interested in what community projects need taking up on?
+          Come check out our <a
             href="https://shelter.purduehackers.com/"
             target="_blank"
             class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 motion-reduce:transition-none md:whitespace-nowrap"
@@ -289,8 +303,7 @@ const shouldEnablePixelCursor =
               ))
             }
           </span>
-          <span
-            class="join-session-btn__label pointer-events-none"
+          <span class="join-session-btn__label pointer-events-none"
             >join us</span
           >
         </a>
@@ -347,7 +360,10 @@ const shouldEnablePixelCursor =
           class="w-8 h-8 mx-auto text-[var(--color-secondary)]"
           fill="currentColor"
         >
-        <polygon points="23 6 23 11 22 11 22 12 21 12 21 13 20 13 20 14 19 14 19 15 18 15 18 16 17 16 17 17 16 17 16 18 15 18 15 19 14 19 14 20 13 20 13 21 11 21 11 20 10 20 10 19 9 19 9 18 8 18 8 17 7 17 7 16 6 16 6 15 5 15 5 14 4 14 4 13 3 13 3 12 2 12 2 11 1 11 1 6 2 6 2 5 3 5 3 4 4 4 4 3 10 3 10 4 11 4 11 5 13 5 13 4 14 4 14 3 20 3 20 4 21 4 21 5 22 5 22 6 23 6"/></svg>
+          <polygon
+            points="23 6 23 11 22 11 22 12 21 12 21 13 20 13 20 14 19 14 19 15 18 15 18 16 17 16 17 17 16 17 16 18 15 18 15 19 14 19 14 20 13 20 13 21 11 21 11 20 10 20 10 19 9 19 9 18 8 18 8 17 7 17 7 16 6 16 6 15 5 15 5 14 4 14 4 13 3 13 3 12 2 12 2 11 1 11 1 6 2 6 2 5 3 5 3 4 4 4 4 3 10 3 10 4 11 4 11 5 13 5 13 4 14 4 14 3 20 3 20 4 21 4 21 5 22 5 22 6 23 6"
+          ></polygon></svg
+        >
         <p
           class="max-w-[32rem] mx-auto text-center font-pixel-hackers text-4xl md:text-6xl leading-relaxed pb-6 pt-6"
         >
@@ -366,7 +382,7 @@ const shouldEnablePixelCursor =
             target="_blank"
             class="font-inconsolata text-l md:text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300 motion-reduce:transition-none"
             >paul graham</a
-          > 
+          >
           *
           <a
             href="https://x.com/aidenybai"
@@ -382,10 +398,12 @@ const shouldEnablePixelCursor =
             >jonathan unikowski</a
           >
         </p>
-        <br>
+        <br />
         <LogoGrid logos={logoUrls} showGrid={false} />
-        <p class="max-w-[32rem] font-polysans text-l mx-auto text-center leading-relaxed pt-6 pb-6">
-          Want to help us keep making? 
+        <p
+          class="max-w-[32rem] font-polysans text-l mx-auto text-center leading-relaxed pt-6 pb-6"
+        >
+          Want to help us keep making?
         </p>
         <a
           href="https://hcb.hackclub.com/donations/start/purdue-hackers"
@@ -403,8 +421,7 @@ const shouldEnablePixelCursor =
               ))
             }
           </span>
-          <span
-            class="join-session-btn__label pointer-events-none"
+          <span class="join-session-btn__label pointer-events-none"
             >back us</span
           >
         </a>
@@ -431,13 +448,25 @@ const shouldEnablePixelCursor =
       <div
         class="relative z-10 flex flex-col-reverse md:flex-row flex-wrap items-start md:items-end justify-between gap-8 px-8 py-8 md:px-12 md:py-12 pointer-events-none"
       >
-        <div id="footer-made-with" class="font-inconsolata text-[var(--color-bg)] text-left pointer-events-auto">
-          <p class="text-sm font-semibold md:text-base uppercase tracking-wide opacity-90">
-            made with <span id="made-with-rotate" style="display:inline-block;transition:opacity 0.3s ease;">spills</span> <br> <a
-            href="https://hcb.hackclub.com/donations/start/purdue-hackers"
-            target="_blank"
-            class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-            >Donate [501(c)(3) nonprofit]</a>
+        <div
+          id="footer-made-with"
+          class="font-inconsolata text-[var(--color-bg)] text-left pointer-events-auto"
+        >
+          <p
+            class="text-sm font-semibold md:text-base uppercase tracking-wide opacity-90"
+          >
+            made with <span
+              id="made-with-rotate"
+              style="display:inline-block;transition:opacity 0.3s ease;"
+              >spills</span
+            >
+            <br />
+            <a
+              href="https://hcb.hackclub.com/donations/start/purdue-hackers"
+              target="_blank"
+              class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+              >Donate [501(c)(3) nonprofit]</a
+            >
           </p>
         </div>
         <div
@@ -557,7 +586,7 @@ const shouldEnablePixelCursor =
       'one william dollars',
       'acrylic from canal plastics',
       'blackberry jam',
-      'pear and prosciutto croissants'
+      'pear and prosciutto croissants',
     ];
     function initMadeWith() {
       const span = document.getElementById('made-with-rotate');
