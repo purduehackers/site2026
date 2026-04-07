@@ -1,4 +1,4 @@
-import { turso } from "./turso";
+import { getTurso } from "./turso";
 
 export interface LatestShip {
   username: string;
@@ -22,7 +22,7 @@ function relativeTime(iso: string): string {
 
 export async function getLatestShip(): Promise<LatestShip | null> {
   try {
-    const result = await turso.execute(
+    const result = await getTurso().execute(
       "SELECT username, content, shipped_at FROM ship ORDER BY shipped_at DESC LIMIT 1"
     );
 

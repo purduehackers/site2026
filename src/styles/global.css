@@ -1,6 +1,12 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme inline {
+  --font-whyte: var(--font-whyte), system-ui, -apple-system, sans-serif;
+  --font-inconsolata: var(--font-inconsolata), monospace;
+  --font-silkscreen: var(--font-silkscreen), sans-serif;
+  --font-polysans: var(--font-polysans), sans-serif;
+  --font-pixel-hackers: var(--font-pixel-hackers), fantasy;
+}
 
 :root {
   --color-primary: #7d3bff;
@@ -286,11 +292,21 @@ body.menu-open .mobile-menu-btn {
   max-height: none;
   transform: none;
 }
-.photo-collage--mobile .photo-collage__piece--1 { z-index: 1; }
-.photo-collage--mobile .photo-collage__piece--2 { z-index: 2; }
-.photo-collage--mobile .photo-collage__piece--5 { z-index: 3; }
-.photo-collage--mobile .photo-collage__piece--6 { z-index: 4; }
-.photo-collage--mobile .photo-collage__piece--7 { z-index: 5; }
+.photo-collage--mobile .photo-collage__piece--1 {
+  z-index: 1;
+}
+.photo-collage--mobile .photo-collage__piece--2 {
+  z-index: 2;
+}
+.photo-collage--mobile .photo-collage__piece--5 {
+  z-index: 3;
+}
+.photo-collage--mobile .photo-collage__piece--6 {
+  z-index: 4;
+}
+.photo-collage--mobile .photo-collage__piece--7 {
+  z-index: 5;
+}
 .photo-collage__card {
   padding: 10px 12px;
   text-align: left;
@@ -439,7 +455,9 @@ body.menu-open .mobile-menu-btn {
   max-width: 240px;
   opacity: 0;
   transform: translateY(4px);
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
 }
 .photo-caption.is-visible {
   opacity: 1;

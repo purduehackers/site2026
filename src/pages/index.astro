@@ -29,11 +29,7 @@ const ditherSvg = getHeroDitherSvg(4, 64);
 const buildPixels = getPixelIndices(50);
 const backPixels = getPixelIndices(40);
 const joinPixels = getPixelIndices(40);
-const ENABLE_PIXEL_CURSOR = true;
-const shouldEnablePixelCursor =
-  (typeof window !== 'undefined' &&
-    !window.matchMedia('(prefers-reduced-motion: reduce)').matches) ||
-  ENABLE_PIXEL_CURSOR;
+const shouldEnablePixelCursor = true;
 ---
 
 <BaseLayout>
