@@ -1,14 +1,26 @@
 // @ts-check
 import { defineConfig, fontProviders } from 'astro/config';
+import { fileURLToPath } from 'node:url';
 import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
 import vercel from '@astrojs/vercel';
+
+const analyticsAstro = fileURLToPath(
+  new URL('./node_modules/@vercel/analytics/dist/astro/index.astro', import.meta.url),
+);
 
 // https://astro.build/config
 export default defineConfig({
   output: 'server',
   adapter: vercel(),
   integrations: [tailwind(), react()],
+  vite: {
+    resolve: {
+      alias: {
+        '@vercel/analytics/astro': analyticsAstro,
+      },
+    },
+  },
   experimental: {
     fonts: [
       {
