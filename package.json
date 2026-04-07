@@ -32,5 +32,8 @@
     "@types/three": "^0.183.1",
     "prettier": "^3.8.1",
     "prettier-plugin-astro": "^0.14.1"
+  },
+  "overrides": {
+    "vite": "^7.3.2"
   }
 }
