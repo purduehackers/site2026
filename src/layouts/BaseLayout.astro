@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { Font } from 'astro:assets';
+import Analytics from '@vercel/analytics/astro';
 
 interface Props {
   title?: string;
@@ -14,8 +15,7 @@ const { title = 'Purdue Hackers' } = Astro.props;
     <script
       defer
       src="https://umami.purduehackers.com/script.js"
-      data-website-id="6b1a85c2-a54b-44ef-82c5-3c8ae34d8ec5">
-    </script>
+      data-website-id="6b1a85c2-a54b-44ef-82c5-3c8ae34d8ec5"></script>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/glider.svg" />
     <meta name="viewport" content="width=device-width" />
@@ -26,6 +26,8 @@ const { title = 'Purdue Hackers' } = Astro.props;
     <Font cssVariable="--font-silkscreen" preload />
     <Font cssVariable="--font-pixel-hackers" preload />
     <Font cssVariable="--font-polysans" preload />
+
+    <Analytics />
 
     <title>{title}</title>
     <style is:global>

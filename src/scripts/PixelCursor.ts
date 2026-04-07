@@ -11,7 +11,7 @@ export interface PixelCursorInstance {
 
 export function initPixelCursor(
   container: HTMLElement,
-  options?: PixelCursorOptions,
+  options?: PixelCursorOptions
 ): PixelCursorInstance {
   const columns = options?.columns ?? 20;
   const fadeMs = options?.fadeMs ?? 300;
@@ -57,12 +57,7 @@ export function initPixelCursor(
     }, fadeMs);
   }
 
-  function interpolateCells(
-    x0: number,
-    y0: number,
-    x1: number,
-    y1: number,
-  ) {
+  function interpolateCells(x0: number, y0: number, x1: number, y1: number) {
     const dx = Math.abs(x1 - x0);
     const dy = Math.abs(y1 - y0);
     const steps = Math.max(dx, dy);
