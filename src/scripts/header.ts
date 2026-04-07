@@ -1,13 +1,17 @@
+import { getCollageDarkAnchor } from '../utils/collageAnchor';
+import { initPixelCursor, type PixelCursorInstance } from './PixelCursor';
+
 const header = document.getElementById('site-header');
-const darkSection = document.querySelector('[data-header-dark]');
-if (header && darkSection) {
+if (header) {
+  const siteHeader = header;
   function updateHeader() {
+    const darkSection = getCollageDarkAnchor();
     if (!darkSection) return;
-    if (!header) return;
     const rect = darkSection.getBoundingClientRect();
-    header.classList.toggle('header-over-dark', rect.top <= 80);
+    siteHeader.classList.toggle('header-over-dark', rect.top <= 80);
   }
   window.addEventListener('scroll', updateHeader, { passive: true });
+  window.addEventListener('resize', updateHeader, { passive: true });
   updateHeader();
 }
 
@@ -50,8 +54,6 @@ if (menuToggle && mobileMenu) {
 }
 
 // pixel trail / pixel cursor toggle cycles: gooey trail -> pixel trail -> off
-import { initPixelCursor, type PixelCursorInstance } from './PixelCursor';
-
 type CursorMode = 'gooey' | 'pixel' | 'off';
 const CURSOR_MODES: CursorMode[] = ['gooey', 'pixel', 'off'];
 const CURSOR_LABELS: Record<CursorMode, string> = {
@@ -69,13 +71,10 @@ if (cursorToggle) {
   let pixelCursorInstance: PixelCursorInstance | null = null;
 
   function getCurrentCursorColor(): string {
-    const dark = document.querySelector('[data-header-dark]');
+    const dark = getCollageDarkAnchor();
     if (!dark) return '#000000';
     const rect = dark.getBoundingClientRect();
-    // if dark section is visible in the upper portion of the viewport
-    return rect.top <= window.innerHeight * 0.5 && rect.bottom > 0
-      ? '#FFEE00'
-      : '#000000';
+    return rect.top <= window.innerHeight * 0.5 ? '#FFEE00' : '#000000';
   }
 
   function applyMode(mode: CursorMode) {
@@ -119,6 +118,7 @@ if (cursorToggle) {
     }
   }
   window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
 
   // initialise
   applyMode(CURSOR_MODES[modeIndex]);

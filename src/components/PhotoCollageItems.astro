@@ -1,0 +1,83 @@
+---
+import type { LatestShip } from '../lib/ships';
+
+interface Props {
+  ship?: LatestShip | null;
+}
+
+const { ship } = Astro.props;
+
+const shipUser = ship?.username ?? 'Ray';
+const shipTime = ship?.timeAgo ?? '3d ago';
+const shipBody = ship?.content ?? 'Shipped privacy options for Purdue Hackers — opt out of data collection like in Commit Overflow. Change settings with /privacy.';
+---
+
+<a
+  href="https://burst.purduehackers.com/"
+  target="_blank"
+  class="photo-collage__piece photo-collage__piece--1 photo-collage__piece--photo"
+  data-caption-title="Burst ✷"
+  data-caption-desc="Our 2024 Show, a pop-up gallery of student-made creative technical projects"
+>
+  <img src="/img1.webp" alt="Burst" />
+</a>
+<a
+  href="https://blog.purduehackers.com/posts/sign"
+  target="_blank"
+  class="photo-collage__piece photo-collage__piece--2 photo-collage__piece--photo"
+  data-caption-title="The Sign"
+  data-caption-desc="A meter-tall Conway glider whose blocks light up according to the color representation of the current time"
+>
+  <img src="/img2.webp" alt="The Glider" />
+</a>
+<a
+  href="https://blog.purduehackers.com/"
+  target="_blank"
+  class="photo-collage__piece photo-collage__piece--3 photo-collage__card photo-collage__card--blog"
+  data-caption-title="Latest Blog"
+  data-caption-desc="Stories and write-ups from the community"
+>
+  <p class="photo-collage__card-date">February 9, 2026</p>
+  <p class="photo-collage__card-title">SIGHHORSE</p>
+  <p class="photo-collage__card-author">Kart(avya) Vashishtha</p>
+</a>
+<a
+  href="https://ships.purduehackers.com/"
+  target="_blank"
+  class="photo-collage__piece photo-collage__piece--4 photo-collage__card photo-collage__card--ships"
+  data-caption-title="Latest #ship"
+  data-caption-desc="Share what you've made in our Discord"
+>
+  <div class="photo-collage__card-head">
+    <span class="photo-collage__card-user">{shipUser}</span>
+    <span class="photo-collage__card-time">{shipTime}</span>
+  </div>
+  <p class="photo-collage__card-body">{shipBody}</p>
+</a>
+<a
+  href="https://events.purduehackers.com/"
+  target="_blank"
+  class="photo-collage__piece photo-collage__piece--5 photo-collage__piece--photo"
+  data-caption-title="Hack Night"
+  data-caption-desc="Every Friday night at the Bechtel Center, working on technical creative projects until the last person leaves"
+>
+  <img src="/img3.webp" alt="Hack Night" />
+</a>
+<a
+  href="https://spill.purduehackers.com/"
+  target="_blank"
+  class="photo-collage__piece photo-collage__piece--6 photo-collage__piece--photo"
+  data-caption-title="Spill ≋"
+  data-caption-desc="Our 2025 Show, an exhibition of community semester-long projects held at a warm coffee shop"
+>
+  <img src="/img4.webp" alt="Spill ≋" />
+</a>
+<a
+  href="https://github.com/qter-project/qter"
+  target="_blank"
+  class="photo-collage__piece photo-collage__piece--7 photo-collage__piece--photo"
+  data-caption-title="Qter"
+  data-caption-desc="A computer architecture that allows humans to perform computations by manipulating the rubik's cube, shown at our 2025 show Spill ≋"
+>
+  <img src="/img5.webp" alt="Qter" />
+</a>

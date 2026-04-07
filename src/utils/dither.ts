@@ -10,7 +10,7 @@ export function getHeroDitherSvg(width = 4, height = 128): string {
   const rects: string[] = [];
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
-      const level = Math.floor(y / 4) / 32;
+      const level = y / height;
       const threshold = BAYER_4[y % 4][x] / 16;
       if (level > threshold) {
         rects.push(

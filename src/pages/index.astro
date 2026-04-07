@@ -7,9 +7,18 @@ import {
   getPixelIndices,
 } from '../utils/dither';
 import LogoGrid from '../components/LogoSoup';
+import PhotoCollageItems from '../components/PhotoCollageItems.astro';
+import { getLatestShip } from '../lib/ships';
+
+const latestShip = await getLatestShip();
+const shipUser = latestShip?.username ?? 'Ray';
+const shipTime = latestShip?.timeAgo ?? '3d ago';
+const shipBody = latestShip?.content ?? 'Shipped privacy options for Purdue Hackers — opt out of data collection like in Commit Overflow.';
 
 const logoUrls = [
   '/logos/cloudflare-color.svg',
+  '/logos/openai-color.svg',
+  '/logos/tbc-color.svg',
   '/logos/kp-color.svg',
   '/logos/million-color.svg',
   '/logos/neuralink-color.svg',
@@ -18,7 +27,7 @@ const logoUrls = [
   '/logos/vercel-color.svg',
 ];
 
-const ditherSvg = getHeroDitherSvg();
+const ditherSvg = getHeroDitherSvg(4, 64);
 const buildPixels = getPixelIndices(50);
 const backPixels = getPixelIndices(40);
 const joinPixels = getPixelIndices(40);
@@ -54,8 +63,9 @@ const shouldEnablePixelCursor =
     style="position: fixed; inset: 0; z-index: 10; pointer-events: none; display: none;"
   ></div>
   <main>
+    <!-- glider is position:absolute and can extend below this section; overflow-hidden clipped those pixels so the dither strip looked stacked on top -->
     <section
-      class="relative min-h-[90vh] flex items-center md:items-center gap-16 px-4 pt-40 sm:px-10 md:px-40 md:pt-20 overflow-hidden"
+      class="relative z-[2] isolate flex items-start md:items-start gap-16 px-4 pt-64 pb-8 sm:px-10 md:px-40 md:pt-32 md:pb-12 overflow-visible"
       style="background-color: var(--color-bg);"
     >
       <div class="flex flex-col gap-6">
@@ -74,7 +84,7 @@ const shouldEnablePixelCursor =
           who make creative-technical software, hardware, and mixed media projects
         </p>
         <a
-          href="https://luma.com/user/purduehackers"
+          href="https://events.purduehackers.com/"
           target="_blank"
           class="join-session-btn"
           style="--pixel-cols: 10; --pixel-color: var(--color-primary);"
@@ -100,19 +110,30 @@ const shouldEnablePixelCursor =
         gridRows={100}
         cellSize={10}
         speedMs={100}
-        class="glider shrink-0 absolute top-[25%] -translate-y-1/4 -left-10 md:top-1/4 md:translate-y-0 md:-right-20 md:left-auto"
+        class="glider z-10 shrink-0 absolute top-[35%] -translate-y-1/4 -left-10 md:top-1/4 md:translate-y-0 md:-right-20 md:left-auto"
       />
     </section>
 
     <section
-      class="h-[256px] w-full shrink-0"
-      style={`background-color: var(--color-bg); background-image: url('${ditherSvg}'); background-size: 8px 256px; background-repeat: repeat-x; image-rendering: pixelated; image-rendering: crisp-edges;`}
+      class="dither-strip relative z-0 h-[128px] w-full shrink-0"
+      style={`background-image: url('${ditherSvg}'); background-size: 8px 128px; background-repeat: repeat-x; image-rendering: pixelated; image-rendering: crisp-edges;`}
       aria-hidden="true"
     >
     </section>
-    <section
+    <!-- photo collage: desktop only — between dither and dark section -->
+    <div
       data-header-dark
-      class="relative min-h-screen flex flex-col items-center pt-72 px-8 py-16 bg-black text-[var(--color-bg)] text-center overflow-hidden"
+      class="photo-collage photo-collage--desktop relative z-[3] hidden overflow-visible bg-black md:block"
+    >
+      <PhotoCollageItems ship={latestShip} />
+    </div>
+    <div class="photo-caption" id="photo-caption">
+      <p class="photo-caption__title"></p>
+      <p class="photo-caption__desc"></p>
+    </div>
+
+    <section
+      class="photo-collage-after relative z-[2] min-h-screen flex flex-col items-center px-8 pb-16 bg-black text-[var(--color-bg)] text-center overflow-hidden"
     >
       <!-- creatura! -->
       <img
@@ -283,6 +304,24 @@ const shouldEnablePixelCursor =
         </a>
       </div>
 
+      <!-- mobile-only: ships + blog cards after Community -->
+      <div class="md:hidden w-full max-w-2xl flex flex-col gap-4 mb-72">
+        <p class="photo-collage__section-label">Latest Ship</p>
+        <a href="https://ships.purduehackers.com/" target="_blank" class="photo-collage__card photo-collage__card--ships">
+          <div class="photo-collage__card-head">
+            <span class="photo-collage__card-user">{shipUser}</span>
+            <span class="photo-collage__card-time">{shipTime}</span>
+          </div>
+          <p class="photo-collage__card-body">{shipBody}</p>
+        </a>
+        <p class="photo-collage__section-label" style="margin-top: 0.5rem;">Latest Blog</p>
+        <a href="https://blog.purduehackers.com/" target="_blank" class="photo-collage__card photo-collage__card--blog">
+          <p class="photo-collage__card-date">February 9, 2026</p>
+          <p class="photo-collage__card-title">SIGHHORSE</p>
+          <p class="photo-collage__card-author">Kart(avya) Vashishtha</p>
+        </a>
+      </div>
+
       <!-- 4 -->
       <div class="mb-72 relative">
         <svg
@@ -396,7 +435,16 @@ const shouldEnablePixelCursor =
           >
         </a>
       </div>
+
     </section>
+
+    <!-- photo collage: mobile only — sticky photo stack (cards shown separately above) -->
+    <div
+      data-header-dark
+      class="photo-collage photo-collage--mobile relative z-[2] w-full md:hidden"
+    >
+      <PhotoCollageItems ship={latestShip} />
+    </div>
 
     <section
       class="relative min-h-screen w-full bg-cover bg-center bg-no-repeat flex flex-col justify-end"
@@ -608,5 +656,78 @@ const shouldEnablePixelCursor =
     } else {
       init();
     }
+  </script>
+  <script>
+    function initPhotoCaption() {
+      const tip = document.getElementById('photo-caption') as HTMLElement | null;
+      if (!tip) return;
+
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+      if (isMobile) return;
+
+      const titleEl = tip.querySelector('.photo-caption__title') as HTMLElement;
+      const descEl = tip.querySelector('.photo-caption__desc') as HTMLElement;
+      const desktopCollage = document.querySelector('.photo-collage--desktop');
+      if (!desktopCollage) return;
+      const images = desktopCollage.querySelectorAll('[data-caption-title]');
+
+      let active = false;
+
+      function show(img: Element, e: MouseEvent) {
+        const title = img.getAttribute('data-caption-title') || '';
+        const desc = img.getAttribute('data-caption-desc') || '';
+        titleEl.textContent = title;
+        descEl.textContent = desc;
+        active = true;
+        positionTooltip(e);
+        tip!.classList.add('is-visible');
+      }
+
+      function hide() {
+        active = false;
+        tip!.classList.remove('is-visible');
+      }
+
+      function positionTooltip(e: MouseEvent) {
+        const offset = 16;
+        let x = e.clientX + offset;
+        let y = e.clientY + offset;
+        const rect = tip!.getBoundingClientRect();
+        if (x + rect.width > window.innerWidth - 8) {
+          x = e.clientX - rect.width - offset;
+        }
+        if (y + rect.height > window.innerHeight - 8) {
+          y = e.clientY - rect.height - offset;
+        }
+        tip!.style.left = x + 'px';
+        tip!.style.top = y + 'px';
+      }
+
+      images.forEach((img) => {
+        img.addEventListener('mouseenter', (e) => show(img, e as MouseEvent));
+        img.addEventListener('mousemove', (e) => {
+          if (active) positionTooltip(e as MouseEvent);
+        });
+        img.addEventListener('mouseleave', hide);
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPhotoCaption);
+    } else {
+      initPhotoCaption();
+    }
+  </script>
+  <script>
+    import { initPhotoCollageParallax } from '../scripts/photoCollageParallax';
+
+    const stopParallax = initPhotoCollageParallax();
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        stopParallax();
+      },
+      { once: true }
+    );
   </script>
 </BaseLayout>

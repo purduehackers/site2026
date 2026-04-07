@@ -1,29 +1,29 @@
 import { useEffect, useState } from 'react';
 import PixelTrail from './PixelTrail';
+import { getCollageDarkAnchor } from '../utils/collageAnchor';
 
 export default function PT(props) {
   const [color, setColor] = useState('#000000');
 
   useEffect(() => {
-    const darkSection = document.querySelector('[data-header-dark]');
-    if (!darkSection) return;
+    function update() {
+      const darkEl = getCollageDarkAnchor();
+      if (!darkEl) {
+        setColor('#000000');
+        return;
+      }
+      const rect = darkEl.getBoundingClientRect();
+      setColor(rect.top <= window.innerHeight * 0.5 ? '#FFEE00' : '#000000');
+    }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setColor('#FFEE00');
-          } else {
-            setColor('#000000');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    update();
 
-    observer.observe(darkSection);
-
-    return () => observer.disconnect();
+    return () => {
+      window.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
   }, []);
 
   return <PixelTrail {...props} color={color} />;
