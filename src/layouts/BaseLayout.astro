@@ -98,7 +98,9 @@ const { title = 'Purdue Hackers' } = Astro.props;
       document.documentElement.style.overflow = 'hidden';
 
       function startDither() {
+        document.documentElement.style.overflow = '';
         overlay.style.background = 'transparent';
+        overlay.style.pointerEvents = 'none';
 
         var cols = Math.ceil(vw / BLOCK);
         var rows = Math.ceil(vh / BLOCK);
@@ -137,7 +139,6 @@ const { title = 'Purdue Hackers' } = Astro.props;
             requestAnimationFrame(frame);
           } else {
             overlay.remove();
-            document.documentElement.style.overflow = '';
           }
         }
 

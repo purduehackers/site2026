@@ -546,19 +546,28 @@ export function initPixelBlast(
     passive: true,
   });
 
-  // Pause when tab is not active to save energy
+  // pause when tab is not active or element is off-screen to save energy
   let isTabVisible = !document.hidden;
   const handleVisibilityChange = () => {
     isTabVisible = !document.hidden;
   };
   document.addEventListener('visibilitychange', handleVisibilityChange);
 
+  let isInViewport = false;
+  const intersectionObserver = new IntersectionObserver(
+    (entries) => {
+      isInViewport = entries.some((e) => e.isIntersecting);
+    },
+    { rootMargin: '200px' }
+  );
+  intersectionObserver.observe(container);
+
   let raf = 0;
   let stopped = false;
   const animate = () => {
     if (stopped) return;
 
-    if (isTabVisible) {
+    if (isTabVisible && isInViewport) {
       uniforms.uTime.value = timeOffset + clock.getElapsedTime() * opts.speed;
       if (liquidEffect) {
         liquidEffect.uniforms.get('uTime')!.value = uniforms.uTime.value;
@@ -588,6 +597,7 @@ export function initPixelBlast(
   return () => {
     stopped = true;
     resizeObserver.disconnect();
+    intersectionObserver.disconnect();
     cancelAnimationFrame(raf);
     document.removeEventListener('visibilitychange', handleVisibilityChange);
     renderer.domElement.removeEventListener('pointerdown', onPointerDown);

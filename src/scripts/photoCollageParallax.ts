@@ -2,11 +2,9 @@ import { getCollageDarkAnchor } from '../utils/collageAnchor';
 
 /** Subtle per-piece vertical parallax vs the rest of the page while scrolling. */
 export function initPhotoCollageParallax(): () => void {
-  function getPieces() {
-    const root = getCollageDarkAnchor();
-    return root?.querySelectorAll<HTMLElement>('.photo-collage__piece');
-  }
-  if (!getPieces()?.length) return () => {};
+  const root = getCollageDarkAnchor();
+  const pieces = root?.querySelectorAll<HTMLElement>('.photo-collage__piece');
+  if (!pieces?.length) return () => {};
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     return () => {};
@@ -16,11 +14,9 @@ export function initPhotoCollageParallax(): () => void {
   const speeds = [0.14, 0.26, 0.09, 0.32, 0.17, 0.22, 0.29];
 
   function tick() {
-    const list = getPieces();
-    if (!list?.length) return;
     const vh = window.innerHeight;
     const mid = vh * 0.5;
-    list.forEach((el, i) => {
+    pieces!.forEach((el, i) => {
       const rect = el.getBoundingClientRect();
       const centerY = rect.top + rect.height / 2;
       const dist = centerY - mid;
@@ -40,9 +36,17 @@ export function initPhotoCollageParallax(): () => void {
   window.addEventListener('resize', onScrollOrResize, { passive: true });
   tick();
 
+  function onLoad() { requestAnimationFrame(tick); }
+  if (document.readyState === 'complete') {
+    onLoad();
+  } else {
+    window.addEventListener('load', onLoad, { once: true });
+  }
+
   return () => {
     window.removeEventListener('scroll', onScrollOrResize);
     window.removeEventListener('resize', onScrollOrResize);
+    window.removeEventListener('load', onLoad);
     cancelAnimationFrame(raf);
   };
 }
