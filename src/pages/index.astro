@@ -7,8 +7,17 @@ import LogoGrid from '../components/LogoSoup';
 import PhotoCollageItems from '../components/PhotoCollageItems.astro';
 import ShipCard from '../components/ShipCard.astro';
 import { getLatestShip } from '../lib/ships';
+import { getLatestPost } from '../lib/blog';
 
-const latestShip = await getLatestShip();
+const [latestShip, latestPost] = await Promise.all([
+  getLatestShip(),
+  getLatestPost(),
+]);
+
+const blogHref = latestPost?.link ?? 'https://blog.purduehackers.com/';
+const blogTitle = latestPost?.title ?? 'Latest Purdue Hackers blog post';
+const blogImage =
+  latestPost?.ogImage ?? 'https://blog.purduehackers.com/og/posts/sighorse.png';
 import Sprite from '../components/Sprite.astro';
 
 const logoUrls = [
@@ -121,7 +130,7 @@ const shouldEnablePixelCursor = true;
       data-header-dark
       class="photo-collage photo-collage--desktop relative z-[3] hidden overflow-visible bg-black md:block"
     >
-      <PhotoCollageItems ship={latestShip} />
+      <PhotoCollageItems ship={latestShip} post={latestPost} />
     </div>
     <div class="photo-caption" id="photo-caption">
       <p class="photo-caption__title"></p>
@@ -343,13 +352,11 @@ const shouldEnablePixelCursor = true;
           Latest Blog
         </p>
         <a
-          href="https://blog.purduehackers.com/"
+          href={blogHref}
           target="_blank"
           class="photo-collage__card photo-collage__card--blog"
         >
-          <p class="photo-collage__card-date">February 9, 2026</p>
-          <p class="photo-collage__card-title">SIGHHORSE</p>
-          <p class="photo-collage__card-author">Kart(avya) Vashishtha</p>
+          <img src={blogImage} alt={blogTitle} loading="lazy" />
         </a>
       </div>
 
@@ -472,7 +479,7 @@ const shouldEnablePixelCursor = true;
       data-header-dark
       class="photo-collage photo-collage--mobile relative z-[2] w-full md:hidden"
     >
-      <PhotoCollageItems ship={latestShip} />
+      <PhotoCollageItems ship={latestShip} post={latestPost} />
     </div>
 
     <section
