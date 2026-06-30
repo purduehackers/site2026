@@ -19,6 +19,7 @@ const blogTitle = latestPost?.title ?? 'Latest Purdue Hackers blog post';
 const blogImage =
   latestPost?.ogImage ?? 'https://blog.purduehackers.com/og/posts/sighorse.png';
 import Sprite from '../components/Sprite.astro';
+import DitherFilters from '../components/DitherFilters.astro';
 
 const logoUrls = [
   '/logos/sentry-color.svg',
@@ -59,6 +60,7 @@ const shouldEnablePixelCursor = true;
     )
   }
   <main>
+    <DitherFilters />
     <!-- glider is position:absolute and can extend below this section; overflow-hidden clipped those pixels so the dither strip looked stacked on top -->
     <section
       class="relative z-[2] isolate flex items-start md:items-start gap-16 px-4 pt-64 pb-8 sm:px-10 md:px-40 md:pt-32 md:pb-12 overflow-visible"
@@ -136,7 +138,9 @@ const shouldEnablePixelCursor = true;
       class="photo-collage-after relative z-[2] min-h-screen flex flex-col items-center px-8 pb-16 bg-black text-[var(--color-bg)] text-center overflow-hidden"
     >
       <!-- creatura! -->
-      <div class="absolute top-8 md:top-12 lg:top-20 -right-16 md:right-8 lg:right-24 scale-90 sm:scale-[1] md:scale-[1.35] lg:scale-[1.65]">
+      <div
+        class="absolute top-8 md:top-12 lg:top-20 -right-16 md:right-8 lg:right-24 scale-90 sm:scale-[1] md:scale-[1.35] lg:scale-[1.65]"
+      >
         <Sprite
           id="angry-guy-sprite"
           className=""
@@ -148,7 +152,9 @@ const shouldEnablePixelCursor = true;
           duration={1.5}
         />
       </div>
-      <div class="absolute -left-8 md:left-24 lg:left-32 top-1/3 md:top-1/2 lg:top-1/2 -translate-y-1/2 scale-[2] sm:scale-[2] md:scale-[2.8] lg:scale-[3.5] 2xl:scale-300 rotate-[-10deg]">
+      <div
+        class="absolute -left-8 md:left-24 lg:left-32 top-1/3 md:top-1/2 lg:top-1/2 -translate-y-1/2 scale-[2] sm:scale-[2] md:scale-[2.8] lg:scale-[3.5] 2xl:scale-300 rotate-[-10deg]"
+      >
         <Sprite
           id="fish-with-legs-sprite"
           className=""

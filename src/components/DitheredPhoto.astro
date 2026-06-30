@@ -1,0 +1,41 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  widths: number[];
+  sizes: string;
+}
+
+const { src, alt, widths, sizes } = Astro.props;
+---
+
+{
+  /* Two stacked copies of the same photo. The colour layer sits underneath and
+   defines the box; the B&W layer is laid over it and fades out on hover, so the
+   piece crossfades from a black-and-white dither to the original colours. The
+   two layers seed their dither differently, so the pattern re-forms across the
+   crossfade (see DitherFilters.astro). */
+}
+<span class="dphoto">
+  <Image
+    class="dphoto__layer dphoto__layer--color"
+    src={src}
+    alt={alt}
+    widths={widths}
+    sizes={sizes}
+    loading="lazy"
+    decoding="async"
+  />
+  <Image
+    class="dphoto__layer dphoto__layer--bw"
+    src={src}
+    alt=""
+    aria-hidden="true"
+    widths={widths}
+    sizes={sizes}
+    loading="lazy"
+    decoding="async"
+  />
+</span>
