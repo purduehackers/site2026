@@ -34,6 +34,12 @@ const { title = 'Purdue Hackers' } = Astro.props;
       .header-over-dark .nav-link {
         color: var(--color-bg) !important;
       }
+      .header-over-dark .header-glider {
+        color: var(--color-bg);
+      }
+      body.menu-open .header-glider {
+        color: var(--color-bg);
+      }
       .header-over-dark .nav-link:hover {
         background: var(--color-bg) !important;
         color: #7d3bff !important;
@@ -49,8 +55,29 @@ const { title = 'Purdue Hackers' } = Astro.props;
       class="fixed top-0 left-0 right-0 z-30 px-6 py-5 md:px-8 md:py-6 font-inconsolata"
     >
       <div class="flex items-center justify-between">
+        <!-- glider logo -->
+        <a
+          href="/"
+          class="header-glider text-black inline-flex items-center transition-opacity hover:opacity-70"
+          aria-label="Purdue Hackers home"
+        >
+          <svg
+            class="h-8 w-8"
+            viewBox="0 0 1815 1816"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M723.58 1458.25H357.555V1092.02H723.58V1458.25ZM1089.6 725.795H1455.63V1458.25H1089.6V1092.02H723.58V359.568H1089.6V725.795Z"
+            ></path>
+          </svg>
+        </a>
+
         <!-- desktopn nav -->
-        <nav class="hidden md:flex ml-auto gap-8 header-links">
+        <nav class="hidden md:flex gap-8 header-links">
           <a
             href="https://puhack.horse/discord"
             target="_blank"
