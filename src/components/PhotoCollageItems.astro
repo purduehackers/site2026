@@ -1,6 +1,6 @@
 ---
 import ShipCard from './ShipCard.astro';
-import { Image } from 'astro:assets';
+import DitheredPhoto from './DitheredPhoto.astro';
 import type { LatestShip } from '../lib/ships';
 import type { LatestPost } from '../lib/blog';
 import img1 from '../assets/collage/img1.webp';
@@ -35,13 +35,11 @@ const blogImage =
   data-caption-title="Burst ✷"
   data-caption-desc="Our 2024 Show, a pop-up gallery of student-made creative technical projects"
 >
-  <Image
+  <DitheredPhoto
     src={img1}
     alt="Burst"
     widths={collageWidths}
     sizes={collageSizes}
-    loading="lazy"
-    decoding="async"
   />
 </a>
 <a
@@ -51,13 +49,11 @@ const blogImage =
   data-caption-title="The Sign"
   data-caption-desc="A meter-tall Conway glider whose blocks light up according to the color representation of the current time"
 >
-  <Image
+  <DitheredPhoto
     src={img2}
     alt="The Glider"
     widths={collageWidths}
     sizes={collageSizes}
-    loading="lazy"
-    decoding="async"
   />
 </a>
 <a
@@ -85,13 +81,11 @@ const blogImage =
   data-caption-title="Hack Night"
   data-caption-desc="Every Friday night at the Bechtel Center, working on technical creative projects until the last person leaves"
 >
-  <Image
+  <DitheredPhoto
     src={img3}
     alt="Hack Night"
     widths={collageWidths}
     sizes={collageSizes}
-    loading="lazy"
-    decoding="async"
   />
 </a>
 <a
@@ -101,13 +95,11 @@ const blogImage =
   data-caption-title="Spill ≋"
   data-caption-desc="Our 2025 Show, an exhibition of community semester-long projects held at a warm coffee shop"
 >
-  <Image
+  <DitheredPhoto
     src={img4}
     alt="Spill ≋"
     widths={collageWidths}
     sizes={collageSizes}
-    loading="lazy"
-    decoding="async"
   />
 </a>
 <a
@@ -117,12 +109,10 @@ const blogImage =
   data-caption-title="Qter"
   data-caption-desc="A computer architecture that allows humans to perform computations by manipulating the rubik's cube, shown at our 2025 show Spill ≋"
 >
-  <Image
+  <DitheredPhoto
     src={img5}
     alt="Qter"
     widths={collageWidths}
     sizes={collageSizes}
-    loading="lazy"
-    decoding="async"
   />
 </a>

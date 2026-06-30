@@ -258,11 +258,87 @@ body.menu-open .mobile-menu-btn {
   text-decoration: none;
   overflow: hidden;
 }
-.photo-collage__piece--photo img {
+/* ── dithered photos: two stacked layers ──────────────────────────
+   See DitheredPhoto.astro. The colour layer sits in flow and defines
+   the box; the B&W layer overlays it and fades out on hover, so the
+   piece crossfades from a 1-bit black & white dither to the original
+   colours. The two filters seed their noise differently, so the dither
+   pattern visibly re-forms during the crossfade and then sits still —
+   it only "moves" while transitioning, never continuously while hovered. */
+.dphoto {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+.dphoto__layer {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
+}
+.dphoto__layer--color {
+  position: relative;
+  filter: url(#ph-dither-color);
+}
+.dphoto__layer--bw {
+  position: absolute;
+  inset: 0;
+  filter: url(#ph-dither-bw);
+  opacity: 1;
+  transition: opacity 0.22s ease-out;
+  will-change: opacity;
+}
+@media (hover: hover) and (pointer: fine) {
+  .photo-collage__piece--photo:hover .dphoto__layer--bw {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dphoto__layer--bw {
+    transition: none;
+  }
+}
+
+/* ── polaroid frames (desktop collage) ────────────────────────────
+   The scattered photos sit in white polaroid mounts with a heavier
+   bottom lip, à la aidenybai.com. Rotation/parallax stay on the
+   piece transform; the frame only adds paper, padding and a shadow. */
+.photo-collage--desktop .photo-collage__piece--photo {
+  border: none;
+  background: #fcfbf4;
+  padding: 12px 12px 38px;
+  overflow: visible;
+  box-shadow:
+    0 16px 30px rgba(0, 0, 0, 0.42),
+    0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.22s ease-out;
+}
+.photo-collage--desktop .dphoto__layer--color {
+  height: auto;
+  aspect-ratio: 4 / 3;
+  background: #000;
+}
+@media (hover: hover) and (pointer: fine) {
+  .photo-collage--desktop .photo-collage__piece--photo:hover {
+    box-shadow:
+      0 22px 40px rgba(0, 0, 0, 0.45),
+      0 6px 14px rgba(0, 0, 0, 0.32);
+  }
+}
+
+/* mobile: photos stay full-bleed inside the sticky piece. There's no hover on
+   touch to reveal colour, and the B&W dither turns dark shots nearly black at
+   full-screen — so just show the vibrant colour dither outright (its mask is
+   lifted, so dark photos stay legible) and drop the B&W layer. The colour
+   layer is in-flow, so it reliably fills the sticky piece. */
+.photo-collage--mobile .dphoto {
+  height: 100%;
+}
+.photo-collage--mobile .dphoto__layer--bw {
+  display: none;
+}
+.photo-collage--mobile .dphoto__layer--color {
+  height: 100%;
 }
 .photo-collage--desktop .photo-collage__piece--photo {
   height: auto;

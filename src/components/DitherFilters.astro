@@ -1,0 +1,168 @@
+---
+// SVG filter defs for the dithered photo treatment used by the homepage collage.
+// Two filters turn a photo into a 1-bit ordered-noise dither:
+//
+//   #ph-dither-bw    — lit pixels are white → black & white dither (rest state)
+//   #ph-dither-color — lit pixels show the saturated, lifted photo colour (hover)
+//
+// They seed feTurbulence differently, so the dither pattern visibly re-forms as
+// the two layers crossfade on hover (see DitheredPhoto.astro), then sits still —
+// the dither only "moves" during the transition, never continuously. Each filter
+// renders once and caches; SVG filters can't share sub-graphs, so the
+// luminance → noise → threshold core is duplicated. The region is grown past the
+// photo and the thresholded result trimmed back to it, so the dither has no hard
+// fringe at the edges.
+---
+
+<svg
+  class="ph-dither-defs"
+  width="0"
+  height="0"
+  aria-hidden="true"
+  focusable="false"
+>
+  <defs>
+    <filter
+      id="ph-dither-bw"
+      x="-20%"
+      y="-20%"
+      width="140%"
+      height="140%"
+      color-interpolation-filters="sRGB"
+    >
+      <feColorMatrix in="SourceGraphic" type="saturate" values="0" result="g0"
+      ></feColorMatrix>
+      <feComponentTransfer in="g0" result="gray">
+        <feFuncR type="linear" slope="0.72" intercept="0.16"></feFuncR>
+        <feFuncG type="linear" slope="0.72" intercept="0.16"></feFuncG>
+        <feFuncB type="linear" slope="0.72" intercept="0.16"></feFuncB>
+      </feComponentTransfer>
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.68"
+        numOctaves="2"
+        seed="4"
+        stitchTiles="stitch"
+        result="nz"></feTurbulence>
+      <feColorMatrix
+        in="nz"
+        type="matrix"
+        values="0.33 0.33 0.33 0 0
+                0.33 0.33 0.33 0 0
+                0.33 0.33 0.33 0 0
+                0    0    0    0 1"
+        result="noise"></feColorMatrix>
+      <feComposite
+        in="gray"
+        in2="noise"
+        operator="arithmetic"
+        k1="0"
+        k2="1"
+        k3="0.7"
+        k4="-0.35"
+        result="sum"></feComposite>
+      <feComponentTransfer in="sum" result="bw">
+        <feFuncR type="discrete" tableValues="0 1"></feFuncR>
+        <feFuncG type="discrete" tableValues="0 1"></feFuncG>
+        <feFuncB type="discrete" tableValues="0 1"></feFuncB>
+      </feComponentTransfer>
+      <feComposite in="bw" in2="SourceGraphic" operator="in"></feComposite>
+    </filter>
+
+    <filter
+      id="ph-dither-color"
+      x="-20%"
+      y="-20%"
+      width="140%"
+      height="140%"
+      color-interpolation-filters="sRGB"
+    >
+      <!-- Punchier colour for the lit pixels: boost saturation and lift the
+           tone curve so dark shots read as colour instead of near-black and
+           pale shots don't look washed out. This graded copy is what shows
+           through the dither mask. -->
+      <feColorMatrix
+        in="SourceGraphic"
+        type="saturate"
+        values="1.7"
+        result="sat"></feColorMatrix>
+      <feComponentTransfer in="sat" result="graded">
+        <feFuncR type="gamma" amplitude="1" exponent="0.82" offset="0"
+        ></feFuncR>
+        <feFuncG type="gamma" amplitude="1" exponent="0.82" offset="0"
+        ></feFuncG>
+        <feFuncB type="gamma" amplitude="1" exponent="0.82" offset="0"
+        ></feFuncB>
+      </feComponentTransfer>
+
+      <!-- Dither mask from luminance. Lifted more than the B&W filter (and a
+           higher baseline below) so dark photos keep enough lit pixels to stay
+           colourful rather than collapsing to black. -->
+      <feColorMatrix in="SourceGraphic" type="saturate" values="0" result="g0"
+      ></feColorMatrix>
+      <feComponentTransfer in="g0" result="gray">
+        <feFuncR type="gamma" amplitude="1" exponent="0.62" offset="0.02"
+        ></feFuncR>
+        <feFuncG type="gamma" amplitude="1" exponent="0.62" offset="0.02"
+        ></feFuncG>
+        <feFuncB type="gamma" amplitude="1" exponent="0.62" offset="0.02"
+        ></feFuncB>
+      </feComponentTransfer>
+      <!-- The colour noise uses a *different* seed than the B&W noise (same
+           grain, an entirely different dot field). So as the layers crossfade
+           on hover the dither pattern itself re-forms — it changes rather than
+           sliding — then sits still once settled. Both filters render once and
+           cache, so there's no per-frame cost; re-seeding live would re-run
+           feTurbulence every frame and jank the renderer. -->
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.68"
+        numOctaves="2"
+        seed="23"
+        stitchTiles="stitch"
+        result="nz"></feTurbulence>
+      <feColorMatrix
+        in="nz"
+        type="matrix"
+        values="0.33 0.33 0.33 0 0
+                0.33 0.33 0.33 0 0
+                0.33 0.33 0.33 0 0
+                0    0    0    0 1"
+        result="noise"></feColorMatrix>
+      <feComposite
+        in="gray"
+        in2="noise"
+        operator="arithmetic"
+        k1="0"
+        k2="1"
+        k3="0.7"
+        k4="-0.3"
+        result="sum"></feComposite>
+      <feComponentTransfer in="sum" result="maskRGB">
+        <feFuncR type="discrete" tableValues="0 1"></feFuncR>
+        <feFuncG type="discrete" tableValues="0 1"></feFuncG>
+        <feFuncB type="discrete" tableValues="0 1"></feFuncB>
+        <feFuncA type="linear" slope="0" intercept="1"></feFuncA>
+      </feComponentTransfer>
+      <!-- lit pixels (mask = 1) reveal the graded colour; the rest go black -->
+      <feComposite
+        in="graded"
+        in2="maskRGB"
+        operator="arithmetic"
+        k1="1"
+        k2="0"
+        k3="0"
+        k4="0"></feComposite>
+    </filter>
+  </defs>
+</svg>
+
+<style>
+  .ph-dither-defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+</style>
