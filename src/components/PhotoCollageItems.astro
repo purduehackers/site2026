@@ -1,15 +1,21 @@
 ---
 import type { LatestShip } from '../lib/ships';
+import type { LatestPost } from '../lib/blog';
 
 interface Props {
   ship?: LatestShip | null;
+  post?: LatestPost | null;
 }
 
-const { ship } = Astro.props;
+const { ship, post } = Astro.props;
 
 const shipUser = ship?.username ?? 'Ray';
 const shipTime = ship?.timeAgo ?? '3d ago';
 const shipBody = ship?.content ?? 'Shipped privacy options for Purdue Hackers â€” opt out of data collection like in Commit Overflow. Change settings with /privacy.';
+
+const blogHref = post?.link ?? 'https://blog.purduehackers.com/';
+const blogTitle = post?.title ?? 'Latest Purdue Hackers blog post';
+const blogImage = post?.ogImage ?? 'https://blog.purduehackers.com/og/posts/sighorse.png';
 ---
 
 <a
@@ -31,15 +37,13 @@ const shipBody = ship?.content ?? 'Shipped privacy options for Purdue Hackers â€
   <img src="/img2.webp" alt="The Glider" />
 </a>
 <a
-  href="https://blog.purduehackers.com/"
+  href={blogHref}
   target="_blank"
   class="photo-collage__piece photo-collage__piece--3 photo-collage__card photo-collage__card--blog"
   data-caption-title="Latest Blog"
   data-caption-desc="Stories and write-ups from the community"
 >
-  <p class="photo-collage__card-date">February 9, 2026</p>
-  <p class="photo-collage__card-title">SIGHHORSE</p>
-  <p class="photo-collage__card-author">Kart(avya) Vashishtha</p>
+  <img src={blogImage} alt={blogTitle} loading="lazy" />
 </a>
 <a
   href="https://ships.purduehackers.com/"
