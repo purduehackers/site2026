@@ -153,32 +153,6 @@ body.menu-open .mobile-menu-btn {
   pointer-events: auto;
 }
 
-/* pixel trail toggle button */
-.pixel-trail-toggle {
-  background: transparent;
-  color: #000;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
-}
-.pixel-trail-toggle.is-active {
-  background: #000;
-  color: var(--color-bg);
-}
-.header-over-dark .pixel-trail-toggle {
-  color: var(--color-bg);
-}
-.header-over-dark .pixel-trail-toggle.is-active {
-  background: var(--color-bg);
-  color: #000;
-}
-
-/* ensure the pixel-cursor overlay never blocks interaction */
-#pixel-cursor-container,
-#pixel-cursor-container * {
-  pointer-events: none !important;
-}
-
 .image-rendering-pixelated {
   image-rendering: pixelated;
 }
@@ -670,9 +644,6 @@ body.menu-open .mobile-menu-btn {
     transition: none;
   }
   .mobile-menu__link {
-    transition: none;
-  }
-  .pixel-trail-toggle {
     transition: none;
   }
   .logo-grid-img {

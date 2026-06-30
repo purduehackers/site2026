@@ -1,5 +1,4 @@
 import { getCollageDarkAnchor } from '../utils/collageAnchor';
-import { initPixelCursor, type PixelCursorInstance } from './PixelCursor';
 
 const header = document.getElementById('site-header');
 if (header) {
@@ -50,81 +49,5 @@ if (menuToggle && mobileMenu) {
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && menu.classList.contains('is-open')) closeMenu();
-  });
-}
-
-// pixel trail / pixel cursor toggle cycles: gooey trail -> pixel trail -> off
-type CursorMode = 'gooey' | 'pixel' | 'off';
-const CURSOR_MODES: CursorMode[] = ['gooey', 'pixel', 'off'];
-const CURSOR_LABELS: Record<CursorMode, string> = {
-  gooey: 'gooey',
-  pixel: 'pixel',
-  off: 'off',
-};
-
-const cursorToggle = document.getElementById('pixel-trail-toggle');
-const trailContainer = document.getElementById('pixel-trail-container');
-const pixelCursorContainer = document.getElementById('pixel-cursor-container');
-
-if (cursorToggle) {
-  let modeIndex = 0; // starts on gooey
-  let pixelCursorInstance: PixelCursorInstance | null = null;
-
-  function getCurrentCursorColor(): string {
-    const dark = getCollageDarkAnchor();
-    if (!dark) return '#000000';
-    const rect = dark.getBoundingClientRect();
-    return rect.top <= window.innerHeight * 0.5 ? '#FFEE00' : '#000000';
-  }
-
-  function applyMode(mode: CursorMode) {
-    // trail container
-    if (trailContainer) {
-      trailContainer.style.display = mode === 'gooey' ? '' : 'none';
-    }
-
-    // pixel cursor
-    if (pixelCursorContainer) {
-      if (mode === 'pixel') {
-        pixelCursorContainer.style.display = '';
-        if (!pixelCursorInstance) {
-          pixelCursorInstance = initPixelCursor(pixelCursorContainer, {
-            columns: 100,
-            color: getCurrentCursorColor(),
-            fadeMs: 100,
-          });
-        }
-      } else {
-        pixelCursorContainer.style.display = 'none';
-        if (pixelCursorInstance) {
-          pixelCursorInstance.destroy();
-          pixelCursorInstance = null;
-        }
-      }
-    }
-
-    if (cursorToggle) {
-      cursorToggle.textContent = CURSOR_LABELS[mode];
-      const isActive = mode !== 'off';
-      cursorToggle.classList.toggle('is-active', isActive);
-      cursorToggle.setAttribute('aria-pressed', String(isActive));
-    }
-  }
-
-  // keep pixel cursor color in sync when scrolling through dark/light sections
-  function onScroll() {
-    if (pixelCursorInstance) {
-      pixelCursorInstance.setColor(getCurrentCursorColor());
-    }
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll, { passive: true });
-
-  // initialise
-  applyMode(CURSOR_MODES[modeIndex]);
-
-  cursorToggle.addEventListener('click', () => {
-    modeIndex = (modeIndex + 1) % CURSOR_MODES.length;
-    applyMode(CURSOR_MODES[modeIndex]);
   });
 }
