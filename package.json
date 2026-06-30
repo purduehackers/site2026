@@ -36,6 +36,7 @@
     "@tailwindcss/postcss": "^4.2.2",
     "@tailwindcss/vite": "^4.2.2",
     "@types/three": "^0.183.1",
+    "@vercel/config": "^0.5.5",
     "prettier": "^3.8.1",
     "prettier-plugin-astro": "^0.14.1"
   },
