@@ -1,4 +1,5 @@
 ---
+import ShipCard from './ShipCard.astro';
 import type { LatestShip } from '../lib/ships';
 
 interface Props {
@@ -6,10 +7,6 @@ interface Props {
 }
 
 const { ship } = Astro.props;
-
-const shipUser = ship?.username ?? 'Ray';
-const shipTime = ship?.timeAgo ?? '3d ago';
-const shipBody = ship?.content ?? 'Shipped privacy options for Purdue Hackers â€” opt out of data collection like in Commit Overflow. Change settings with /privacy.';
 ---
 
 <a
@@ -48,11 +45,7 @@ const shipBody = ship?.content ?? 'Shipped privacy options for Purdue Hackers â€
   data-caption-title="Latest #ship"
   data-caption-desc="Share what you've made in our Discord"
 >
-  <div class="photo-collage__card-head">
-    <span class="photo-collage__card-user">{shipUser}</span>
-    <span class="photo-collage__card-time">{shipTime}</span>
-  </div>
-  <p class="photo-collage__card-body">{shipBody}</p>
+  <ShipCard ship={ship} />
 </a>
 <a
   href="https://events.purduehackers.com/"
