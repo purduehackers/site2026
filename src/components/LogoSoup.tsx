@@ -23,6 +23,8 @@ export default function LogoGrid({
           <img
             src={src}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="logo-grid-img h-8 md:h-10 w-auto max-w-full object-contain"
           />
         </div>

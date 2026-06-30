@@ -1,12 +1,24 @@
 ---
 import ShipCard from './ShipCard.astro';
+import { Image } from 'astro:assets';
 import type { LatestShip } from '../lib/ships';
+import img1 from '../assets/collage/img1.webp';
+import img2 from '../assets/collage/img2.webp';
+import img3 from '../assets/collage/img3.webp';
+import img4 from '../assets/collage/img4.webp';
+import img5 from '../assets/collage/img5.webp';
 
 interface Props {
   ship?: LatestShip | null;
 }
 
 const { ship } = Astro.props;
+
+// The pieces render at ~270–340px on desktop and full-width on mobile, so we
+// only ever need a fraction of each source's native resolution. Let Astro emit
+// a responsive srcset and pick the smallest variant that fits.
+const collageWidths = [320, 480, 640, 960, 1280];
+const collageSizes = '(min-width: 768px) 340px, 100vw';
 ---
 
 <a
@@ -16,7 +28,14 @@ const { ship } = Astro.props;
   data-caption-title="Burst ✷"
   data-caption-desc="Our 2024 Show, a pop-up gallery of student-made creative technical projects"
 >
-  <img src="/img1.webp" alt="Burst" />
+  <Image
+    src={img1}
+    alt="Burst"
+    widths={collageWidths}
+    sizes={collageSizes}
+    loading="lazy"
+    decoding="async"
+  />
 </a>
 <a
   href="https://blog.purduehackers.com/posts/sign"
@@ -25,7 +44,14 @@ const { ship } = Astro.props;
   data-caption-title="The Sign"
   data-caption-desc="A meter-tall Conway glider whose blocks light up according to the color representation of the current time"
 >
-  <img src="/img2.webp" alt="The Glider" />
+  <Image
+    src={img2}
+    alt="The Glider"
+    widths={collageWidths}
+    sizes={collageSizes}
+    loading="lazy"
+    decoding="async"
+  />
 </a>
 <a
   href="https://blog.purduehackers.com/"
@@ -54,7 +80,14 @@ const { ship } = Astro.props;
   data-caption-title="Hack Night"
   data-caption-desc="Every Friday night at the Bechtel Center, working on technical creative projects until the last person leaves"
 >
-  <img src="/img3.webp" alt="Hack Night" />
+  <Image
+    src={img3}
+    alt="Hack Night"
+    widths={collageWidths}
+    sizes={collageSizes}
+    loading="lazy"
+    decoding="async"
+  />
 </a>
 <a
   href="https://spill.purduehackers.com/"
@@ -63,7 +96,14 @@ const { ship } = Astro.props;
   data-caption-title="Spill ≋"
   data-caption-desc="Our 2025 Show, an exhibition of community semester-long projects held at a warm coffee shop"
 >
-  <img src="/img4.webp" alt="Spill ≋" />
+  <Image
+    src={img4}
+    alt="Spill ≋"
+    widths={collageWidths}
+    sizes={collageSizes}
+    loading="lazy"
+    decoding="async"
+  />
 </a>
 <a
   href="https://github.com/qter-project/qter"
@@ -72,5 +112,12 @@ const { ship } = Astro.props;
   data-caption-title="Qter"
   data-caption-desc="A computer architecture that allows humans to perform computations by manipulating the rubik's cube, shown at our 2025 show Spill ≋"
 >
-  <img src="/img5.webp" alt="Qter" />
+  <Image
+    src={img5}
+    alt="Qter"
+    widths={collageWidths}
+    sizes={collageSizes}
+    loading="lazy"
+    decoding="async"
+  />
 </a>

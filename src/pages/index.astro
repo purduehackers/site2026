@@ -12,15 +12,16 @@ const latestShip = await getLatestShip();
 import Sprite from '../components/Sprite.astro';
 
 const logoUrls = [
-  '/logos/cloudflare-color.svg',
+  '/logos/sentry-color.svg',
+  '/logos/vercel-color.svg',
   '/logos/openai-color.svg',
+  '/logos/cloudflare-color.svg',
+  '/logos/linear-color.svg',
   '/logos/tbc-color.svg',
+  '/logos/spacex-color.svg',
+  '/logos/neuralink-color.svg',
   '/logos/kp-color.svg',
   '/logos/million-color.svg',
-  '/logos/neuralink-color.svg',
-  '/logos/sentry-color.svg',
-  '/logos/spacex-color.svg',
-  '/logos/vercel-color.svg',
 ];
 
 const ditherSvg = getHeroDitherSvg(4, 64);
@@ -63,6 +64,10 @@ const shouldEnablePixelCursor = true;
         <img
           src="/title.svg"
           alt="Purdue Hackers"
+          width="566"
+          height="201"
+          fetchpriority="high"
+          decoding="async"
           class="w-full max-w-2xl h-auto object-contain object-left shrink-0 noselect pb-6"
         />
         <p
@@ -408,14 +413,16 @@ const shouldEnablePixelCursor = true;
         >
           Friends
         </p>
-        <p class="font-inconsolata text-l md:text-xl font-semibold uppercase">
-          <a
-            href="https://mitchellh.com/"
-            target="_blank"
-            class="font-inconsolata text-l md:text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300 motion-reduce:transition-none"
-            >mitchell hashimoto</a
-          >
-          *
+        <p
+          class="max-w-[32rem] font-polysans text-l mx-auto text-center leading-relaxed pb-6"
+        >
+          We're working to make Purdue one of the best places in the world to be
+          a <span class="highlight">young and ambitious builder</span> &mdash; and
+          we're lucky to be backed by people and companies whose work we really admire.
+        </p>
+        <p
+          class="font-inconsolata text-l md:text-xl font-semibold uppercase mx-auto text-center"
+        >
           <a
             href="https://www.paulgraham.com/"
             target="_blank"
@@ -424,17 +431,10 @@ const shouldEnablePixelCursor = true;
           >
           *
           <a
-            href="https://x.com/aidenybai"
+            href="https://mitchellh.com/"
             target="_blank"
             class="font-inconsolata text-l md:text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300 motion-reduce:transition-none"
-            >aiden bai</a
-          >
-          *
-          <a
-            href="https://x.com/jnnnthnn"
-            target="_blank"
-            class="font-inconsolata text-l md:text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300 motion-reduce:transition-none"
-            >jonathan unikowski</a
+            >mitchell hashimoto</a
           >
         </p>
         <br />
