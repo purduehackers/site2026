@@ -31,6 +31,16 @@ export default defineConfig({
       // optimized variants can be cached aggressively.
       minimumCacheTTL: 60 * 60 * 24 * 365,
     },
+    // Incremental Static Regeneration. The homepage is server-rendered and reads
+    // the latest "ship" from Turso, but it isn't personalized — so let Vercel
+    // serve a cached render from the edge and regenerate it at most once an hour.
+    // The function then only runs on a cache miss instead of on every request.
+    isr: {
+      expiration: 60 * 60,
+      // For on-demand revalidation (e.g. right after a new ship is posted), add a
+      // `bypassToken` here and hit the route with a matching `x-prerender-revalidate`
+      // header. Omitted for now, so regeneration is purely time-based.
+    },
   }),
   integrations: [react()],
   vite: {
