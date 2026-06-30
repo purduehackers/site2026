@@ -5,6 +5,7 @@ import Glider from '../components/GliderShader.astro';
 import { getHeroDitherSvg, getPixelIndices } from '../utils/dither';
 import LogoGrid from '../components/LogoSoup';
 import PhotoCollageItems from '../components/PhotoCollageItems.astro';
+import ShipCard from '../components/ShipCard.astro';
 import { getLatestShip } from '../lib/ships';
 import { getLatestPost } from '../lib/blog';
 
@@ -12,13 +13,11 @@ const [latestShip, latestPost] = await Promise.all([
   getLatestShip(),
   getLatestPost(),
 ]);
-const shipUser = latestShip?.username ?? 'Ray';
-const shipTime = latestShip?.timeAgo ?? '3d ago';
-const shipBody = latestShip?.content ?? 'Shipped privacy options for Purdue Hackers — opt out of data collection like in Commit Overflow.';
 
 const blogHref = latestPost?.link ?? 'https://blog.purduehackers.com/';
 const blogTitle = latestPost?.title ?? 'Latest Purdue Hackers blog post';
-const blogImage = latestPost?.ogImage ?? 'https://blog.purduehackers.com/og/posts/sighorse.png';
+const blogImage =
+  latestPost?.ogImage ?? 'https://blog.purduehackers.com/og/posts/sighorse.png';
 import Sprite from '../components/Sprite.astro';
 
 const logoUrls = [
@@ -342,15 +341,21 @@ const shouldEnablePixelCursor = true;
       <!-- mobile-only: ships + blog cards after Community -->
       <div class="md:hidden w-full max-w-2xl flex flex-col gap-4 mb-72">
         <p class="photo-collage__section-label">Latest Ship</p>
-        <a href="https://ships.purduehackers.com/" target="_blank" class="photo-collage__card photo-collage__card--ships">
-          <div class="photo-collage__card-head">
-            <span class="photo-collage__card-user">{shipUser}</span>
-            <span class="photo-collage__card-time">{shipTime}</span>
-          </div>
-          <p class="photo-collage__card-body">{shipBody}</p>
+        <a
+          href="https://ships.purduehackers.com/"
+          target="_blank"
+          class="photo-collage__card photo-collage__card--ships"
+        >
+          <ShipCard ship={latestShip} />
         </a>
-        <p class="photo-collage__section-label" style="margin-top: 0.5rem;">Latest Blog</p>
-        <a href={blogHref} target="_blank" class="photo-collage__card photo-collage__card--blog">
+        <p class="photo-collage__section-label" style="margin-top: 0.5rem;">
+          Latest Blog
+        </p>
+        <a
+          href={blogHref}
+          target="_blank"
+          class="photo-collage__card photo-collage__card--blog"
+        >
           <img src={blogImage} alt={blogTitle} loading="lazy" />
         </a>
       </div>
@@ -467,7 +472,6 @@ const shouldEnablePixelCursor = true;
           >
         </a>
       </div>
-
     </section>
 
     <!-- photo collage: mobile only — sticky photo stack (cards shown separately above) -->
@@ -703,7 +707,9 @@ const shouldEnablePixelCursor = true;
   </script>
   <script>
     function initPhotoCaption() {
-      const tip = document.getElementById('photo-caption') as HTMLElement | null;
+      const tip = document.getElementById(
+        'photo-caption'
+      ) as HTMLElement | null;
       if (!tip) return;
 
       const isMobile = window.matchMedia('(max-width: 768px)').matches;

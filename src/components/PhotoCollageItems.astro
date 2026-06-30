@@ -1,4 +1,5 @@
 ---
+import ShipCard from './ShipCard.astro';
 import { Image } from 'astro:assets';
 import type { LatestShip } from '../lib/ships';
 import type { LatestPost } from '../lib/blog';
@@ -21,13 +22,10 @@ const { ship, post } = Astro.props;
 const collageWidths = [320, 480, 640, 960, 1280];
 const collageSizes = '(min-width: 768px) 340px, 100vw';
 
-const shipUser = ship?.username ?? 'Ray';
-const shipTime = ship?.timeAgo ?? '3d ago';
-const shipBody = ship?.content ?? 'Shipped privacy options for Purdue Hackers — opt out of data collection like in Commit Overflow. Change settings with /privacy.';
-
 const blogHref = post?.link ?? 'https://blog.purduehackers.com/';
 const blogTitle = post?.title ?? 'Latest Purdue Hackers blog post';
-const blogImage = post?.ogImage ?? 'https://blog.purduehackers.com/og/posts/sighorse.png';
+const blogImage =
+  post?.ogImage ?? 'https://blog.purduehackers.com/og/posts/sighorse.png';
 ---
 
 <a
@@ -78,11 +76,7 @@ const blogImage = post?.ogImage ?? 'https://blog.purduehackers.com/og/posts/sigh
   data-caption-title="Latest #ship"
   data-caption-desc="Share what you've made in our Discord"
 >
-  <div class="photo-collage__card-head">
-    <span class="photo-collage__card-user">{shipUser}</span>
-    <span class="photo-collage__card-time">{shipTime}</span>
-  </div>
-  <p class="photo-collage__card-body">{shipBody}</p>
+  <ShipCard ship={ship} />
 </a>
 <a
   href="https://events.purduehackers.com/"

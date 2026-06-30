@@ -16,6 +16,10 @@
   --color-accent-2: #ff00cc;
   --color-accent-3: #efb9ff;
   --color-bg: #fffbf1;
+  /* Discord's UI font is "gg sans"; fall back to a humanist sans stack */
+  --font-discord:
+    'gg sans', 'ggsans', system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue',
+    Helvetica, Arial, sans-serif;
 }
 
 /* selection colors */
@@ -321,40 +325,200 @@ body.menu-open .mobile-menu-btn {
   display: block;
 }
 .photo-collage__card--ships {
-  background: #000;
-  color: var(--color-bg);
+  /* Discord's message-list background */
+  background: #313338;
+  color: #dbdee1;
+  /* header + message supply their own padding so the header spans edge-to-edge */
+  padding: 0;
 }
-.photo-collage__card-head {
+/* Discord channel-header bar: server icon pinned left, #channel name centered */
+.ship-channel-header {
+  position: relative;
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 8px;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 12px;
+  background: #313338;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
 }
-.photo-collage__card-user {
-  font-family: var(--font-inconsolata);
-  font-weight: 700;
-  font-size: 0.7rem;
-  letter-spacing: 0.02em;
-}
-.photo-collage__card-time {
-  font-family: var(--font-inconsolata);
-  font-size: 0.65rem;
-  opacity: 0.65;
+.ship-channel-header__icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: #5865f2;
+  color: #fff;
   flex-shrink: 0;
 }
-.photo-collage__card-body {
-  font-family: var(--font-inconsolata);
-  font-size: 0.62rem;
-  line-height: 1.45;
-  margin: 0;
-  opacity: 0.92;
+.ship-channel-header__icon svg {
+  width: 13px;
+  height: auto;
+  display: block;
 }
-.photo-collage__card-code {
-  display: inline-block;
-  background: rgba(255, 251, 241, 0.12);
-  padding: 1px 5px;
-  font-size: 0.58rem;
+.ship-channel-header__name {
+  font-family: var(--font-discord);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #f2f3f5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* ships card — laid out like a Discord message */
+.ship-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  font-family: var(--font-discord);
+}
+.ship-message__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover;
+  background: #1e1f22;
+}
+.ship-message__main {
+  flex: 1;
+  min-width: 0;
+}
+.ship-message__head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+.ship-message__user {
+  font-family: var(--font-discord);
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1.375;
+}
+.ship-message__time {
+  font-family: var(--font-discord);
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: #949ba4;
+  flex-shrink: 0;
+}
+.ship-message__body {
+  font-family: var(--font-discord);
+  font-size: 0.78rem;
+  line-height: 1.375;
+  color: #dbdee1;
+  max-height: 8.5em;
+  overflow: hidden;
+  word-break: break-word;
+}
+.ship-message__body p {
+  margin: 0 0 0.25em;
+}
+.ship-message__body p:last-child {
+  margin-bottom: 0;
+}
+.ship-message__body a,
+.ship-message__body .discord-link {
+  color: #00a8fc;
+  text-decoration: none;
+}
+.ship-message__body a:hover,
+.ship-message__body .discord-link:hover {
+  text-decoration: underline;
+}
+.ship-message__body strong {
+  font-weight: 700;
+}
+.ship-message__body code {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  background: #1e1f22;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  padding: 0 3px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: #dbdee1;
+}
+.ship-message__body pre {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  background: #1e1f22;
+  border: 1px solid #2b2d31;
+  padding: 6px 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  font-size: 0.78em;
+}
+.ship-message__body pre code {
+  padding: 0;
+  border: none;
+  background: none;
+}
+.ship-message__body img.discord-emoji {
+  height: 1.4em;
+  width: auto;
+  vertical-align: -0.3em;
+  display: inline;
+  object-fit: contain;
+}
+.ship-message__body .discord-user,
+.ship-message__body .discord-role,
+.ship-message__body .discord-channel,
+.ship-message__body .discord-command {
+  color: #c9cdfb;
+  background: rgba(88, 101, 242, 0.3);
+  border-radius: 3px;
+  padding: 0.1em 0.3em;
+  font-weight: 500;
+}
+.ship-message__body .discord-timestamp {
+  background: rgba(88, 101, 242, 0.18);
+  border-radius: 3px;
+  padding: 0.1em 0.3em;
+  color: #dbdee1;
+}
+/* GitHub link chips — Discord's link-embed equivalent (see transform.ts in
+   commit-overflow-website). Rendered inline as "user/repo @sha" / "#num". */
+.ship-message__body .github-commit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3ch;
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #dbdee1;
+}
+.ship-message__body .github-repo {
+  font-weight: 500;
+}
+.ship-message__body .github-sha {
+  opacity: 0.7;
+}
+.ship-message__body .github-sha::before {
+  content: '@';
+}
+.ship-message__body .github-file::before {
+  content: '/';
+  opacity: 0.7;
+  margin-inline-end: 0.25em;
+}
+.ship-message__body .github-num {
+  opacity: 0.8;
+}
+.ship-message__image {
+  display: block;
+  margin-top: 8px;
+  max-width: 100%;
+  max-height: 160px;
+  width: auto;
+  border-radius: 8px;
+  object-fit: cover;
 }
 /* blog card = the post's OG image (it already carries title, date + author) */
 .photo-collage__card--blog {
@@ -392,9 +556,9 @@ body.menu-open .mobile-menu-btn {
   z-index: 2;
 }
 .photo-collage--desktop .photo-collage__piece--4 {
-  width: 250px;
+  width: 300px;
   min-height: 140px;
-  left: 30%;
+  left: 28%;
   top: 0px;
   transform: translate3d(0, var(--py, 0px), 0) rotate(-1.5deg);
   z-index: 5;
@@ -425,8 +589,19 @@ body.menu-open .mobile-menu-btn {
   display: none;
 }
 @media (max-width: 768px) {
-  .photo-collage--mobile .photo-collage__card-body {
-    font-size: 0.52rem;
+  /* the standalone mobile ships card has room for a fuller, larger message */
+  .ship-message__user {
+    font-size: 1rem;
+  }
+  .ship-message__time {
+    font-size: 0.75rem;
+  }
+  .ship-message__body {
+    font-size: 0.95rem;
+    max-height: 16em;
+  }
+  .ship-message__image {
+    max-height: 280px;
   }
 }
 
