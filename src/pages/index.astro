@@ -4,6 +4,7 @@ import PT from '../components/PT';
 import Glider from '../components/GliderShader.astro';
 import { getHeroDitherSvg, getPixelIndices } from '../utils/dither';
 import LogoGrid from '../components/LogoSoup';
+import sponsorLogos from '../data/sponsors.normalized.json';
 import PhotoCollageItems from '../components/PhotoCollageItems.astro';
 import ShipCard from '../components/ShipCard.astro';
 import { getLatestShip } from '../lib/ships';
@@ -20,19 +21,6 @@ const blogImage =
   latestPost?.ogImage ?? 'https://blog.purduehackers.com/og/posts/sighorse.png';
 import Sprite from '../components/Sprite.astro';
 import DitherFilters from '../components/DitherFilters.astro';
-
-const logoUrls = [
-  '/logos/sentry-color.svg',
-  '/logos/vercel-color.svg',
-  '/logos/openai-color.svg',
-  '/logos/cloudflare-color.svg',
-  '/logos/linear-color.svg',
-  '/logos/tbc-color.svg',
-  '/logos/spacex-color.svg',
-  '/logos/neuralink-color.svg',
-  '/logos/kp-color.svg',
-  '/logos/million-color.svg',
-];
 
 const ditherSvg = getHeroDitherSvg(4, 64);
 const buildPixels = getPixelIndices(50);
@@ -446,7 +434,7 @@ const shouldEnablePixelCursor = true;
           >
         </p>
         <br />
-        <LogoGrid logos={logoUrls} showGrid={false} />
+        <LogoGrid logos={sponsorLogos} showGrid={false} />
         <p
           class="max-w-[32rem] font-polysans text-l mx-auto text-center leading-relaxed pt-6 pb-6"
         >
