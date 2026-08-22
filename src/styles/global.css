@@ -157,16 +157,55 @@ body.menu-open .mobile-menu-btn {
   image-rendering: pixelated;
 }
 
-/* logo grid */
+/* logo grid — "logo soup": every logo is pre-sized to carry the same optical
+   weight (see scripts/normalize-logos.mjs), so cells are sized per-logo in em
+   rather than forced to a shared height. --logo-base is the only knob: it sets
+   the em unit those normalized sizes are expressed against. */
+.logo-soup {
+  --logo-base: 30px;
+  font-size: var(--logo-base);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9em 1.2em;
+}
+@media (min-width: 768px) {
+  .logo-soup {
+    --logo-base: 44px;
+    gap: 1em 1.75em;
+  }
+}
+.logo-grid-cell {
+  position: relative;
+  flex: none;
+}
 .logo-grid-line {
   outline: 1px solid white;
 }
 .logo-grid-img {
-  filter: brightness(0) invert(1);
-  transition: filter 0.2s ease;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
-.logo-grid-cell:hover .logo-grid-img {
-  filter: none;
+/* The white-at-rest layer. Its filter is static and never transitions:
+   animating `brightness(0) invert(1)` towards `none` looks broken, because
+   invert(0.5) maps every channel to exactly 0.5 — so the halfway frame of any
+   logo is flat mid-grey. The logo visibly dims out and recovers, which reads as
+   one animation being cut off and a second one starting. Cross-fading the
+   brand-coloured copy in on top of it keeps the colour ramp monotonic. */
+.logo-grid-img--wash {
+  filter: brightness(0) invert(1);
+}
+.logo-grid-img--brand {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.logo-grid-cell:hover .logo-grid-img--brand {
+  opacity: 1;
 }
 
 /* dither strip sits under hero/collage in stack order */

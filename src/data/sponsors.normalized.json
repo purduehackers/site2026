@@ -1,0 +1,100 @@
+[
+  {
+    "name": "Sentry",
+    "src": "/logos/sentry-color.svg",
+    "width": 112,
+    "height": 26,
+    "transform": "translate(0em, -0.0208em)"
+  },
+  {
+    "name": "Vercel",
+    "src": "/logos/vercel-color.svg",
+    "width": 104,
+    "height": 21,
+    "transform": "translate(0em, -0.0396em)"
+  },
+  {
+    "name": "OpenAI",
+    "src": "/logos/openai-color.svg",
+    "width": 99,
+    "height": 27,
+    "transform": null
+  },
+  {
+    "name": "Neuralink",
+    "src": "/logos/neuralink-color.svg",
+    "width": 111,
+    "height": 37,
+    "transform": "translate(0em, 0.0563em)"
+  },
+  {
+    "name": "Million",
+    "src": "/logos/million-color.svg",
+    "width": 109,
+    "height": 18,
+    "transform": "translate(0em, -0.0146em)"
+  },
+  {
+    "name": "Kleiner Perkins",
+    "src": "/logos/kp-color.svg",
+    "width": 185,
+    "height": 17,
+    "transform": "translate(0em, 0.0125em)"
+  },
+  {
+    "name": "Roblox",
+    "src": "/logos/roblox-color.svg",
+    "width": 98,
+    "height": 18,
+    "transform": null
+  },
+  {
+    "name": "Zed",
+    "src": "/logos/zed-color.svg",
+    "width": 86,
+    "height": 29,
+    "transform": null
+  },
+  {
+    "name": "Walmart",
+    "src": "/logos/walmart-color.svg",
+    "width": 97,
+    "height": 18,
+    "transform": "translate(0em, -0.0187em)"
+  },
+  {
+    "name": "Paper",
+    "src": "/logos/paper-color.svg",
+    "width": 94,
+    "height": 26,
+    "transform": "translate(0em, 0.0125em)"
+  },
+  {
+    "name": "Linear",
+    "src": "/logos/linear-color.svg",
+    "width": 98,
+    "height": 24,
+    "transform": "translate(0em, -0.0125em)"
+  },
+  {
+    "name": "The Browser Company of New York",
+    "src": "/logos/tbc-color.svg",
+    "width": 144,
+    "height": 24,
+    "transform": "translate(0em, 0.0646em)"
+  },
+  {
+    "name": "SpaceX",
+    "src": "/logos/spacex-color.svg",
+    "width": 148,
+    "height": 19,
+    "transform": "translate(0em, -0.0646em)"
+  },
+  {
+    "name": "Cloudflare",
+    "src": "/logos/cloudflare-color.svg",
+    "width": 87,
+    "height": 29,
+    "transform": "translate(0em, -0.0396em)"
+  }
+]

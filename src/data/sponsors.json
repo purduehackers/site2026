@@ -1,0 +1,16 @@
+[
+  { "name": "Sentry", "src": "/logos/sentry-color.svg" },
+  { "name": "Vercel", "src": "/logos/vercel-color.svg" },
+  { "name": "OpenAI", "src": "/logos/openai-color.svg" },
+  { "name": "Neuralink", "src": "/logos/neuralink-color.svg" },
+  { "name": "Million", "src": "/logos/million-color.svg" },
+  { "name": "Kleiner Perkins", "src": "/logos/kp-color.svg" },
+  { "name": "Roblox", "src": "/logos/roblox-color.svg" },
+  { "name": "Zed", "src": "/logos/zed-color.svg" },
+  { "name": "Walmart", "src": "/logos/walmart-color.svg" },
+  { "name": "Paper", "src": "/logos/paper-color.svg" },
+  { "name": "Linear", "src": "/logos/linear-color.svg" },
+  { "name": "The Browser Company of New York", "src": "/logos/tbc-color.svg" },
+  { "name": "SpaceX", "src": "/logos/spacex-color.svg" },
+  { "name": "Cloudflare", "src": "/logos/cloudflare-color.svg" }
+]
