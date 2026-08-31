@@ -153,14 +153,23 @@ body.menu-open .mobile-menu-btn {
   pointer-events: auto;
 }
 
-/* footer easter egg: hidden until the pointer is within ~20px (script toggles
-   .is-near) or the link receives keyboard focus */
+/* footer easter egg: hidden until the pointer is within ~20px (script adds
+   .is-near, permanently) or the link receives keyboard focus. Fades in slowly;
+   the color transition matches its `transition-colors` siblings. */
 .lunar-egg {
   opacity: 0;
+  transition:
+    opacity 2s ease,
+    color 150ms;
 }
 .lunar-egg.is-near,
 .lunar-egg:focus-visible {
   opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lunar-egg {
+    transition: none;
+  }
 }
 
 .image-rendering-pixelated {

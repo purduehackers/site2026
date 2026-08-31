@@ -566,12 +566,12 @@ const shouldEnablePixelCursor = true;
                 >Commit Overflow</a
               >
               <br />
-              <!-- easter egg: invisible until the pointer comes within ~20px (see initLunarEgg) or it receives keyboard focus -->
+              <!-- easter egg: invisible until the pointer comes within ~20px (see initLunarEgg) or it receives keyboard focus; once revealed it stays -->
               <a
                 id="lunar-egg"
                 href="https://lunar.purduehackers.com/"
                 target="_blank"
-                class="lunar-egg footer-overlay-link underline hover:text-[var(--color-secondary)] transition-[color,opacity] font-semibold motion-reduce:transition-none"
+                class="lunar-egg footer-overlay-link underline hover:text-[var(--color-secondary)] font-semibold"
                 >Lunar</a
               >
             </p>
@@ -684,26 +684,24 @@ const shouldEnablePixelCursor = true;
       const zone = link?.closest('section');
       if (!link || !zone) return;
       const RADIUS = 20; // px around the link's box that counts as "near"
-      let near = false;
-      function setNear(next: boolean) {
-        if (next === near) return;
-        near = next;
-        link!.classList.toggle('is-near', near);
+      // once found, it stays found: reveal is one-shot and the listener goes away
+      function reveal() {
+        link!.classList.add('is-near');
+        zone!.removeEventListener('pointermove', onMove);
       }
-      zone.addEventListener(
-        'pointermove',
-        (e) => {
-          const r = link!.getBoundingClientRect();
-          setNear(
-            e.clientX >= r.left - RADIUS &&
-              e.clientX <= r.right + RADIUS &&
-              e.clientY >= r.top - RADIUS &&
-              e.clientY <= r.bottom + RADIUS
-          );
-        },
-        { passive: true }
-      );
-      zone.addEventListener('pointerleave', () => setNear(false));
+      function onMove(e: PointerEvent) {
+        const r = link!.getBoundingClientRect();
+        if (
+          e.clientX >= r.left - RADIUS &&
+          e.clientX <= r.right + RADIUS &&
+          e.clientY >= r.top - RADIUS &&
+          e.clientY <= r.bottom + RADIUS
+        ) {
+          reveal();
+        }
+      }
+      zone.addEventListener('pointermove', onMove, { passive: true });
+      link.addEventListener('focus', reveal, { once: true });
     }
     function init() {
       const root = document.getElementById('pixel-blast-root');
