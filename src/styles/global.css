@@ -153,6 +153,16 @@ body.menu-open .mobile-menu-btn {
   pointer-events: auto;
 }
 
+/* footer easter egg: hidden until the pointer is within ~20px (script toggles
+   .is-near) or the link receives keyboard focus */
+.lunar-egg {
+  opacity: 0;
+}
+.lunar-egg.is-near,
+.lunar-egg:focus-visible {
+  opacity: 1;
+}
+
 .image-rendering-pixelated {
   image-rendering: pixelated;
 }

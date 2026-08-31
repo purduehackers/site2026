@@ -525,10 +525,10 @@ const shouldEnablePixelCursor = true;
             </p>
             <p class="mt-2 text-lg md:text-xl uppercase text-[var(--color-bg)]">
               <a
-                href="https://sig.horse/"
+                href="https://ships.purduehackers.com/"
                 target="_blank"
                 class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >SIGHORSE</a
+                >Ships</a
               >
               <br />
               <a
@@ -539,24 +539,10 @@ const shouldEnablePixelCursor = true;
               >
               <br />
               <a
-                href="https://ships.purduehackers.com/"
-                target="_blank"
-                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >Ships</a
-              >
-              <br />
-              <a
                 href="https://merch.purduehackers.com/"
                 target="_blank"
                 class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >Merch</a
-              >
-              <br />
-              <a
-                href="https://commit.purduehackers.com/"
-                target="_blank"
-                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >Commit Overflow</a
+                >Merchandise</a
               >
               <br />
               <a
@@ -566,11 +552,26 @@ const shouldEnablePixelCursor = true;
                 >Webring</a
               >
               <br />
-              <!-- easter egg: invisible until you hover (or tab to) the empty last line -->
               <a
+                href="https://sig.horse/"
+                target="_blank"
+                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+                >SIGHORSE</a
+              >
+              <br />
+              <a
+                href="https://commit.purduehackers.com/"
+                target="_blank"
+                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+                >Commit Overflow</a
+              >
+              <br />
+              <!-- easter egg: invisible until the pointer comes within ~20px (see initLunarEgg) or it receives keyboard focus -->
+              <a
+                id="lunar-egg"
                 href="https://lunar.purduehackers.com/"
                 target="_blank"
-                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-[color,opacity] font-semibold opacity-0 hover:opacity-100 focus-visible:opacity-100 motion-reduce:transition-none"
+                class="lunar-egg footer-overlay-link underline hover:text-[var(--color-secondary)] transition-[color,opacity] font-semibold motion-reduce:transition-none"
                 >Lunar</a
               >
             </p>
@@ -678,6 +679,32 @@ const shouldEnablePixelCursor = true;
       container.addEventListener('mouseenter', () => startInterval(fastMs));
       container.addEventListener('mouseleave', () => startInterval(slowMs));
     }
+    function initLunarEgg() {
+      const link = document.getElementById('lunar-egg');
+      const zone = link?.closest('section');
+      if (!link || !zone) return;
+      const RADIUS = 20; // px around the link's box that counts as "near"
+      let near = false;
+      function setNear(next: boolean) {
+        if (next === near) return;
+        near = next;
+        link!.classList.toggle('is-near', near);
+      }
+      zone.addEventListener(
+        'pointermove',
+        (e) => {
+          const r = link!.getBoundingClientRect();
+          setNear(
+            e.clientX >= r.left - RADIUS &&
+              e.clientX <= r.right + RADIUS &&
+              e.clientY >= r.top - RADIUS &&
+              e.clientY <= r.bottom + RADIUS
+          );
+        },
+        { passive: true }
+      );
+      zone.addEventListener('pointerleave', () => setNear(false));
+    }
     function init() {
       const root = document.getElementById('pixel-blast-root');
       if (root) {
@@ -704,6 +731,7 @@ const shouldEnablePixelCursor = true;
         document.addEventListener('astro:before-swap', cleanup, { once: true });
       }
       initMadeWith();
+      initLunarEgg();
     }
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
