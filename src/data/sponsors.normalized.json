@@ -2,6 +2,7 @@
   {
     "name": "Sentry",
     "src": "/logos/sentry-color.svg",
+    "url": "https://sentry.io",
     "width": 112,
     "height": 26,
     "transform": "translate(0em, -0.0208em)"
@@ -9,6 +10,7 @@
   {
     "name": "Vercel",
     "src": "/logos/vercel-color.svg",
+    "url": "https://vercel.com",
     "width": 104,
     "height": 21,
     "transform": "translate(0em, -0.0396em)"
@@ -16,6 +18,7 @@
   {
     "name": "OpenAI",
     "src": "/logos/openai-color.svg",
+    "url": "https://openai.com",
     "width": 99,
     "height": 27,
     "transform": null
@@ -23,6 +26,7 @@
   {
     "name": "Neuralink",
     "src": "/logos/neuralink-color.svg",
+    "url": "https://neuralink.com",
     "width": 111,
     "height": 37,
     "transform": "translate(0em, 0.0563em)"
@@ -30,6 +34,7 @@
   {
     "name": "Million",
     "src": "/logos/million-color.svg",
+    "url": "https://million.dev",
     "width": 109,
     "height": 18,
     "transform": "translate(0em, -0.0146em)"
@@ -37,6 +42,7 @@
   {
     "name": "Kleiner Perkins",
     "src": "/logos/kp-color.svg",
+    "url": "https://www.kleinerperkins.com",
     "width": 185,
     "height": 17,
     "transform": "translate(0em, 0.0125em)"
@@ -44,6 +50,7 @@
   {
     "name": "Roblox",
     "src": "/logos/roblox-color.svg",
+    "url": "https://www.roblox.com",
     "width": 98,
     "height": 18,
     "transform": null
@@ -51,6 +58,7 @@
   {
     "name": "Zed",
     "src": "/logos/zed-color.svg",
+    "url": "https://zed.dev",
     "width": 86,
     "height": 29,
     "transform": null
@@ -58,6 +66,7 @@
   {
     "name": "Walmart",
     "src": "/logos/walmart-color.svg",
+    "url": "https://www.walmart.com",
     "width": 97,
     "height": 18,
     "transform": "translate(0em, -0.0187em)"
@@ -65,6 +74,7 @@
   {
     "name": "Paper",
     "src": "/logos/paper-color.svg",
+    "url": "https://paper.design",
     "width": 94,
     "height": 26,
     "transform": "translate(0em, 0.0125em)"
@@ -72,6 +82,7 @@
   {
     "name": "Linear",
     "src": "/logos/linear-color.svg",
+    "url": "https://linear.app",
     "width": 98,
     "height": 24,
     "transform": "translate(0em, -0.0125em)"
@@ -79,20 +90,23 @@
   {
     "name": "The Browser Company of New York",
     "src": "/logos/tbc-color.svg",
+    "url": "https://thebrowser.company",
     "width": 144,
     "height": 24,
     "transform": "translate(0em, 0.0646em)"
   },
   {
-    "name": "SpaceX",
-    "src": "/logos/spacex-color.svg",
+    "name": "SpaceXAI",
+    "src": "/logos/spacexai-color.svg",
+    "url": "https://x.ai",
     "width": 148,
     "height": 19,
-    "transform": "translate(0em, -0.0646em)"
+    "transform": "translate(0em, -0.0687em)"
   },
   {
     "name": "Cloudflare",
     "src": "/logos/cloudflare-color.svg",
+    "url": "https://www.cloudflare.com",
     "width": 87,
     "height": 29,
     "transform": "translate(0em, -0.0396em)"

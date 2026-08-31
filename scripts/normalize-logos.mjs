@@ -76,6 +76,7 @@ const normalized = sponsors.map((sponsor, index) => {
   return {
     name: sponsor.name,
     src: sponsor.src,
+    url: sponsor.url ?? null,
     width: logo.normalizedWidth,
     height: logo.normalizedHeight,
     transform: transform ?? null,
