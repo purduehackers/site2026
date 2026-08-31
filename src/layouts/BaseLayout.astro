@@ -21,6 +21,8 @@ const { title = 'Purdue Hackers' } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
 
+    <slot name="head"></slot>
+
     <Font cssVariable="--font-whyte" preload />
     <Font cssVariable="--font-inconsolata" preload />
     <Font cssVariable="--font-silkscreen" preload />
