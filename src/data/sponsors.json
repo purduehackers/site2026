@@ -1,16 +1,68 @@
 [
-  { "name": "Sentry", "src": "/logos/sentry-color.svg" },
-  { "name": "Vercel", "src": "/logos/vercel-color.svg" },
-  { "name": "OpenAI", "src": "/logos/openai-color.svg" },
-  { "name": "Neuralink", "src": "/logos/neuralink-color.svg" },
-  { "name": "Million", "src": "/logos/million-color.svg" },
-  { "name": "Kleiner Perkins", "src": "/logos/kp-color.svg" },
-  { "name": "Roblox", "src": "/logos/roblox-color.svg" },
-  { "name": "Zed", "src": "/logos/zed-color.svg" },
-  { "name": "Walmart", "src": "/logos/walmart-color.svg" },
-  { "name": "Paper", "src": "/logos/paper-color.svg" },
-  { "name": "Linear", "src": "/logos/linear-color.svg" },
-  { "name": "The Browser Company of New York", "src": "/logos/tbc-color.svg" },
-  { "name": "SpaceX", "src": "/logos/spacex-color.svg" },
-  { "name": "Cloudflare", "src": "/logos/cloudflare-color.svg" }
+  {
+    "name": "Sentry",
+    "src": "/logos/sentry-color.svg",
+    "url": "https://sentry.io"
+  },
+  {
+    "name": "Vercel",
+    "src": "/logos/vercel-color.svg",
+    "url": "https://vercel.com"
+  },
+  {
+    "name": "OpenAI",
+    "src": "/logos/openai-color.svg",
+    "url": "https://openai.com"
+  },
+  {
+    "name": "Neuralink",
+    "src": "/logos/neuralink-color.svg",
+    "url": "https://neuralink.com"
+  },
+  {
+    "name": "Million",
+    "src": "/logos/million-color.svg",
+    "url": "https://million.dev"
+  },
+  {
+    "name": "Kleiner Perkins",
+    "src": "/logos/kp-color.svg",
+    "url": "https://www.kleinerperkins.com"
+  },
+  {
+    "name": "Roblox",
+    "src": "/logos/roblox-color.svg",
+    "url": "https://www.roblox.com"
+  },
+  { "name": "Zed", "src": "/logos/zed-color.svg", "url": "https://zed.dev" },
+  {
+    "name": "Walmart",
+    "src": "/logos/walmart-color.svg",
+    "url": "https://www.walmart.com"
+  },
+  {
+    "name": "Paper",
+    "src": "/logos/paper-color.svg",
+    "url": "https://paper.design"
+  },
+  {
+    "name": "Linear",
+    "src": "/logos/linear-color.svg",
+    "url": "https://linear.app"
+  },
+  {
+    "name": "The Browser Company of New York",
+    "src": "/logos/tbc-color.svg",
+    "url": "https://thebrowser.company"
+  },
+  {
+    "name": "SpaceXAI",
+    "src": "/logos/spacexai-color.svg",
+    "url": "https://x.ai"
+  },
+  {
+    "name": "Cloudflare",
+    "src": "/logos/cloudflare-color.svg",
+    "url": "https://www.cloudflare.com"
+  }
 ]

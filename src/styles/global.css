@@ -179,6 +179,8 @@ body.menu-open .mobile-menu-btn {
 .logo-grid-cell {
   position: relative;
   flex: none;
+  /* Cells that link to a sponsor render as <a>, which is inline by default. */
+  display: block;
 }
 .logo-grid-line {
   outline: 1px solid white;
@@ -204,7 +206,8 @@ body.menu-open .mobile-menu-btn {
   opacity: 0;
   transition: opacity 0.2s ease;
 }
-.logo-grid-cell:hover .logo-grid-img--brand {
+.logo-grid-cell:hover .logo-grid-img--brand,
+.logo-grid-cell:focus-visible .logo-grid-img--brand {
   opacity: 1;
 }
 
