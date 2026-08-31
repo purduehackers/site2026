@@ -697,6 +697,21 @@ body.menu-open .mobile-menu-btn {
   }
 }
 
+/* hero conway grid: cell size + phase are set from JS so the lines land
+   exactly on the glider shader's cell boundaries */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  --hero-grid-cell: 10px;
+  --hero-grid-line: rgba(0, 0, 0, 0.07);
+  background-image:
+    linear-gradient(to right, var(--hero-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--hero-grid-line) 1px, transparent 1px);
+  background-size: var(--hero-grid-cell) var(--hero-grid-cell);
+}
+
 /* photo caption tooltip */
 .photo-caption {
   position: fixed;
