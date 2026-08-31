@@ -9,6 +9,9 @@ import PhotoCollageItems from '../components/PhotoCollageItems.astro';
 import ShipCard from '../components/ShipCard.astro';
 import { getLatestShip } from '../lib/ships';
 import { getLatestPost } from '../lib/blog';
+import SocialPreviewMetadata from '../components/SocialPreviewMetadata.astro';
+import Sprite from '../components/Sprite.astro';
+import DitherFilters from '../components/DitherFilters.astro';
 
 const [latestShip, latestPost] = await Promise.all([
   getLatestShip(),
@@ -19,8 +22,6 @@ const blogHref = latestPost?.link ?? 'https://blog.purduehackers.com/';
 const blogTitle = latestPost?.title ?? 'Latest Purdue Hackers blog post';
 const blogImage =
   latestPost?.ogImage ?? 'https://blog.purduehackers.com/og/posts/sighorse.png';
-import Sprite from '../components/Sprite.astro';
-import DitherFilters from '../components/DitherFilters.astro';
 
 const ditherSvg = getHeroDitherSvg(4, 64);
 const buildPixels = getPixelIndices(50);
@@ -30,6 +31,12 @@ const shouldEnablePixelCursor = true;
 ---
 
 <BaseLayout>
+  <slot name="head">
+    <SocialPreviewMetadata
+      title="Purdue Hackers"
+      description="A collective of hobbyists, engineers, and artists who make creative-technical software, hardware, and mixed media projects"
+    />
+  </slot>
   {
     shouldEnablePixelCursor && (
       <div

@@ -1,0 +1,31 @@
+---
+import thumbnailImage from '../assets/thumbnail.png';
+
+export interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+
+const imageMimeType =
+  thumbnailImage.format === 'png'
+    ? 'image/png'
+    : (() => {
+        throw new Error('Not yet supported image format for thumbnail image');
+      })();
+---
+
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:type" content="website" />
+<meta property="og:url" content={Astro.url.href} />
+<meta property="og:image:url" content={thumbnailImage.src} />
+<meta property="og:image:width" content={thumbnailImage.width.toString()} />
+<meta property="og:image:height" content={thumbnailImage.height.toString()} />
+<meta property="og:image:type" content={imageMimeType} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@purduehackers">
+<meta name="twitter:creator" content="@purduehackers">
+{/* The title/description/image will fall back to the OpenGraph tags. */}
