@@ -61,6 +61,7 @@ const shouldEnablePixelCursor = true;
       class="relative z-[2] isolate flex items-start md:items-start gap-16 px-4 pt-64 pb-8 sm:px-10 md:px-40 md:pt-32 md:pb-12 overflow-visible"
       style="background-color: var(--color-bg);"
     >
+      <div class="hero-grid" aria-hidden="true"></div>
       <div class="flex flex-col gap-6">
         <img
           src="/title.svg"
@@ -762,6 +763,51 @@ const shouldEnablePixelCursor = true;
       document.addEventListener('DOMContentLoaded', initPhotoCaption);
     } else {
       initPhotoCaption();
+    }
+  </script>
+  <script>
+    // Keep the hero grid in phase with the glider shader's cells. The glider
+    // is positioned with percentage offsets + translates, so the cell origin
+    // relative to the section is only known at layout time.
+    function initHeroGrid() {
+      const grid = document.querySelector('.hero-grid');
+      const canvas = document.querySelector('canvas[data-glider-shader]');
+      if (!(grid instanceof HTMLElement) || !(canvas instanceof HTMLElement)) {
+        return;
+      }
+
+      const cell = parseInt(canvas.dataset.cellSize || '10');
+      grid.style.setProperty('--hero-grid-cell', `${cell}px`);
+
+      const align = () => {
+        const g = grid.getBoundingClientRect();
+        const c = canvas.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        const phase = (v: number) =>
+          Math.round((((v % cell) + cell) % cell) * dpr) / dpr;
+        grid.style.backgroundPosition = `${phase(c.left - g.left)}px ${phase(c.top - g.top)}px`;
+      };
+
+      let raf = 0;
+      const queueAlign = () => {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(align);
+      };
+
+      align();
+      // canvas gets its real size once the shader boots; section height moves
+      // as fonts/images settle — observe both instead of guessing timing
+      const ro = new ResizeObserver(queueAlign);
+      ro.observe(grid);
+      ro.observe(canvas);
+      window.addEventListener('resize', queueAlign);
+      document.fonts?.ready.then(queueAlign);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initHeroGrid);
+    } else {
+      initHeroGrid();
     }
   </script>
   <script>
