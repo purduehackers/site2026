@@ -137,7 +137,10 @@ export function initPixelTrail(
       (p.age < rampUp
         ? p.age / rampUp
         : 1 - (p.age - rampUp) / (maxAge - rampUp)) * p.force;
-    const r = Math.max(0, gridSize * radius * intensity);
+    const r = gridSize * radius * intensity;
+    // a trail's first sample (force 0) and a stamp at exactly maxAge have no
+    // radius and would paint nothing; skip the gradient work
+    if (r <= 0) return;
     const grd = tctx!.createRadialGradient(px, py, r * 0.25, px, py, r);
     grd.addColorStop(0, `rgba(255, 255, 255, ${STAMP_ALPHA})`);
     grd.addColorStop(1, 'rgba(0, 0, 0, 0)');

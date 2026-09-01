@@ -837,6 +837,19 @@ const shouldEnablePixelCursor = true;
       reducedMotion.addEventListener('change', sync);
       window.addEventListener('scroll', updateColor, { passive: true });
       window.addEventListener('resize', updateColor, { passive: true });
+
+      document.addEventListener(
+        'astro:before-swap',
+        () => {
+          trail?.destroy();
+          trail = null;
+          desktop.removeEventListener('change', sync);
+          reducedMotion.removeEventListener('change', sync);
+          window.removeEventListener('scroll', updateColor);
+          window.removeEventListener('resize', updateColor);
+        },
+        { once: true }
+      );
     }
 
     if (document.readyState === 'loading') {
