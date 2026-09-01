@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PT from '../components/PT';
 import Glider from '../components/GliderShader.astro';
 import { getHeroDitherSvg, getPixelIndices } from '../utils/dither';
 import LogoGrid from '../components/LogoSoup';
@@ -41,17 +40,8 @@ const shouldEnablePixelCursor = true;
     shouldEnablePixelCursor && (
       <div
         id="pixel-trail-container"
-        style="position: fixed; inset: 0; z-index: 10; pointer-events: none;"
-      >
-        <PT
-          client:load
-          gridSize={85}
-          trailSize={0.05}
-          maxAge={220}
-          interpolate={3}
-          gooeyFilter={{ id: 'custom-goo-filter', strength: 0 }}
-        />
-      </div>
+        style="position: fixed; inset: 0; z-index: 10; pointer-events: none; overflow: hidden;"
+      />
     )
   }
   <main>
@@ -798,6 +788,74 @@ const shouldEnablePixelCursor = true;
       document.addEventListener('DOMContentLoaded', initPhotoCaption);
     } else {
       initPhotoCaption();
+    }
+  </script>
+  <script>
+    import { initPixelTrail } from '../scripts/pixelTrail';
+    import { getCollageDarkAnchor } from '../utils/collageAnchor';
+
+    function initCursorTrail() {
+      const container = document.getElementById('pixel-trail-container');
+      if (!container) return;
+
+      const desktop = window.matchMedia('(min-width: 768px)');
+      const reducedMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      );
+      let trail: ReturnType<typeof initPixelTrail> | null = null;
+
+      // trail turns yellow once the dark collage section reaches mid-viewport
+      function currentColor() {
+        const darkEl = getCollageDarkAnchor();
+        if (!darkEl) return '#000000';
+        const rect = darkEl.getBoundingClientRect();
+        return rect.top <= window.innerHeight * 0.5 ? '#FFEE00' : '#000000';
+      }
+
+      function updateColor() {
+        trail?.setColor(currentColor());
+      }
+
+      function sync() {
+        const wanted = desktop.matches && !reducedMotion.matches;
+        if (wanted && !trail) {
+          trail = initPixelTrail(container!, {
+            gridSize: 85,
+            trailSize: 0.05,
+            maxAge: 220,
+            interpolate: 3,
+            color: currentColor(),
+          });
+        } else if (!wanted && trail) {
+          trail.destroy();
+          trail = null;
+        }
+      }
+
+      sync();
+      desktop.addEventListener('change', sync);
+      reducedMotion.addEventListener('change', sync);
+      window.addEventListener('scroll', updateColor, { passive: true });
+      window.addEventListener('resize', updateColor, { passive: true });
+
+      document.addEventListener(
+        'astro:before-swap',
+        () => {
+          trail?.destroy();
+          trail = null;
+          desktop.removeEventListener('change', sync);
+          reducedMotion.removeEventListener('change', sync);
+          window.removeEventListener('scroll', updateColor);
+          window.removeEventListener('resize', updateColor);
+        },
+        { once: true }
+      );
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initCursorTrail);
+    } else {
+      initCursorTrail();
     }
   </script>
   <script>
