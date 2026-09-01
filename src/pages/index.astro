@@ -305,13 +305,7 @@ const shouldEnablePixelCursor = true;
             target="_blank"
             class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 motion-reduce:transition-none md:whitespace-nowrap"
             >a journal of projects done over summer</a
-          >, and more. Interested in what community projects need taking up on?
-          Come check out our <a
-            href="https://shelter.purduehackers.com/"
-            target="_blank"
-            class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 motion-reduce:transition-none md:whitespace-nowrap"
-            >Shelter</a
-          >.
+          >, and more.
         </p>
         <a
           href="https://discord.gg/5paFjKzdPE"
@@ -531,10 +525,10 @@ const shouldEnablePixelCursor = true;
             </p>
             <p class="mt-2 text-lg md:text-xl uppercase text-[var(--color-bg)]">
               <a
-                href="https://sig.horse/"
+                href="https://ships.purduehackers.com/"
                 target="_blank"
                 class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >SIGHORSE</a
+                >Ships</a
               >
               <br />
               <a
@@ -545,10 +539,24 @@ const shouldEnablePixelCursor = true;
               >
               <br />
               <a
-                href="https://shelter.purduehackers.com/"
+                href="https://merch.purduehackers.com/"
                 target="_blank"
                 class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >Shelter</a
+                >Merchandise</a
+              >
+              <br />
+              <a
+                href="https://ring.purduehackers.com/"
+                target="_blank"
+                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+                >Webring</a
+              >
+              <br />
+              <a
+                href="https://sig.horse/"
+                target="_blank"
+                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+                >SIGHORSE</a
               >
               <br />
               <a
@@ -558,11 +566,13 @@ const shouldEnablePixelCursor = true;
                 >Commit Overflow</a
               >
               <br />
+              <!-- easter egg: invisible until the pointer comes within ~20px (see initLunarEgg) or it receives keyboard focus; once revealed it stays -->
               <a
-                href="https://ring.purduehackers.com/"
+                id="lunar-egg"
+                href="https://lunar.purduehackers.com/"
                 target="_blank"
-                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >Webring</a
+                class="lunar-egg footer-overlay-link underline hover:text-[var(--color-secondary)] font-semibold"
+                >Lunar</a
               >
             </p>
           </div>
@@ -669,6 +679,30 @@ const shouldEnablePixelCursor = true;
       container.addEventListener('mouseenter', () => startInterval(fastMs));
       container.addEventListener('mouseleave', () => startInterval(slowMs));
     }
+    function initLunarEgg() {
+      const link = document.getElementById('lunar-egg');
+      const zone = link?.closest('section');
+      if (!link || !zone) return;
+      const RADIUS = 20; // px around the link's box that counts as "near"
+      // once found, it stays found: reveal is one-shot and the listener goes away
+      function reveal() {
+        link!.classList.add('is-near');
+        zone!.removeEventListener('pointermove', onMove);
+      }
+      function onMove(e: PointerEvent) {
+        const r = link!.getBoundingClientRect();
+        if (
+          e.clientX >= r.left - RADIUS &&
+          e.clientX <= r.right + RADIUS &&
+          e.clientY >= r.top - RADIUS &&
+          e.clientY <= r.bottom + RADIUS
+        ) {
+          reveal();
+        }
+      }
+      zone.addEventListener('pointermove', onMove, { passive: true });
+      link.addEventListener('focus', reveal, { once: true });
+    }
     function init() {
       const root = document.getElementById('pixel-blast-root');
       if (root) {
@@ -695,6 +729,7 @@ const shouldEnablePixelCursor = true;
         document.addEventListener('astro:before-swap', cleanup, { once: true });
       }
       initMadeWith();
+      initLunarEgg();
     }
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', init);
