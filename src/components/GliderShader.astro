@@ -1,22 +1,29 @@
 ---
+import { DITHER_BAND_ROWS, GLIDER_CELL_SIZE } from '../constants/gliderGrid';
+
 interface Props {
-  gridCols?: number;
-  gridRows?: number;
   cellSize?: number;
   speedMs?: number;
+  /** Rows of pinned dither at the bottom of the sim. */
+  ditherRows?: number;
   class?: string;
 }
 
 const {
-  gridCols = 80,
-  gridRows = 100,
-  cellSize = 10,
+  cellSize = GLIDER_CELL_SIZE,
   speedMs = 100,
+  ditherRows = DITHER_BAND_ROWS,
   class: className = '',
 } = Astro.props;
 ---
 
-<div class={`glider-wrap ${className}`.trim()}>
+<div
+  class={`glider-wrap ${className}`.trim()}
+  aria-hidden="true"
+  data-cell-size={cellSize}
+  data-speed-ms={speedMs}
+  data-dither-rows={ditherRows}
+>
   <canvas data-glider-shader></canvas>
 </div>
 
@@ -28,20 +35,21 @@ const {
     canvases.forEach((canvas) => {
       if (!(canvas instanceof HTMLCanvasElement)) return;
       if (canvas.dataset.initialized) return; // prevent double-init
+      const wrap = canvas.parentElement;
+      if (!wrap) return;
 
       canvas.dataset.initialized = 'true';
 
-      // Read config from data attributes
-      const gridCols = parseInt(canvas.dataset.gridCols || '80');
-      const gridRows = parseInt(canvas.dataset.gridRows || '100');
-      const cellSize = parseInt(canvas.dataset.cellSize || '10');
-      const speedMs = parseInt(canvas.dataset.speedMs || '100');
+      // Config rides on the wrapper: the canvas sizes itself from that box.
+      const cellSize = parseInt(wrap.dataset.cellSize || '10', 10);
+      const speedMs = parseInt(wrap.dataset.speedMs || '100', 10);
+      const ditherRows = parseInt(wrap.dataset.ditherRows || '22', 10);
+      canvas.dataset.cellSize = String(cellSize);
 
       const cleanup = initGliderShader(canvas, {
-        gridCols,
-        gridRows,
         cellSize,
         speedMs,
+        ditherRows,
         cellColor: [0, 0, 0],
       });
 
@@ -57,34 +65,23 @@ const {
   }
 </script>
 
-<script define:vars={{ gridCols, gridRows, cellSize, speedMs }}>
-  // Pass config via data attributes
-  const script = document.currentScript;
-  const wrap = script?.closest('.glider-wrap');
-  const canvas = wrap?.querySelector('canvas[data-glider-shader]');
-  if (canvas) {
-    canvas.dataset.gridCols = String(gridCols);
-    canvas.dataset.gridRows = String(gridRows);
-    canvas.dataset.cellSize = String(cellSize);
-    canvas.dataset.speedMs = String(speedMs);
-  }
-</script>
-
 <style>
+  /* Full-bleed layer: the sim covers the hero, and its last rows are the
+     dithered transition into the dark section below. */
   .glider-wrap {
-    display: inline-block;
-    flex-shrink: 0;
-    padding: 0;
-    border-radius: 0px;
+    position: absolute;
+    inset: 0;
     overflow: hidden;
     pointer-events: none;
   }
 
   .glider-wrap canvas {
+    position: absolute;
+    /* whole cells only, so the solid rows sit flush on the section's edge */
+    bottom: 0;
+    left: 0;
     display: block;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
-    /* border-radius: 5px;
-		border: 1px solid #000; */
   }
 </style>

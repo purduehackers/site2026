@@ -230,7 +230,7 @@ body.menu-open .mobile-menu-btn {
   opacity: 1;
 }
 
-/* dither strip sits under hero/collage in stack order */
+/* legacy alias */
 .dither-strip {
   transform: translateZ(0);
 }
@@ -764,15 +764,6 @@ body.menu-open .mobile-menu-btn {
   line-height: 1.4;
   margin-top: 3px;
   opacity: 0.9;
-}
-
-@media (min-aspect-ratio: 2/3) and (max-aspect-ratio: 4/3) {
-  .glider {
-    top: -15% !important;
-    left: 50% !important;
-    right: auto !important;
-    transform: translateX(-50%) !important;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

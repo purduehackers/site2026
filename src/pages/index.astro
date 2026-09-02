@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Glider from '../components/GliderShader.astro';
-import { getHeroDitherSvg, getPixelIndices } from '../utils/dither';
+import { getPixelIndices } from '../utils/dither';
 import LogoGrid from '../components/LogoSoup';
 import sponsorLogos from '../data/sponsors.normalized.json';
 import PhotoCollageItems from '../components/PhotoCollageItems.astro';
@@ -11,6 +11,11 @@ import { getLatestPost } from '../lib/blog';
 import SocialPreviewMetadata from '../components/SocialPreviewMetadata.astro';
 import Sprite from '../components/Sprite.astro';
 import DitherFilters from '../components/DitherFilters.astro';
+import { DITHER_BAND_ROWS, GLIDER_CELL_SIZE } from '../constants/gliderGrid';
+
+// The sim's last rows are the dithered transition; the hero has to reserve
+// that much room under its content so the ramp never runs into the CTA.
+const ditherBandPx = DITHER_BAND_ROWS * GLIDER_CELL_SIZE;
 
 const [latestShip, latestPost] = await Promise.all([
   getLatestShip(),
@@ -22,7 +27,6 @@ const blogTitle = latestPost?.title ?? 'Latest Purdue Hackers blog post';
 const blogImage =
   latestPost?.ogImage ?? 'https://blog.purduehackers.com/og/posts/sighorse.png';
 
-const ditherSvg = getHeroDitherSvg(4, 64);
 const buildPixels = getPixelIndices(50);
 const backPixels = getPixelIndices(40);
 const joinPixels = getPixelIndices(40);
@@ -46,13 +50,15 @@ const shouldEnablePixelCursor = true;
   }
   <main>
     <DitherFilters />
-    <!-- glider is position:absolute and can extend below this section; overflow-hidden clipped those pixels so the dither strip looked stacked on top -->
+    <!-- one Conway grid spans the whole hero: the gun runs at the top, and the
+         bottom rows are the pinned dither that fades into the dark section -->
     <section
-      class="relative z-[2] isolate flex items-start md:items-start gap-16 px-4 pt-64 pb-8 sm:px-10 md:px-40 md:pt-32 md:pb-12 overflow-visible"
-      style="background-color: var(--color-bg);"
+      class="relative z-[2] isolate flex items-start md:items-start gap-16 px-4 pt-64 sm:px-10 md:px-40 md:pt-32 overflow-hidden"
+      style={`background-color: var(--color-bg); padding-bottom: calc(${ditherBandPx}px + 2rem);`}
     >
       <div class="hero-grid" aria-hidden="true"></div>
-      <div class="flex flex-col gap-6">
+      <Glider cellSize={GLIDER_CELL_SIZE} speedMs={100} ditherRows={DITHER_BAND_ROWS} />
+      <div class="relative z-10 flex flex-col gap-6">
         <h1
           class="font-pixel-hackers text-7xl sm:text-8xl md:text-[8.5rem] leading-[0.85] shrink-0 noselect pb-2"
         >
@@ -89,20 +95,6 @@ const shouldEnablePixelCursor = true;
           >
         </a>
       </div>
-      <Glider
-        gridCols={80}
-        gridRows={100}
-        cellSize={10}
-        speedMs={100}
-        class="glider z-10 shrink-0 absolute top-[35%] -translate-y-1/4 -left-10 md:top-1/4 md:translate-y-0 md:-right-20 md:left-auto"
-      />
-    </section>
-
-    <section
-      class="dither-strip relative z-0 h-[128px] w-full shrink-0"
-      style={`background-image: url('${ditherSvg}'); background-size: 8px 128px; background-repeat: repeat-x; image-rendering: pixelated; image-rendering: crisp-edges;`}
-      aria-hidden="true"
-    >
     </section>
     <!-- photo collage: desktop only — between dither and dark section -->
     <div
