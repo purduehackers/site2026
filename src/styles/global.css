@@ -181,7 +181,7 @@ body.menu-open .mobile-menu-btn {
    rather than forced to a shared height. --logo-base is the only knob: it sets
    the em unit those normalized sizes are expressed against. */
 .logo-soup {
-  --logo-base: 30px;
+  --logo-base: 32px;
   font-size: var(--logo-base);
   display: flex;
   flex-wrap: wrap;
@@ -191,7 +191,7 @@ body.menu-open .mobile-menu-btn {
 }
 @media (min-width: 768px) {
   .logo-soup {
-    --logo-base: 44px;
+    --logo-base: 45px;
     gap: 1em 1.75em;
   }
 }
@@ -658,7 +658,7 @@ body.menu-open .mobile-menu-btn {
 }
 .photo-collage--desktop .photo-collage__piece--1 {
   width: 320px;
-  left: 15%;
+  left: 12%;
   top: 265px;
   transform: translate3d(0, var(--py, 0px), 0) rotate(8deg);
   z-index: 3;

@@ -143,7 +143,7 @@ const shouldEnablePixelCursor = true;
       <img
         src="/lizard_gun.png"
         alt=""
-        class="absolute image-rendering-pixelated bottom-1/3 md:bottom-12 lg:bottom-12 -right-12 md:right-8 lg:right-12 w-40 h-auto md:w-56 lg:w-72 object-contain pointer-events-none"
+        class="absolute image-rendering-pixelated bottom-1/3 md:bottom-24 lg:bottom-24 -right-12 md:right-10 lg:right-14 w-40 h-auto md:w-56 lg:w-72 object-contain pointer-events-none"
         aria-hidden="true"
       />
 
@@ -273,7 +273,7 @@ const shouldEnablePixelCursor = true;
           together.
         </p>
         <br />
-        <p class="max-w-[32rem] font-polysans text-l leading-relaxed pb-6">
+        <p class="max-w-[32rem] font-polysans text-l leading-relaxed pb-8">
           We have lots of cool artifacts too, including <a
             href="https://blog.purduehackers.com/posts/papers-please"
             target="_blank"
@@ -391,14 +391,14 @@ const shouldEnablePixelCursor = true;
           Friends
         </p>
         <p
-          class="max-w-[32rem] font-polysans text-l mx-auto text-center leading-relaxed pb-6"
+          class="max-w-[32rem] font-polysans text-l mx-auto text-center leading-relaxed pb-8"
         >
           We're working to make Purdue one of the best places in the world to be
           a <span class="highlight">young and ambitious builder</span> &mdash; and
           we're lucky to be backed by people and companies whose work we really admire.
         </p>
         <p
-          class="font-inconsolata text-l md:text-xl font-semibold uppercase mx-auto text-center"
+          class="font-inconsolata text-l md:text-xl font-semibold uppercase mx-auto text-center mb-8 md:mb-12"
         >
           <a
             href="https://www.paulgraham.com/"
@@ -414,10 +414,9 @@ const shouldEnablePixelCursor = true;
             >mitchell hashimoto</a
           >
         </p>
-        <br />
         <LogoGrid logos={sponsorLogos} showGrid={false} />
         <p
-          class="max-w-[32rem] font-polysans text-l mx-auto text-center leading-relaxed pt-15 pb-6"
+          class="max-w-[32rem] font-polysans text-l mx-auto text-center leading-relaxed pt-16 md:pt-24 pb-6"
         >
           Want to help us keep making?
         </p>
@@ -720,7 +719,8 @@ const shouldEnablePixelCursor = true;
         });
         document.addEventListener('astro:before-swap', cleanup, { once: true });
       }
-      // Same dither behind the header, for readability and cohesive look
+      
+      // same dither behind the header, for readability and cohesive look
       const headerRoot = document.getElementById('header-dither-root');
       if (headerRoot) {
         const cleanupHeader = initPixelBlast(headerRoot, {
