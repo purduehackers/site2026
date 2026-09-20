@@ -266,7 +266,7 @@ body.menu-open .mobile-menu-btn {
 .photo-collage-after {
   background-color: #000;
   margin-top: -3px;
-  padding-top: calc(6rem + 3px);
+  padding-top: calc(20rem + 3px);
 }
 @media (max-width: 768px) {
   .photo-collage-after {
@@ -319,13 +319,9 @@ body.menu-open .mobile-menu-btn {
   text-decoration: none;
   overflow: hidden;
 }
-/* ── dithered photos: two stacked layers ──────────────────────────
-   See DitheredPhoto.astro. The colour layer sits in flow and defines
-   the box; the B&W layer overlays it and fades out on hover, so the
-   piece crossfades from a 1-bit black & white dither to the original
-   colours. The two filters seed their noise differently, so the dither
-   pattern visibly re-forms during the crossfade and then sits still —
-   it only "moves" while transitioning, never continuously while hovered. */
+/* ── dithered photos ──────────────────────────────────────────────
+   See DitheredPhoto.astro. The B&W dither stays in place while an 8 × 6
+   grid of aligned colour fragments switches on with staggered delays. */
 .dphoto {
   position: relative;
   display: block;
@@ -346,16 +342,31 @@ body.menu-open .mobile-menu-btn {
   inset: 0;
   filter: url(#ph-dither-bw);
   opacity: 1;
-  transition: opacity 0.22s ease-out;
-  will-change: opacity;
+}
+.dphoto__pixel-reveal {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  pointer-events: none;
+}
+.dphoto__pixel {
+  background-image: var(--dphoto-image);
+  background-position: var(--background-x) var(--background-y);
+  background-repeat: no-repeat;
+  background-size: var(--dphoto-background-width)
+    var(--dphoto-background-height);
+  opacity: 0;
+  transition: opacity 0.22s ease-out calc(var(--i) * 8ms);
 }
 @media (hover: hover) and (pointer: fine) {
-  .photo-collage__piece--photo:hover .dphoto__layer--bw {
-    opacity: 0;
+  .photo-collage__piece--photo:hover .dphoto__pixel {
+    opacity: 1;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .dphoto__layer--bw {
+  .dphoto__pixel {
     transition: none;
   }
 }
@@ -387,15 +398,14 @@ body.menu-open .mobile-menu-btn {
   }
 }
 
-/* mobile: photos stay full-bleed inside the sticky piece. There's no hover on
-   touch to reveal colour, and the B&W dither turns dark shots nearly black at
-   full-screen — so just show the vibrant colour dither outright (its mask is
-   lifted, so dark photos stay legible) and drop the B&W layer. The colour
-   layer is in-flow, so it reliably fills the sticky piece. */
+/* mobile: there is no hover state, so show the vibrant colour dither outright. */
 .photo-collage--mobile .dphoto {
   height: 100%;
 }
 .photo-collage--mobile .dphoto__layer--bw {
+  display: none;
+}
+.photo-collage--mobile .dphoto__pixel-reveal {
   display: none;
 }
 .photo-collage--mobile .dphoto__layer--color {
@@ -724,7 +734,7 @@ body.menu-open .mobile-menu-btn {
   z-index: -1;
   pointer-events: none;
   --hero-grid-cell: 10px;
-  --hero-grid-line: rgba(0, 0, 0, 0.07);
+  --hero-grid-line: rgba(0, 0, 0, 0.05);
   background-image:
     linear-gradient(to right, var(--hero-grid-line) 1px, transparent 1px),
     linear-gradient(to bottom, var(--hero-grid-line) 1px, transparent 1px);

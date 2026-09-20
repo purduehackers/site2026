@@ -3,15 +3,12 @@
 // Two filters turn a photo into a 1-bit ordered-noise dither:
 //
 //   #ph-dither-bw    — lit pixels are white → black & white dither (rest state)
-//   #ph-dither-color — lit pixels show the saturated, lifted photo colour (hover)
+//   #ph-dither-color — lit pixels show the saturated, lifted photo colour (mobile)
 //
-// They seed feTurbulence differently, so the dither pattern visibly re-forms as
-// the two layers crossfade on hover (see DitheredPhoto.astro), then sits still —
-// the dither only "moves" during the transition, never continuously. Each filter
-// renders once and caches; SVG filters can't share sub-graphs, so the
-// luminance → noise → threshold core is duplicated. The region is grown past the
-// photo and the thresholded result trimmed back to it, so the dither has no hard
-// fringe at the edges.
+// Desktop hover uses aligned colour tiles in DitheredPhoto.astro. Each filter
+// renders once and caches; SVG filters can't share sub-graphs, so the luminance
+// → noise → threshold core is duplicated. The region is grown past the photo and
+// the thresholded result trimmed back to it, so the dither has no hard fringe.
 ---
 
 <svg
@@ -108,12 +105,9 @@
         <feFuncB type="gamma" amplitude="1" exponent="0.62" offset="0.02"
         ></feFuncB>
       </feComponentTransfer>
-      <!-- The colour noise uses a *different* seed than the B&W noise (same
-           grain, an entirely different dot field). So as the layers crossfade
-           on hover the dither pattern itself re-forms — it changes rather than
-           sliding — then sits still once settled. Both filters render once and
-           cache, so there's no per-frame cost; re-seeding live would re-run
-           feTurbulence every frame and jank the renderer. -->
+      <!-- Keep the colour dither independent of the B&W layer. Both filters
+           render once and cache; re-seeding live would re-run feTurbulence
+           every frame and jank the renderer. -->
       <feTurbulence
         type="fractalNoise"
         baseFrequency="0.68"

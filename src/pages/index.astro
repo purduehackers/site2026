@@ -53,7 +53,7 @@ const shouldEnablePixelCursor = true;
     <!-- one Conway grid spans the whole hero: the gun runs at the top, and the
          bottom rows are the pinned dither that fades into the dark section -->
     <section
-      class="relative z-[2] isolate flex items-start md:items-start gap-16 px-4 pt-64 sm:px-10 md:px-40 md:pt-32 overflow-hidden"
+      class="relative z-[2] isolate flex items-start md:items-start gap-16 px-4 pt-64 sm:px-10 md:px-40 md:pt-50 overflow-hidden"
       style={`background-color: var(--color-bg); padding-bottom: calc(${ditherBandPx}px + 2rem);`}
     >
       <div class="hero-grid" aria-hidden="true"></div>
@@ -77,7 +77,7 @@ const shouldEnablePixelCursor = true;
           href="https://events.purduehackers.com/"
           target="_blank"
           class="join-session-btn"
-          style="--pixel-cols: 10; --pixel-color: var(--color-primary);"
+          style="--pixel-cols: 10; --pixel-color: var(--color-secondary); --label-color: black; --label-color-hover: var(--color-bg);"
         >
           <span class="join-session-btn__pixels" aria-hidden="true">
             {
@@ -90,7 +90,7 @@ const shouldEnablePixelCursor = true;
             }
           </span>
           <span
-            class="join-session-btn__label pointer-events-none text-[var(--color-bg)]"
+            class="join-session-btn__label pointer-events-none"
             >build with us</span
           >
         </a>
@@ -183,13 +183,13 @@ const shouldEnablePixelCursor = true;
         </p>
         <p class="max-w-[32rem] font-polysans text-l leading-relaxed">
           Hack Night happens <span class="highlight"
-            >every Friday night at 8pm</span
-          >, second floor of <a
-            href="https://www.purdue.edu/bidc/"
+            >every Friday, 8pm</span
+          > at <a
+            href="https://engineering.purdue.edu/HIVE"
             target="_blank"
             class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 motion-reduce:transition-none whitespace-nowrap"
-            >the Bechtel Center</a
-          >. It's a dedicated space to work on personal projects, join (or even
+            >the HIVE (BHEE 270/280)</a
+          >. It's a dedicated space to work on personal projects, join (or
           run) workshops, and share your progress at Checkpoints or on <a
             href="https://discord.gg/5paFjKzdPE"
             target="_blank"
@@ -351,26 +351,26 @@ const shouldEnablePixelCursor = true;
           The Show
         </p>
         <p class="max-w-[32rem] font-polysans text-l leading-relaxed">
-          At the end-of-semester, we hold the Show, an exhibit where our
+          At the end of the semester, we hold the Show, an exhibit where our
           community comes together to share projects made throughout the
           semester at Hack Night and beyond.
         </p>
         <br />
         <p class="font-inconsolata text-xl font-semibold uppercase">
-          ???????: Fall 2026 Show
+          ???????: Fall 2026
         </p>
         <a
           href="https://spill.purduehackers.com/"
           target="_blank"
           class="font-inconsolata text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300 motion-reduce:transition-none"
-          >spill ≋: Fall 2025 Show</a
+          >spill ≋: Fall 2025</a
         >
         <br />
         <a
           href="https://burst.purduehackers.com/"
           target="_blank"
           class="font-inconsolata text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300 motion-reduce:transition-none"
-          >BURST ✷: Fall 2024 Show</a
+          >BURST ✷: Fall 2024</a
         >
       </div>
       <div class="mb-72 relative w-full max-w-2xl">
@@ -416,7 +416,7 @@ const shouldEnablePixelCursor = true;
         <br />
         <LogoGrid logos={sponsorLogos} showGrid={false} />
         <p
-          class="max-w-[32rem] font-polysans text-l mx-auto text-center leading-relaxed pt-6 pb-6"
+          class="max-w-[32rem] font-polysans text-l mx-auto text-center leading-relaxed pt-15 pb-6"
         >
           Want to help us keep making?
         </p>

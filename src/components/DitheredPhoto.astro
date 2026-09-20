@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import { getPixelIndices } from '../utils/dither';
 
 interface Props {
   src: ImageMetadata;
@@ -9,16 +10,36 @@ interface Props {
 }
 
 const { src, alt, widths, sizes } = Astro.props;
+const revealColumns = 8;
+const revealRows = 6;
+const revealPixelCount = revealColumns * revealRows;
+// Keep tiles in their visual positions, but give each one the CTA's randomized
+// delay so colour gradually creeps through the photo instead of sweeping by row.
+const revealDelays = getPixelIndices(revealPixelCount);
+const displayAspectRatio = 4 / 3;
+const sourceAspectRatio = src.width / src.height;
+// Match the desktop image's `object-fit: cover` crop. CSS backgrounds size
+// relative to one tile, so convert the full image's cover dimensions to tiles.
+const backgroundWidth =
+  Math.max(
+    revealColumns,
+    (revealColumns * sourceAspectRatio) / displayAspectRatio
+  ) * 100;
+const backgroundHeight =
+  Math.max(revealRows, (revealRows * displayAspectRatio) / sourceAspectRatio) *
+  100;
+const backgroundWidthInTiles = backgroundWidth / 100;
+const backgroundHeightInTiles = backgroundHeight / 100;
 ---
 
 {
-  /* Two stacked copies of the same photo. The colour layer sits underneath and
-   defines the box; the B&W layer is laid over it and fades out on hover, so the
-   piece crossfades from a black-and-white dither to the original colours. The
-   two layers seed their dither differently, so the pattern re-forms across the
-   crossfade (see DitherFilters.astro). */
+  /* The B&W dither is the resting layer. On hover, square colour fragments
+   stay in their image positions and switch on with the CTA's staggered timing. */
 }
-<span class="dphoto">
+<span
+  class="dphoto"
+  style={`--dphoto-image: url(${src.src}); --dphoto-background-width: ${backgroundWidth}%; --dphoto-background-height: ${backgroundHeight}%;`}
+>
   <Image
     class="dphoto__layer dphoto__layer--color"
     src={src}
@@ -38,4 +59,21 @@ const { src, alt, widths, sizes } = Astro.props;
     loading="lazy"
     decoding="async"
   />
+  <span class="dphoto__pixel-reveal" aria-hidden="true">
+    {
+      Array.from({ length: revealPixelCount }, (_, pixelIndex) => {
+        const column = pixelIndex % revealColumns;
+        const row = Math.floor(pixelIndex / revealColumns);
+        const backgroundX = `${(((revealColumns - backgroundWidthInTiles) / 2 - column) / (1 - backgroundWidthInTiles)) * 100}%`;
+        const backgroundY = `${(((revealRows - backgroundHeightInTiles) / 2 - row) / (1 - backgroundHeightInTiles)) * 100}%`;
+
+        return (
+          <span
+            class="dphoto__pixel"
+            style={`--i: ${revealDelays[pixelIndex]}; --background-x: ${backgroundX}; --background-y: ${backgroundY};`}
+          />
+        );
+      })
+    }
+  </span>
 </span>

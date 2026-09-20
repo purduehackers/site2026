@@ -75,6 +75,15 @@ const {
     pointer-events: none;
   }
 
+  /* desktop: start the sim slightly below the top edge. The hero-grid lines
+     keep running up into the gap, and the canvas stays bottom-anchored so the
+     cells still line up with them. Keep in step with the hero's md:pt-40. */
+  @media (min-width: 48rem) {
+    .glider-wrap {
+      top: 2rem;
+    }
+  }
+
   .glider-wrap canvas {
     position: absolute;
     /* whole cells only, so the solid rows sit flush on the section's edge */
