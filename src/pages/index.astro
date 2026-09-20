@@ -113,7 +113,7 @@ const shouldEnablePixelCursor = true;
     >
       <!-- creatura! -->
       <div
-        class="absolute top-8 md:top-12 lg:top-20 -right-16 md:right-8 lg:right-24 scale-90 sm:scale-[1] md:scale-[1.35] lg:scale-[1.65]"
+        class="absolute top-110 md:top-135 lg:top-150 right-10 md:right-22 lg:right-48 scale-90 sm:scale-[1] md:scale-[1.35] lg:scale-[1.65]"
       >
         <Sprite
           id="angry-guy-sprite"
@@ -207,6 +207,7 @@ const shouldEnablePixelCursor = true;
               <td class="highlight pr-4 py-1 text-right">D~5~5|5 (8 pm):</td>
               <td class="py-1 uppercase text-left">Hacking begins</td>
             </tr>
+            <!-- may want to elaborate on what sessions are -->
             <tr>
               <td class="highlight pr-4 py-1 text-right">E~0~0|0 (9 pm):</td>
               <td class="py-1 uppercase text-left">Session 1</td>
@@ -718,6 +719,29 @@ const shouldEnablePixelCursor = true;
           transparent: true,
         });
         document.addEventListener('astro:before-swap', cleanup, { once: true });
+      }
+      // Same dither behind the header, for readability and cohesive look
+      const headerRoot = document.getElementById('header-dither-root');
+      if (headerRoot) {
+        const cleanupHeader = initPixelBlast(headerRoot, {
+          variant: 'diamond',
+          pixelSize: 1,
+          color: '#000000',
+          patternScale: 4.5,
+          patternDensity: 0.5,
+          pixelSizeJitter: 0,
+          enableRipples: false,
+          liquid: false,
+          speed: 0.5,
+          edgeFade: 0,
+          topFade: 0.1,
+          sideFade: 2,
+          bottomFade: .5,
+          transparent: true,
+        });
+        document.addEventListener('astro:before-swap', cleanupHeader, {
+          once: true,
+        });
       }
       initMadeWith();
       initLunarEgg();

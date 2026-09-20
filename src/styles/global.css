@@ -266,12 +266,12 @@ body.menu-open .mobile-menu-btn {
 .photo-collage-after {
   background-color: #000;
   margin-top: -3px;
-  padding-top: calc(20rem + 3px);
+  padding-top: calc(16rem + 3px);
 }
 @media (max-width: 768px) {
   .photo-collage-after {
     margin-top: -5px;
-    padding-top: calc(6rem + 5px);
+    padding-top: calc(16rem + 5px);
   }
 }
 .photo-collage__piece {
@@ -350,6 +350,7 @@ body.menu-open .mobile-menu-btn {
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(6, 1fr);
   pointer-events: none;
+  filter: url(#ph-dither-color);
 }
 .dphoto__pixel {
   background-image: var(--dphoto-image);
@@ -658,21 +659,21 @@ body.menu-open .mobile-menu-btn {
 .photo-collage--desktop .photo-collage__piece--1 {
   width: 320px;
   left: 4%;
-  top: -50px;
+  top: -110px;
   transform: translate3d(0, var(--py, 0px), 0) rotate(-3deg);
   z-index: 3;
 }
 .photo-collage--desktop .photo-collage__piece--2 {
   width: 270px;
   right: 6%;
-  top: -30px;
+  top: -90px;
   transform: translate3d(0, var(--py, 0px), 0) rotate(2.5deg);
   z-index: 4;
 }
 .photo-collage--desktop .photo-collage__piece--3 {
   width: 300px;
   left: 8%;
-  top: 300px;
+  top: 240px;
   transform: translate3d(0, var(--py, 0px), 0) rotate(2deg);
   z-index: 2;
 }
@@ -680,28 +681,28 @@ body.menu-open .mobile-menu-btn {
   width: 300px;
   min-height: 140px;
   left: 28%;
-  top: 0px;
+  top: -60px;
   transform: translate3d(0, var(--py, 0px), 0) rotate(-1.5deg);
   z-index: 5;
 }
 .photo-collage--desktop .photo-collage__piece--5 {
   width: 300px;
   left: 40%;
-  top: 300px;
+  top: 240px;
   transform: translate3d(0, var(--py, 0px), 0) rotate(1deg);
   z-index: 1;
 }
 .photo-collage--desktop .photo-collage__piece--6 {
   width: 330px;
   right: 12%;
-  top: 220px;
+  top: 160px;
   transform: translate3d(0, var(--py, 0px), 0) rotate(-2deg);
   z-index: 2;
 }
 .photo-collage--desktop .photo-collage__piece--7 {
   width: 340px;
   left: 52%;
-  top: -45px;
+  top: -105px;
   transform: translate3d(0, var(--py, 0px), 0) rotate(1.8deg);
   z-index: 6;
 }

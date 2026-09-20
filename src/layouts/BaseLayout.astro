@@ -49,6 +49,22 @@ const { title = 'Purdue Hackers' } = Astro.props;
       .header-over-dark .mobile-menu-btn__line {
         background-color: var(--color-bg);
       }
+      .header-dither-backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        /* total length of the dither ramp; it overflows below the header on
+           purpose so the tail has room to reach zero instead of being cut */
+        height: var(--header-dither-height, 200px);
+        z-index: -1;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .header-over-dark .header-dither-backdrop {
+        opacity: 1;
+      }
     </style>
   </head>
   <body>
@@ -56,6 +72,12 @@ const { title = 'Purdue Hackers' } = Astro.props;
       id="site-header"
       class="fixed top-0 left-0 right-0 z-30 px-6 py-5 md:px-8 md:py-6 font-inconsolata"
     >
+      <div
+        id="header-dither-root"
+        class="header-dither-backdrop"
+        aria-hidden="true"
+      >
+      </div>
       <div class="flex items-center justify-between">
         <!-- glider logo -->
         <a

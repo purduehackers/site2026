@@ -36,6 +36,8 @@ uniform float uRippleThickness;
 uniform float uRippleIntensity;
 uniform float uEdgeFade;
 uniform float uTopFade;
+uniform float uSideFade;
+uniform float uBottomFade;
 
 uniform int   uShapeType;
 const int SHAPE_SQUARE   = 0;
@@ -142,6 +144,16 @@ void main(){
     topBlend = 1.0 - smoothstep(0.0, uTopFade, topNorm);
   }
 
+  // Same ramp off the left and right edges, so content pinned to either side
+  // keeps solid coverage behind it. 0 at either edge, 0.5 at the centre.
+  float sideBlend = 0.0;
+  if (uSideFade > 0.0) {
+    float sideNorm = min(gl_FragCoord.x, uResolution.x - gl_FragCoord.x) / uResolution.x;
+    sideBlend = 1.0 - smoothstep(0.0, uSideFade, sideNorm);
+  }
+
+  float edgeBlend = max(topBlend, sideBlend);
+
   float speed     = uRippleSpeed;
   float thickness = uRippleThickness;
   const float dampT     = 1.0;
@@ -158,11 +170,20 @@ void main(){
       float waveR = speed * t;
       float ring  = exp(-pow((r - waveR) / thickness, 2.0));
       float atten = exp(-dampT * t) * exp(-dampR * r);
-      feed = max(feed, ring * atten * uRippleIntensity * (1.0 - topBlend));
+      feed = max(feed, ring * atten * uRippleIntensity * (1.0 - edgeBlend));
     }
   }
 
-  feed = max(feed, topBlend);
+  feed = max(feed, edgeBlend);
+
+  // Scale coverage to exactly zero by uBottomFade down the canvas, so the
+  // pattern thins out and dies on its own rather than being clipped mid-
+  // pattern by the canvas edge. Multiplicative, so it takes the organic fbm
+  // down with it — max()/topFade alone leaves speckle running into the cut.
+  if (uBottomFade > 0.0) {
+    float bottomNorm = (uResolution.y - gl_FragCoord.y) / uResolution.y;
+    feed *= 1.0 - smoothstep(0.0, uBottomFade, bottomNorm);
+  }
 
   float bayer = Bayer8(fragCoord / uPixelSize) - 0.5;
   float bw = step(0.5, feed + bayer);
@@ -343,6 +364,8 @@ export interface PixelBlastOptions {
   transparent: boolean;
   edgeFade: number;
   topFade: number;
+  sideFade: number;
+  bottomFade: number;
   antialias: boolean;
 }
 
@@ -365,6 +388,8 @@ const DEFAULT_OPTIONS: PixelBlastOptions = {
   transparent: true,
   edgeFade: 0.25,
   topFade: 0,
+  sideFade: 0,
+  bottomFade: 0,
   antialias: true,
 };
 
@@ -410,6 +435,8 @@ export function initPixelBlast(
     uRippleIntensity: { value: opts.rippleIntensityScale },
     uEdgeFade: { value: opts.edgeFade },
     uTopFade: { value: opts.topFade },
+    uSideFade: { value: opts.sideFade },
+    uBottomFade: { value: opts.bottomFade },
   };
 
   const scene = new THREE.Scene();
