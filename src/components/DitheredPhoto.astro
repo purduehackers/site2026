@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import { getPixelIndices } from '../utils/dither';
 
 interface Props {
@@ -29,6 +29,11 @@ const backgroundHeight =
   Math.max(revealRows, (revealRows * displayAspectRatio) / sourceAspectRatio) *
   100;
 const backgroundWidthInTiles = backgroundWidth / 100;
+// The reveal tiles paint the photo as a CSS background. Pointing that at the
+// raw import (up to ~8000px) made the first hover fetch and decode the
+// original, which hitched. 960w is the variant the srcset already picks for
+// these ~340px pieces on 2x screens, so it is usually cached by hover time.
+const tileImage = await getImage({ src, width: 960 });
 const backgroundHeightInTiles = backgroundHeight / 100;
 ---
 
@@ -38,7 +43,7 @@ const backgroundHeightInTiles = backgroundHeight / 100;
 }
 <span
   class="dphoto"
-  style={`--dphoto-image: url(${src.src}); --dphoto-background-width: ${backgroundWidth}%; --dphoto-background-height: ${backgroundHeight}%;`}
+  style={`--dphoto-image: url(${tileImage.src}); --dphoto-background-width: ${backgroundWidth}%; --dphoto-background-height: ${backgroundHeight}%;`}
 >
   <Image
     class="dphoto__layer dphoto__layer--color"
