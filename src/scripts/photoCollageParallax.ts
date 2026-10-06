@@ -10,16 +10,16 @@ export function initPhotoCollageParallax(): () => void {
     return () => {};
   }
 
-  /** Per-piece multipliers by piece number (1–7), matching top offsets in
-   * global.css: pieces higher in the collage (2, 3, 7) move most, lowest (1, 5) least. */
-  const speeds = [0.13, 0.32, 0.29, 0.22, 0.18, 0.21, 0.26];
+  /** Per-piece multipliers — wider spread = more depth separation vs neighbors */
+  const speeds = [0.14, 0.26, 0.09, 0.32, 0.17, 0.22, 0.29];
 
   function tick() {
     const vh = window.innerHeight;
     const mid = vh * 0.5;
     pieces!.forEach((el, i) => {
       const rect = el.getBoundingClientRect();
-      const dist = rect.top + rect.height / 2 - mid;
+      const centerY = rect.top + rect.height / 2;
+      const dist = centerY - mid;
       const speed = speeds[i % speeds.length];
       const py = dist * speed * -0.55;
       el.style.setProperty('--py', `${py.toFixed(2)}px`);
