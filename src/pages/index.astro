@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Glider from '../components/GliderShader.astro';
-import LifeCanvas from '../components/LifeCanvas.astro';
 import { getPixelIndices } from '../utils/dither';
 import LogoGrid from '../components/LogoSoup';
 import sponsorLogos from '../data/sponsors.normalized.json';
@@ -149,17 +148,6 @@ const shouldEnablePixelCursor = true;
         aria-hidden="true"
       />
 
-      <!-- gutter life: desktop only, kept clear of the sprites above -->
-      <LifeCanvas
-        shape="pulsar"
-        x={0.3}
-        class="hidden xl:block absolute -z-10 right-0 w-[calc((100%-42rem)/2-2rem)] top-[3%] h-[200px]"
-      />
-      <LifeCanvas
-        shape="toad"
-        x={0.55}
-        class="hidden xl:block absolute -z-10 right-0 w-[calc((100%-42rem)/2-2rem)] top-[64%] h-[200px]"
-      />
 
 
       <!-- 1 -->
@@ -181,10 +169,6 @@ const shouldEnablePixelCursor = true;
 
       <!-- 2 -->
       <div id="hack-night" class="mb-72 relative">
-        <LifeCanvas
-          shape="galaxy"
-          class="hidden xl:block absolute -z-10 right-full mr-16 top-1/2 -translate-y-1/2 w-[200px] h-[200px]"
-        />
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -251,10 +235,6 @@ const shouldEnablePixelCursor = true;
 
       <!-- 3 -->
       <div id="projects" class="mb-72 relative">
-        <LifeCanvas
-          shape="figureEight"
-          class="hidden xl:block absolute -z-10 left-full ml-16 top-1/2 -translate-y-1/2 w-[200px] h-[200px]"
-        />
         <svg
           width="24"
           height="24"
@@ -355,10 +335,6 @@ const shouldEnablePixelCursor = true;
 
       <!-- 4 -->
       <div class="mb-72 relative">
-        <LifeCanvas
-          shape="tumbler"
-          class="hidden xl:block absolute -z-10 right-full mr-16 top-[calc(100%+44px)] w-[200px] h-[200px]"
-        />
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
