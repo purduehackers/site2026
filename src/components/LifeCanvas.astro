@@ -1,0 +1,68 @@
+---
+import type { LifeShape } from '../scripts/lifeCanvas';
+
+interface Props {
+  shape: LifeShape;
+  /** Where across the box the shape sits, 0 = left edge, 1 = right edge. */
+  x?: number;
+  /** Position/size the box from the page (absolute + inset/size utilities). */
+  class?: string;
+}
+
+const { shape, x = 0.5, class: className = '' } = Astro.props;
+---
+
+<div
+  class={`life-wrap ${className}`.trim()}
+  aria-hidden="true"
+  data-shape={shape}
+  data-x={x}
+>
+  <canvas data-life></canvas>
+</div>
+
+<script>
+  import { initLifeCanvas, type LifeShape } from '../scripts/lifeCanvas';
+
+  function init() {
+    document.querySelectorAll('canvas[data-life]').forEach((canvas) => {
+      if (!(canvas instanceof HTMLCanvasElement)) return;
+      if (canvas.dataset.initialized) return; // prevent double-init
+      const wrap = canvas.parentElement;
+      if (!wrap) return;
+      canvas.dataset.initialized = 'true';
+
+      const cleanup = initLifeCanvas(canvas, {
+        shape: wrap.dataset.shape as LifeShape,
+        x: Number(wrap.dataset.x ?? 0.5),
+      });
+
+      // Astro view transitions safety
+      document.addEventListener('astro:before-swap', cleanup, { once: true });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>
+
+<style>
+  /* The page sizes the box; the sim fills it in whole cells from the top-left. */
+  .life-wrap {
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .life-wrap canvas {
+    display: block;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    /* drag-to-paint: don't let a touch drag scroll instead */
+    touch-action: none;
+    pointer-events: auto;
+    cursor: crosshair;
+  }
+</style>

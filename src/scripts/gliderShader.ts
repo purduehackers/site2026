@@ -1,4 +1,8 @@
-import { DITHER_BAND_ROWS, GLIDER_CELL_SIZE } from '../constants/gliderGrid';
+import {
+  DITHER_BAND_ROWS,
+  GLIDER_CELL_SIZE,
+  GOSPER_GLIDER_GUN,
+} from '../constants/gliderGrid';
 
 type GliderShaderOptions = {
   cellSize?: number;
@@ -7,46 +11,6 @@ type GliderShaderOptions = {
   /** Rows of dithered transition pinned at the bottom of the grid. */
   ditherRows?: number;
 };
-
-// gosper glider gun but shader heh
-const GOSPER_GLIDER_GUN: Array<[number, number]> = [
-  [1, 5],
-  [1, 6],
-  [2, 5],
-  [2, 6],
-  [11, 5],
-  [11, 6],
-  [11, 7],
-  [12, 4],
-  [12, 8],
-  [13, 3],
-  [13, 9],
-  [14, 3],
-  [14, 9],
-  [15, 6],
-  [16, 4],
-  [16, 8],
-  [17, 5],
-  [17, 6],
-  [17, 7],
-  [18, 6],
-  [21, 3],
-  [21, 4],
-  [21, 5],
-  [22, 3],
-  [22, 4],
-  [22, 5],
-  [23, 2],
-  [23, 6],
-  [25, 1],
-  [25, 2],
-  [25, 6],
-  [25, 7],
-  [35, 3],
-  [35, 4],
-  [36, 3],
-  [36, 4],
-];
 
 /**
  * Narrow viewports get a grid wider than the screen (the wrapper clips it), so
@@ -164,6 +128,12 @@ const BLAST_PARTICLE_LO = 0.08;
 const BLAST_PARTICLE_DENSITY = 0.4;
 /** Bottom rows the blast never touches, so the seam with the dark section holds. */
 const BLAST_FLOOR_ROWS = 4;
+
+/**
+ * Cells drawn by the visitor are held still and joined to the sim this long
+ * after the last one goes down, so a shape can be drawn before it starts.
+ */
+const PAINT_DELAY_MS = 300;
 
 const VERT_FULL_SCREEN_TRI = `#version 300 es
 precision highp float;
@@ -321,6 +291,7 @@ precision highp float;
 precision highp sampler2D;
 
 uniform sampler2D uState;
+uniform sampler2D uPending; // r = drawn by the visitor, not yet live
 uniform ivec2 uGridSize;   // (cols, rows)
 uniform float uCellPx;     // cell size in device pixels
 uniform vec3 uCellColor;   // 0..1
@@ -340,7 +311,8 @@ void main() {
     return;
   }
 
-  float alive = texelFetch(uState, ivec2(x, y), 0).r;
+  float alive = max(texelFetch(uState, ivec2(x, y), 0).r,
+                    texelFetch(uPending, ivec2(x, y), 0).r);
   float a = step(0.5, alive);
   outColor = vec4(uCellColor, a);
 }
@@ -631,8 +603,12 @@ export function initGliderShader(
   let texA: WebGLTexture | null = null;
   let texB: WebGLTexture | null = null;
   let texMask: WebGLTexture | null = null;
+  let texPending: WebGLTexture | null = null;
   let fboA: WebGLFramebuffer | null = null;
   let fboB: WebGLFramebuffer | null = null;
+
+  /** Drawn cells waiting to go live, keyed by row * cols + col. */
+  const pending = new Map<number, [number, number]>();
 
   const destroyGrid = () => {
     if (fboA) gl.deleteFramebuffer(fboA);
@@ -640,8 +616,10 @@ export function initGliderShader(
     if (texA) gl.deleteTexture(texA);
     if (texB) gl.deleteTexture(texB);
     if (texMask) gl.deleteTexture(texMask);
+    if (texPending) gl.deleteTexture(texPending);
     fboA = fboB = null;
-    texA = texB = texMask = null;
+    texA = texB = texMask = texPending = null;
+    pending.clear();
   };
 
   /** Sizes the canvas to its parent box and reseeds the sim. */
@@ -677,6 +655,7 @@ export function initGliderShader(
     texB = createStateTexture(gl, cols, rows, undefined, 2);
     fboA = createFramebuffer(gl, texA);
     fboB = createFramebuffer(gl, texB);
+    texPending = createStateTexture(gl, cols, rows, undefined, 1);
   };
 
   const setCommonState = () => {
@@ -738,6 +717,9 @@ export function initGliderShader(
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, texA);
     gl.uniform1i(gl.getUniformLocation(progRender, 'uState'), 0);
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, texPending);
+    gl.uniform1i(gl.getUniformLocation(progRender, 'uPending'), 1);
     gl.uniform2i(gl.getUniformLocation(progRender, 'uGridSize'), cols, rows);
     gl.uniform1f(gl.getUniformLocation(progRender, 'uCellPx'), cellSize * dpr);
     gl.uniform3f(
@@ -782,6 +764,121 @@ export function initGliderShader(
   const ro = host ? new ResizeObserver(handleResize) : null;
   if (host && ro) ro.observe(host);
 
+  // Click and drag on the hero to draw cells. They show straight away but stay
+  // out of the sim until PAINT_DELAY_MS after the last one, then go live
+  // together; the gun keeps running the whole time. Mouse only, so touch still
+  // scrolls.
+  const ONE = new Uint8Array([255, 0]);
+  const ZERO = new Uint8Array([0]);
+  const INK = new Uint8Array([255]);
+
+  const commitPending = () => {
+    if (!texA || !texPending) return;
+    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+    for (const [x, y] of pending.values()) {
+      gl.bindTexture(gl.TEXTURE_2D, texA);
+      gl.texSubImage2D(
+        gl.TEXTURE_2D,
+        0,
+        x,
+        y,
+        1,
+        1,
+        gl.RG,
+        gl.UNSIGNED_BYTE,
+        ONE
+      );
+      gl.bindTexture(gl.TEXTURE_2D, texPending);
+      gl.texSubImage2D(
+        gl.TEXTURE_2D,
+        0,
+        x,
+        y,
+        1,
+        1,
+        gl.RED,
+        gl.UNSIGNED_BYTE,
+        ZERO
+      );
+    }
+    gl.bindTexture(gl.TEXTURE_2D, null);
+    pending.clear();
+    render();
+  };
+
+  const addCell = (x: number, y: number) => {
+    // Keep off the absorbing layer and the band: the band is authored, and a
+    // cell drawn there would be wiped or set off a blast.
+    if (!texPending || x < 0 || y < 0 || x >= cols || y >= minSurfaceRow - 2) {
+      return;
+    }
+    const key = y * cols + x;
+    if (pending.has(key)) return;
+    pending.set(key, [x, y]);
+    gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+    gl.bindTexture(gl.TEXTURE_2D, texPending);
+    gl.texSubImage2D(
+      gl.TEXTURE_2D,
+      0,
+      x,
+      y,
+      1,
+      1,
+      gl.RED,
+      gl.UNSIGNED_BYTE,
+      INK
+    );
+    gl.bindTexture(gl.TEXTURE_2D, null);
+  };
+
+  const hero = canvas.closest('section');
+  let lastCell: [number, number] | null = null;
+  let commitTimer: ReturnType<typeof setTimeout> | undefined;
+
+  const cellAt = (e: PointerEvent): [number, number] => {
+    const r = canvas.getBoundingClientRect();
+    return [
+      Math.floor((e.clientX - r.left) / cellSize),
+      Math.floor((e.clientY - r.top) / cellSize),
+    ];
+  };
+
+  const paintTo = (e: PointerEvent) => {
+    const [x1, y1] = cellAt(e);
+    const [x0, y0] = lastCell ?? [x1, y1];
+    // walk the segment so a fast drag leaves a line, not dots
+    const n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0), 1);
+    for (let i = 0; i <= n; i++) {
+      addCell(
+        Math.round(x0 + ((x1 - x0) * i) / n),
+        Math.round(y0 + ((y1 - y0) * i) / n)
+      );
+    }
+    lastCell = [x1, y1];
+    render();
+    clearTimeout(commitTimer);
+    commitTimer = setTimeout(commitPending, PAINT_DELAY_MS);
+  };
+
+  const onPointerDown = (e: PointerEvent) => {
+    if (e.pointerType !== 'mouse' || e.button !== 0) return;
+    if ((e.target as Element).closest('a, button')) return; // links stay links
+    e.preventDefault(); // no text selection while drawing
+    hero?.setPointerCapture(e.pointerId);
+    lastCell = null;
+    paintTo(e);
+  };
+  const onPointerMove = (e: PointerEvent) => {
+    if (hero?.hasPointerCapture(e.pointerId)) paintTo(e);
+  };
+  const onPointerUp = () => {
+    lastCell = null;
+  };
+  hero?.addEventListener('pointerdown', onPointerDown);
+  hero?.addEventListener('pointermove', onPointerMove);
+  hero?.addEventListener('pointerup', onPointerUp);
+  hero?.addEventListener('pointercancel', onPointerUp);
+
   const loop = (timestamp: number) => {
     if (stopped) return;
 
@@ -807,6 +904,11 @@ export function initGliderShader(
     document.removeEventListener('visibilitychange', handleVisibilityChange);
     window.removeEventListener('resize', handleResize);
     ro?.disconnect();
+    clearTimeout(commitTimer);
+    hero?.removeEventListener('pointerdown', onPointerDown);
+    hero?.removeEventListener('pointermove', onPointerMove);
+    hero?.removeEventListener('pointerup', onPointerUp);
+    hero?.removeEventListener('pointercancel', onPointerUp);
     gl.deleteVertexArray(vao);
     destroyGrid();
     gl.deleteProgram(progStep);
