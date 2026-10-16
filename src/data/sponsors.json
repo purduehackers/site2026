@@ -64,5 +64,11 @@
     "name": "Cloudflare",
     "src": "/logos/cloudflare-color.svg",
     "url": "https://www.cloudflare.com"
+  },
+  {
+    "name": "Duckietown",
+    "src": "/logos/duckietown-color.png",
+    "url": "https://duckietown.com",
+    "scale": 2
   }
 ]

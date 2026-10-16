@@ -9,7 +9,7 @@
  * width of `(aspectRatio ** SCALE_FACTOR) * BASE_SIZE`, then a nudge up or down
  * based on how much ink it actually puts on the page.
  *
- * The measuring pass rasterizes each SVG, so it needs @napi-rs/canvas. Rather
+ * The measuring pass renders each image, so it needs @napi-rs/canvas. Rather
  * than pay that on every render (the homepage is ISR'd, so the page module runs
  * in the serverless function), it runs here and commits its output. Re-run it
  * whenever src/data/sponsors.json changes or a logo file is replaced:
@@ -49,7 +49,7 @@ const measurements = await measureImages(
   sponsors.map((sponsor) =>
     fileURLToPath(new URL(`public${sponsor.src}`, root))
   ),
-  // No backgroundColor: every logo here is a transparent SVG, so the library
+  // No backgroundColor: every logo here has a transparent background, so the library
   // falls back to measuring coverage from the alpha channel alone. That is what
   // we want — the grid recolors each logo to flat white in CSS, so the artwork's
   // own colors say nothing about how heavy it looks on the page.
@@ -57,10 +57,11 @@ const measurements = await measureImages(
 );
 
 const normalized = sponsors.map((sponsor, index) => {
+  // Optional per-logo scale keeps lettering readable in illustrated marks.
   const logo = createNormalizedLogo(
     { src: sponsor.src, alt: sponsor.name },
     measurements[index],
-    BASE_SIZE,
+    BASE_SIZE * (sponsor.scale ?? 1),
     SCALE_FACTOR,
     DENSITY_FACTOR
   );

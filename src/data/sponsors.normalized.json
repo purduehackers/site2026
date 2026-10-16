@@ -110,5 +110,13 @@
     "width": 87,
     "height": 29,
     "transform": "translate(0em, -0.0396em)"
+  },
+  {
+    "name": "Duckietown",
+    "src": "/logos/duckietown-color.png",
+    "url": "https://duckietown.com",
+    "width": 219,
+    "height": 49,
+    "transform": "translate(0em, -0.0146em)"
   }
 ]
