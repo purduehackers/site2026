@@ -20,6 +20,7 @@ const eventImagePattern = {
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://www.purduehackers.com',
   output: 'server',
   image: {
     remotePatterns: [eventImagePattern],
