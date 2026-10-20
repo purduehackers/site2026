@@ -8,7 +8,6 @@ import PhotoCollageItems from '../components/PhotoCollageItems.astro';
 import ShipCard from '../components/ShipCard.astro';
 import { getLatestShip } from '../lib/ships';
 import { getLatestPost } from '../lib/blog';
-import { stories } from '../data/stories';
 import Sprite from '../components/Sprite.astro';
 import DitherFilters from '../components/DitherFilters.astro';
 import { DITHER_BAND_ROWS, GLIDER_CELL_SIZE } from '../constants/gliderGrid';
@@ -167,9 +166,8 @@ const shouldEnablePixelCursor = true;
         <p class="max-w-[36rem] font-polysans leading-relaxed mt-6">
           We provide <a href="https://grants.purduehackers.com/" class="underline highlight">project funding</a>,
           a community of collaborators, and opportunities to build and share
-          your work. Bring an idea to Hack Night, follow projects as they
-          develop on <a href="https://ships.purduehackers.com/" class="underline highlight">Ships</a>,
-          and meet the <a href="/projects" class="underline highlight">people behind the work</a>.
+          your work. Bring an idea to Hack Night and follow projects as they
+          develop on <a href="https://ships.purduehackers.com/" class="underline highlight">Ships</a>.
         </p>
       </div>
 
@@ -386,29 +384,10 @@ const shouldEnablePixelCursor = true;
           >BURST ✷: Fall 2024</a
         >
         <p class="max-w-[32rem] font-polysans leading-relaxed mt-8">
-          Hear the stories behind the work at
+          Watch
           <a href="https://bento.purduehackers.com/" class="underline highlight">BENTO</a>,
           our event for lightning talks about projects, ideas, and unusual interests.
         </p>
-      </div>
-      <div id="people-and-projects" class="mb-72 relative w-full max-w-3xl">
-        <h2 class="font-pixel-hackers text-4xl md:text-6xl leading-tight mb-8">
-          People & projects we back
-        </h2>
-        <div class="grid gap-8 md:grid-cols-3 text-left">
-          {stories.map((story) => (
-            <article class="border-t border-white/30 pt-5">
-              <p class="font-inconsolata uppercase text-[var(--color-secondary)] mb-3">{story.name}</p>
-              <h3 class="font-polysans text-xl font-semibold mb-3">
-                <a href={`/projects#${story.id}`} class="underline">{story.title}</a>
-              </h3>
-              <p class="font-polysans leading-relaxed">{story.support}</p>
-            </article>
-          ))}
-        </div>
-        <a href="/projects" class="inline-block mt-8 font-inconsolata uppercase underline hover:text-[var(--color-secondary)]">
-          Read their stories ↗
-        </a>
       </div>
       <div class="mb-72 relative w-full max-w-2xl">
         <svg
