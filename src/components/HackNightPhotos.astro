@@ -1,0 +1,293 @@
+---
+import { Image } from 'astro:assets';
+import { hackNightPhotos } from '../data/hackNightPhotos';
+---
+
+<section class="hack-night-photos" aria-label="Life at Hack Night">
+  <div
+    class="hack-night-photos__viewport"
+    id="hack-night-photo-strip"
+    data-lenis-prevent-horizontal
+  >
+    <div class="hack-night-photos__track">
+      {
+        [false, true].map((copy) => (
+          <ul
+            class="hack-night-photos__group"
+            aria-label={copy ? undefined : 'Hack Night photos'}
+            aria-hidden={copy ? 'true' : undefined}
+            data-copy={copy || undefined}
+          >
+            {hackNightPhotos.map((photo) => (
+              <li
+                class="hack-night-photos__item"
+                style={`--photo-ratio: ${photo.src.width / photo.src.height};`}
+              >
+                <a
+                  href={`https://events.purduehackers.com/events/hack-night/${photo.event}#photo-${photo.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  tabindex={copy ? -1 : undefined}
+                  class="hack-night-photos__link"
+                >
+                  <Image
+                    src={photo.src}
+                    alt={copy ? '' : photo.alt}
+                    widths={[320, 480, 640, 960]}
+                    sizes="(min-width: 1280px) 384px, (min-width: 768px) 30vw, 264px"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span class="hack-night-photos__caption" aria-hidden="true">
+                    Hack Night {photo.event} <span>↗</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        ))
+      }
+    </div>
+  </div>
+  <div class="hack-night-photos__controls">
+    <a
+      href="https://events.purduehackers.com/?cat=hack-night"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      SEE MORE <span aria-hidden="true">↗</span>
+    </a>
+  </div>
+</section>
+
+<script>
+  const strip = document.querySelector<HTMLElement>('.hack-night-photos');
+
+  if (strip) {
+    const viewport = strip.querySelector<HTMLElement>(
+      '.hack-night-photos__viewport'
+    )!;
+    const group = strip.querySelector<HTMLElement>(
+      '.hack-night-photos__group'
+    )!;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let hovered = false;
+    let focused = false;
+    let visible = false;
+    let interacting = false;
+    let resumeTimer = 0;
+    let frame = 0;
+    let lastTime = 0;
+    let position = 0;
+    let loopWidth = 0;
+
+    const advance = (time: number) => {
+      if (lastTime && loopWidth > 0) {
+        // A slow, constant drift; cap the step after a suspended frame.
+        position =
+          (position + Math.min(time - lastTime, 64) * 0.024) % loopWidth;
+        viewport.scrollLeft = position;
+      }
+      lastTime = time;
+      frame = requestAnimationFrame(advance);
+    };
+
+    const update = () => {
+      cancelAnimationFrame(frame);
+      lastTime = 0;
+      if (
+        !reducedMotion.matches &&
+        !hovered &&
+        !focused &&
+        !interacting &&
+        visible &&
+        !document.hidden
+      ) {
+        position = viewport.scrollLeft;
+        frame = requestAnimationFrame(advance);
+      }
+    };
+
+    const pauseForGesture = () => {
+      window.clearTimeout(resumeTimer);
+      interacting = true;
+      update();
+    };
+
+    const resumeAfterGesture = () => {
+      if (!interacting) return;
+      window.clearTimeout(resumeTimer);
+      resumeTimer = window.setTimeout(() => {
+        interacting = false;
+        update();
+      }, 2000);
+    };
+
+    strip.dataset.enhanced = 'true';
+    new ResizeObserver(() => {
+      loopWidth = group.getBoundingClientRect().width;
+    }).observe(group);
+    new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      update();
+    }).observe(viewport);
+
+    viewport.addEventListener('pointerenter', (event) => {
+      if (event.pointerType !== 'mouse') return;
+      hovered = true;
+      update();
+    });
+    viewport.addEventListener('pointerleave', () => {
+      hovered = false;
+      update();
+    });
+    viewport.addEventListener('focusin', (event) => {
+      focused = true;
+      update();
+      const link = event.target as HTMLElement;
+      if (link?.matches(':focus-visible')) {
+        link.scrollIntoView({
+          block: 'nearest',
+          inline: 'center',
+          behavior: 'instant',
+        });
+      }
+    });
+    viewport.addEventListener('focusout', (event) => {
+      focused = viewport.contains(event.relatedTarget as Node | null);
+      update();
+    });
+    // Give swipes and trackpad scrolling time to settle before drifting again.
+    viewport.addEventListener('pointerdown', pauseForGesture, {
+      passive: true,
+    });
+    window.addEventListener('pointerup', resumeAfterGesture, { passive: true });
+    window.addEventListener('pointercancel', resumeAfterGesture, {
+      passive: true,
+    });
+    viewport.addEventListener(
+      'wheel',
+      (event) => {
+        if (event.deltaX || event.shiftKey) {
+          pauseForGesture();
+          resumeAfterGesture();
+        }
+      },
+      { passive: true }
+    );
+    document.addEventListener('visibilitychange', update);
+    reducedMotion.addEventListener('change', update);
+    update();
+  }
+</script>
+
+<style>
+  .hack-night-photos {
+    --photo-height: clamp(11rem, 20vw, 16rem);
+    position: relative;
+    width: 100vw;
+    margin: 2.5rem 0 0.5rem calc(50% - 50vw);
+  }
+
+  .hack-night-photos__viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .hack-night-photos__viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hack-night-photos__track,
+  .hack-night-photos__group {
+    display: flex;
+    width: max-content;
+  }
+
+  .hack-night-photos__group {
+    flex: none;
+    gap: 0.625rem;
+    margin: 0;
+    padding: 0 0.625rem 0 0;
+    list-style: none;
+  }
+
+  .hack-night-photos:not([data-enhanced]) [data-copy] {
+    display: none;
+  }
+
+  .hack-night-photos__item {
+    flex: none;
+    width: calc(var(--photo-height) * var(--photo-ratio));
+    height: var(--photo-height);
+  }
+
+  .hack-night-photos__link {
+    position: relative;
+    display: block;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 2px;
+  }
+
+  .hack-night-photos__link img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hack-night-photos__caption {
+    position: absolute;
+    inset: auto 0 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 1.5rem 0.75rem 0.625rem;
+    background: linear-gradient(transparent, rgb(0 0 0 / 80%));
+    color: var(--color-bg);
+    font: 0.875rem var(--font-inconsolata);
+    text-align: left;
+    opacity: 0;
+    transition: opacity 150ms ease;
+  }
+
+  .hack-night-photos__link:hover .hack-night-photos__caption,
+  .hack-night-photos__link:focus-visible .hack-night-photos__caption {
+    opacity: 1;
+  }
+
+  .hack-night-photos__link:focus-visible {
+    outline: 3px solid var(--color-secondary);
+    outline-offset: -3px;
+  }
+
+  .hack-night-photos__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.75rem;
+    font: 0.8rem var(--font-inconsolata);
+    text-transform: uppercase;
+  }
+
+  .hack-night-photos__controls a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    color: var(--color-bg);
+    cursor: pointer;
+  }
+
+  .hack-night-photos__controls a:hover {
+    color: var(--color-secondary);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hack-night-photos__caption {
+      transition: none;
+    }
+  }
+</style>

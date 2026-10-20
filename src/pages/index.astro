@@ -5,7 +5,10 @@ import { getPixelIndices } from '../utils/dither';
 import LogoGrid from '../components/LogoSoup';
 import sponsorLogos from '../data/sponsors.normalized.json';
 import PhotoCollageItems from '../components/PhotoCollageItems.astro';
+import HackNightPhotos from '../components/HackNightPhotos.astro';
+import Community from '../components/Community.astro';
 import ShipCard from '../components/ShipCard.astro';
+import ShowReel from '../components/ShowReel.astro';
 import { getLatestShip } from '../lib/ships';
 import { getLatestPost } from '../lib/blog';
 import Sprite from '../components/Sprite.astro';
@@ -28,7 +31,6 @@ const blogImage =
 
 const buildPixels = getPixelIndices(50);
 const backPixels = getPixelIndices(40);
-const joinPixels = getPixelIndices(40);
 const shouldEnablePixelCursor = true;
 ---
 
@@ -58,13 +60,11 @@ const shouldEnablePixelCursor = true;
         >
           Purdue<br />Hackers
         </h1>
-        <p class="font-inconsolata text-xl md:text-2xl font-semibold uppercase max-w-[36rem]">
-          Backing hackers with ambitious ideas.
-        </p>
         <p
           class="max-w-[36rem] font-inconsolata uppercase sm:text-lg md:text-xl font-semibold leading-relaxed mb-6"
         >
-          We back highly talented, curious people at Purdue working across
+          We back highly talented and curious individuals working on ambitious
+          ideas across
           <span class="text-[var(--color-accent-2)]">software</span>,
           <span class="text-[var(--color-primary)]">hardware</span>, and
           <span class="text-[var(--color-accent)]">design</span>.
@@ -105,7 +105,7 @@ const shouldEnablePixelCursor = true;
     </div>
 
     <section
-      class="photo-collage-after relative z-[2] min-h-screen flex flex-col items-center px-8 pb-16 bg-black text-[var(--color-bg)] text-center overflow-hidden"
+      class="photo-collage-after relative z-[2] min-h-screen flex flex-col items-center px-8 pb-16 bg-black text-[var(--color-bg)] text-center overflow-clip"
     >
       <!-- creatura! -->
       <div
@@ -172,7 +172,7 @@ const shouldEnablePixelCursor = true;
       </div>
 
       <!-- 2 -->
-      <div id="hack-night" class="mb-72 relative">
+      <div id="hack-night" class="mb-72 relative w-full max-w-[32rem] scroll-mt-24">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -204,31 +204,7 @@ const shouldEnablePixelCursor = true;
             >Discord</a
           >. Ends when the last person leaves (often until 6am or later).
         </p>
-        <br />
-        <p class="max-w-[36rem] font-polysans text-l leading-relaxed mb-4">
-          A typical Hack Night schedule looks something like this:
-        </p>
-        <table class="font-inconsolata text-l md:text-xl mx-auto">
-          <tbody>
-            <tr>
-              <td class="highlight pr-4 py-1 text-right">D~5~5|5 (8 pm):</td>
-              <td class="py-1 uppercase text-left">Hacking begins</td>
-            </tr>
-            <!-- may want to elaborate on what sessions are -->
-            <tr>
-              <td class="highlight pr-4 py-1 text-right">E~0~0|0 (9 pm):</td>
-              <td class="py-1 uppercase text-left">Session 1</td>
-            </tr>
-            <tr>
-              <td class="highlight pr-4 py-1 text-right">E~A~A|A (10 pm):</td>
-              <td class="py-1 uppercase text-left">Session 2</td>
-            </tr>
-            <tr>
-              <td class="highlight pr-4 py-1 text-right">0~0~0 (12 am):</td>
-              <td class="py-1 uppercase text-left">Checkpoints</td>
-            </tr>
-          </tbody>
-        </table>
+        <HackNightPhotos />
         <p class="max-w-[32rem] pt-6 font-polysans text-l leading-relaxed">
           If you go to Purdue &mdash; whether you've never written code before
           or are highly technical, whether you're an art major or a CS major
@@ -240,83 +216,7 @@ const shouldEnablePixelCursor = true;
         </p>
       </div>
 
-      <!-- 3 -->
-      <div id="projects" class="mb-72 relative">
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          class="w-8 h-8 mx-auto text-[var(--color-secondary)]"
-          fill="currentColor"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <polygon
-            points="3 17 4 17 4 18 3 18 3 20 1 20 1 17 2 17 2 16 3 16 3 17"
-          ></polygon><polygon
-            points="4 5 3 5 3 3 4 3 4 2 6 2 6 3 7 3 7 5 6 5 6 6 4 6 4 5"
-          ></polygon><polygon
-            points="23 17 23 20 21 20 21 18 20 18 20 17 21 17 21 16 22 16 22 17 23 17"
-          ></polygon><polygon
-            points="20 16 19 16 19 20 18 20 18 21 17 21 17 20 16 20 16 17 17 17 17 14 18 14 18 12 17 12 17 13 16 13 16 14 8 14 8 13 7 13 7 12 6 12 6 14 7 14 7 17 8 17 8 20 7 20 7 21 6 21 6 20 5 20 5 16 4 16 4 15 3 15 3 14 2 14 2 11 3 11 3 8 4 8 4 7 6 7 6 8 7 8 7 10 8 10 8 11 9 11 9 7 15 7 15 11 16 11 16 10 17 10 17 8 18 8 18 7 20 7 20 8 21 8 21 11 22 11 22 14 21 14 21 15 20 15 20 16"
-          ></polygon><polygon
-            points="18 5 17 5 17 3 18 3 18 2 20 2 20 3 21 3 21 5 20 5 20 6 18 6 18 5"
-          ></polygon>
-        </svg>
-        <h2
-          class="max-w-[32rem] font-pixel-hackers text-4xl md:text-6xl leading-relaxed pb-6 pt-6"
-        >
-          Community
-        </h2>
-        <p class="max-w-[32rem] font-polysans text-l leading-relaxed">
-          The heart of Purdue Hackers is our <a
-            href="https://discord.gg/5paFjKzdPE"
-            target="_blank"
-            class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 motion-reduce:transition-none"
-            >Discord</a
-          > community with 3000+ people. Share what you've made in <span
-            class="highlight font-inconsolata">#ship</span
-          >, chat about rainbows in <span class="highlight font-inconsolata"
-            >#lounge</span
-          >, and get technical help in <span class="highlight font-inconsolata"
-            >#code</span
-          >. Find people who push you to be your best, and make awesome things
-          together.
-        </p>
-        <br />
-        <p class="max-w-[32rem] font-polysans text-l leading-relaxed pb-8">
-          We have lots of cool artifacts too, including <a
-            href="https://blog.purduehackers.com/posts/papers-please"
-            target="_blank"
-            class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 motion-reduce:transition-none md:whitespace-nowrap"
-            >custom hacker passports</a
-          >, weekly acrylic badges designed and cut by members, <a
-            href="https://sig.horse/"
-            target="_blank"
-            class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 motion-reduce:transition-none md:whitespace-nowrap"
-            >a journal of projects done over summer</a
-          >, and more.
-        </p>
-        <a
-          href="https://discord.gg/5paFjKzdPE"
-          target="_blank"
-          class="join-session-btn"
-          style="background: var(--color-bg); --pixel-cols: 6; --pixel-color: var(--color-bg); --pixel-color-hover: var(--color-secondary); --label-color: black;"
-        >
-          <span class="join-session-btn__pixels" aria-hidden="true">
-            {
-              joinPixels.map((delayIndex) => (
-                <span
-                  class="join-session-btn__pixel"
-                  style={`--i: ${delayIndex}`}
-                />
-              ))
-            }
-          </span>
-          <span class="join-session-btn__label pointer-events-none"
-            >join us</span
-          >
-        </a>
-      </div>
+      <Community />
 
       <!-- mobile-only: ships + blog cards after Community -->
       <div class="md:hidden w-full max-w-2xl flex flex-col gap-4 mb-72">
@@ -341,54 +241,7 @@ const shouldEnablePixelCursor = true;
       </div>
 
       <!-- 4 -->
-      <div class="mb-72 relative">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          class="w-8 h-8 mx-auto text-[var(--color-secondary)]"
-          fill="currentColor"
-        >
-          <polygon
-            points="23 18 23 20 21 20 21 21 20 21 20 23 18 23 18 21 17 21 17 20 15 20 15 18 17 18 17 17 18 17 18 15 20 15 20 17 21 17 21 18 23 18"
-          ></polygon><polygon
-            points="23 4 23 6 21 6 21 7 20 7 20 9 18 9 18 7 17 7 17 6 15 6 15 4 17 4 17 3 18 3 18 1 20 1 20 3 21 3 21 4 23 4"
-          ></polygon><polygon
-            points="17 11 17 13 15 13 15 14 13 14 13 15 12 15 12 16 11 16 11 18 10 18 10 20 8 20 8 18 7 18 7 16 6 16 6 15 5 15 5 14 3 14 3 13 1 13 1 11 3 11 3 10 5 10 5 9 6 9 6 8 7 8 7 6 8 6 8 4 10 4 10 6 11 6 11 8 12 8 12 9 13 9 13 10 15 10 15 11 17 11"
-          ></polygon>
-        </svg>
-        <h2
-          class="max-w-[32rem] font-pixel-hackers text-4xl md:text-6xl leading-relaxed pb-6 pt-6"
-        >
-          The Show
-        </h2>
-        <p class="max-w-[32rem] font-polysans text-l leading-relaxed">
-          At the end of the semester, we hold the Show, an exhibit where our
-          community comes together to share projects made throughout the
-          semester at Hack Night and beyond.
-        </p>
-        <br />
-        <p class="font-inconsolata text-xl font-semibold uppercase">
-          ???????: Fall 2026
-        </p>
-        <a
-          href="https://spill.purduehackers.com/"
-          target="_blank"
-          class="font-inconsolata text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300 motion-reduce:transition-none"
-          >spill ≋: Fall 2025</a
-        >
-        <br />
-        <a
-          href="https://burst.purduehackers.com/"
-          target="_blank"
-          class="font-inconsolata text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300 motion-reduce:transition-none"
-          >BURST ✷: Fall 2024</a
-        >
-        <p class="max-w-[32rem] font-polysans leading-relaxed mt-8">
-          Watch
-          <a href="https://bento.purduehackers.com/" class="underline highlight">BENTO</a>,
-          our event for lightning talks about projects, ideas, and unusual interests.
-        </p>
-      </div>
+      <ShowReel />
       <div class="mb-72 relative w-full max-w-2xl">
         <svg
           xmlns="http://www.w3.org/2000/svg"

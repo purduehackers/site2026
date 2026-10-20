@@ -38,6 +38,8 @@ export default defineConfig({
     // The function then only runs on a cache miss instead of on every request.
     isr: {
       expiration: 60 * 60,
+      // This fragment has its own one-minute CDN cache for fresh Discord posts.
+      exclude: ['/api/community-feed'],
       // For on-demand revalidation (e.g. right after a new ship is posted), add a
       // `bypassToken` here and hit the route with a matching `x-prerender-revalidate`
       // header. Omitted for now, so regeneration is purely time-based.

@@ -7,7 +7,15 @@ if (header) {
     const darkSection = getCollageDarkAnchor();
     if (!darkSection) return;
     const rect = darkSection.getBoundingClientRect();
-    siteHeader.classList.toggle('header-over-dark', rect.top <= 80);
+    // On phones the collage comes after Friends; the content (including the
+    // pinned Show) is already dark long before that mobile collage arrives.
+    const contentTop = document
+      .querySelector('.photo-collage-after')
+      ?.getBoundingClientRect().top;
+    siteHeader.classList.toggle(
+      'header-over-dark',
+      Math.min(rect.top, contentTop ?? Infinity) <= 80
+    );
   }
   window.addEventListener('scroll', updateHeader, { passive: true });
   window.addEventListener('resize', updateHeader, { passive: true });
