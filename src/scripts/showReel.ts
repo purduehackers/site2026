@@ -1,4 +1,4 @@
-import type { DashCascade } from './waveforum/engine';
+import { DashCascade } from './waveforum/engine';
 
 export function initShowReel(reel: HTMLElement) {
   const stage = reel.querySelector<HTMLElement>('.show-reel__stage')!;
@@ -32,12 +32,10 @@ export function initShowReel(reel: HTMLElement) {
     }
   }
 
-  async function loadShader() {
-    if (shaderRequested) return;
+  function loadShader() {
+    if (shaderRequested || disposed) return;
     shaderRequested = true;
     try {
-      const { DashCascade } = await import('./waveforum/engine');
-      if (disposed) return;
       shader = new DashCascade(canvas);
       if (!shader.ok) {
         shader.destroy();
@@ -48,7 +46,7 @@ export function initShowReel(reel: HTMLElement) {
       canvas.dataset.ready = '';
       syncShader();
     } catch {
-      // The static artwork stays visible if WebGL or the module is unavailable.
+      // The static artwork stays visible if WebGL is unavailable.
     }
   }
 
@@ -103,7 +101,7 @@ export function initShowReel(reel: HTMLElement) {
       nearby = entry.isIntersecting;
       if (nearby) {
         loadImages();
-        void loadShader();
+        loadShader();
         schedule();
       }
     },
