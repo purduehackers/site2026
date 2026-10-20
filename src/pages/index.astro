@@ -83,6 +83,8 @@ const shouldEnablePixelCursor = true;
         <div class="flex flex-wrap items-center gap-x-6 gap-y-4">
           <a
             href="https://events.purduehackers.com/"
+            data-umami-event="website_event_click"
+            data-umami-event-placement="hero"
             target="_blank"
             class="join-session-btn"
             style="--pixel-cols: 10; --pixel-color: var(--color-primary);"
@@ -104,6 +106,8 @@ const shouldEnablePixelCursor = true;
           </a>
           <a
             href="https://discord.gg/5paFjKzdPE"
+            data-umami-event="website_discord_click"
+            data-umami-event-placement="hero"
             target="_blank"
             class="font-inconsolata uppercase font-semibold underline underline-offset-4 hover:text-[var(--color-primary)] transition-colors motion-reduce:transition-none"
           >Join our Discord ↗</a>
@@ -208,6 +212,8 @@ const shouldEnablePixelCursor = true;
           >. It's a dedicated space to work on personal projects, join (or
           run) workshops, and share your progress at Checkpoints or on <a
             href="https://discord.gg/5paFjKzdPE"
+            data-umami-event="website_discord_click"
+            data-umami-event-placement="hack_night"
             target="_blank"
             class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 motion-reduce:transition-none"
             >Discord</a
@@ -216,6 +222,8 @@ const shouldEnablePixelCursor = true;
         <p class="max-w-[32rem] pt-6 font-inconsolata uppercase font-semibold leading-relaxed">
           <a
             href={nextHackNight?.href ?? EVENTS_HREF}
+            data-umami-event="website_event_click"
+            data-umami-event-placement="hack_night"
             target="_blank"
             class="underline underline-offset-4 hover:text-[var(--color-secondary)] transition-colors motion-reduce:transition-none"
           >
@@ -287,6 +295,8 @@ const shouldEnablePixelCursor = true;
         <p class="max-w-[32rem] font-polysans text-l leading-relaxed">
           The heart of Purdue Hackers is our <a
             href="https://discord.gg/5paFjKzdPE"
+            data-umami-event="website_discord_click"
+            data-umami-event-placement="community_text"
             target="_blank"
             class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 motion-reduce:transition-none"
             >Discord</a
@@ -319,6 +329,8 @@ const shouldEnablePixelCursor = true;
         </p>
         <a
           href="https://discord.gg/5paFjKzdPE"
+          data-umami-event="website_discord_click"
+          data-umami-event-placement="community_button"
           target="_blank"
           class="join-session-btn"
           style="background: var(--color-bg); --pixel-cols: 6; --pixel-color: var(--color-bg); --pixel-color-hover: var(--color-secondary); --label-color: black;"
@@ -392,6 +404,8 @@ const shouldEnablePixelCursor = true;
         <br />
         <a
           href="https://events.purduehackers.com/events/show/waveforum"
+          data-umami-event="website_event_click"
+          data-umami-event-placement="the_show"
           target="_blank"
           class="font-inconsolata text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300 motion-reduce:transition-none"
           >Waveforum: December 5, 2026</a
@@ -613,6 +627,8 @@ const shouldEnablePixelCursor = true;
             <p class="mt-2 text-lg md:text-xl uppercase text-[var(--color-bg)]">
               <a
                 href="https://discord.gg/5paFjKzdPE"
+                data-umami-event="website_discord_click"
+                data-umami-event-placement="footer"
                 target="_blank"
                 class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
                 >Discord</a
