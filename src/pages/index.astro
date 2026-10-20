@@ -8,6 +8,7 @@ import PhotoCollageItems from '../components/PhotoCollageItems.astro';
 import ShipCard from '../components/ShipCard.astro';
 import { getLatestShip } from '../lib/ships';
 import { getLatestPost } from '../lib/blog';
+import { EVENTS_HREF, formatHackNightStart, getNextHackNight } from '../lib/events';
 import SocialPreviewMetadata from '../components/SocialPreviewMetadata.astro';
 import Sprite from '../components/Sprite.astro';
 import DitherFilters from '../components/DitherFilters.astro';
@@ -17,9 +18,10 @@ import { DITHER_BAND_ROWS, GLIDER_CELL_SIZE } from '../constants/gliderGrid';
 // that much room under its content so the ramp never runs into the CTA.
 const ditherBandPx = DITHER_BAND_ROWS * GLIDER_CELL_SIZE;
 
-const [latestShip, latestPost] = await Promise.all([
+const [latestShip, latestPost, nextHackNight] = await Promise.all([
   getLatestShip(),
   getLatestPost(),
+  getNextHackNight(),
 ]);
 
 const blogHref = latestPost?.link ?? 'https://blog.purduehackers.com/';
@@ -206,6 +208,17 @@ const shouldEnablePixelCursor = true;
             class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 motion-reduce:transition-none"
             >Discord</a
           >. Ends when the last person leaves (often until 6am or later).
+        </p>
+        <p class="max-w-[32rem] pt-6 font-inconsolata uppercase font-semibold leading-relaxed">
+          <a
+            href={nextHackNight?.href ?? EVENTS_HREF}
+            target="_blank"
+            class="underline underline-offset-4 hover:text-[var(--color-secondary)] transition-colors motion-reduce:transition-none"
+          >
+            {nextHackNight
+              ? `Next Hack Night: ${formatHackNightStart(nextHackNight.start)}${nextHackNight.location ? ` — ${nextHackNight.location}` : ''} ↗`
+              : 'See upcoming events ↗'}
+          </a>
         </p>
         <br />
         <p class="max-w-[36rem] font-polysans text-l leading-relaxed mb-4">
