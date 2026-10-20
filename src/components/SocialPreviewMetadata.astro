@@ -7,6 +7,8 @@ export interface Props {
 }
 
 const { title, description } = Astro.props;
+const site = Astro.site ?? new URL('https://www.purduehackers.com');
+const canonical = new URL(Astro.url.pathname, site);
 
 const imageMimeType =
   thumbnailImage.format === 'png'
@@ -16,11 +18,13 @@ const imageMimeType =
       })();
 ---
 
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:type" content="website" />
-<meta property="og:url" content={Astro.url.href} />
-<meta property="og:image:url" content={thumbnailImage.src} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={new URL(thumbnailImage.src, site)} />
 <meta property="og:image:width" content={thumbnailImage.width.toString()} />
 <meta property="og:image:height" content={thumbnailImage.height.toString()} />
 <meta property="og:image:type" content={imageMimeType} />

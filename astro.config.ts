@@ -14,6 +14,7 @@ const analyticsAstro = fileURLToPath(
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://www.purduehackers.com',
   output: 'server',
   adapter: vercel({
     // Optimize images through Vercel's Image Optimization CDN in production

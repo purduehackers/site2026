@@ -11,7 +11,6 @@ import ShipCard from '../components/ShipCard.astro';
 import ShowReel from '../components/ShowReel.astro';
 import { getLatestShip } from '../lib/ships';
 import { getLatestPost } from '../lib/blog';
-import SocialPreviewMetadata from '../components/SocialPreviewMetadata.astro';
 import Sprite from '../components/Sprite.astro';
 import DitherFilters from '../components/DitherFilters.astro';
 import { DITHER_BAND_ROWS, GLIDER_CELL_SIZE } from '../constants/gliderGrid';
@@ -36,12 +35,6 @@ const shouldEnablePixelCursor = true;
 ---
 
 <BaseLayout>
-  <slot name="head">
-    <SocialPreviewMetadata
-      title="Purdue Hackers"
-      description="Purdue Hackers backs highly talented and curious individuals working on ambitious ideas across software, hardware, and design."
-    />
-  </slot>
   {
     shouldEnablePixelCursor && (
       <div
@@ -159,6 +152,9 @@ const shouldEnablePixelCursor = true;
           alt="Purdue Hackers"
           class="w-8 h-8 mb-6 mx-auto fill-[var(--color-secondary)]"
         />
+        <h2 class="font-pixel-hackers text-3xl md:text-4xl max-w-[36rem]">
+          How do we back ambitious ideas?
+        </h2>
         <p
           class="max-w-[36rem] font-inconsolata text-l md:text-xl uppercase font-semibold leading-relaxed mt-6"
         >
@@ -166,6 +162,12 @@ const shouldEnablePixelCursor = true;
           really hard to do alone. Since 2013, Purdue Hackers has been a home to
           build, ship, and demo creative-technical projects together. <br />
           <br /> Here's how we do it:
+        </p>
+        <p class="max-w-[36rem] font-polysans leading-relaxed mt-6">
+          We provide <a href="https://grants.purduehackers.com/" class="underline highlight">project funding</a>,
+          a community of collaborators, and opportunities to build and share
+          your work. Bring an idea to Hack Night and follow projects as they
+          develop on <a href="https://ships.purduehackers.com/" class="underline highlight">Ships</a>.
         </p>
       </div>
 
@@ -181,11 +183,11 @@ const shouldEnablePixelCursor = true;
             points="22 17 22 19 21 19 21 20 20 20 20 21 18 21 18 22 16 22 16 23 10 23 10 22 8 22 8 21 6 21 6 20 5 20 5 19 4 19 4 17 3 17 3 15 2 15 2 9 3 9 3 7 4 7 4 5 5 5 5 4 6 4 6 3 8 3 8 2 10 2 10 1 15 1 15 2 13 2 13 3 11 3 11 4 10 4 10 6 9 6 9 8 8 8 8 12 9 12 9 14 10 14 10 16 11 16 11 17 13 17 13 18 15 18 15 19 19 19 19 18 21 18 21 17 22 17"
           ></polygon>
         </svg>
-        <p
+        <h2
           class="max-w-[32rem] font-pixel-hackers text-4xl md:text-6xl leading-relaxed pb-6 pt-6"
         >
           Hack Night
-        </p>
+        </h2>
         <p class="max-w-[32rem] font-polysans text-l leading-relaxed">
           Hack Night happens <span class="highlight"
             >every Friday, 8pm</span
@@ -208,6 +210,9 @@ const shouldEnablePixelCursor = true;
           or are highly technical, whether you're an art major or a CS major
           &mdash; <br />
           <span class="highlight">you're invited.</span>
+        </p>
+        <p class="mt-6 font-inconsolata uppercase">
+          <a href="/hack-night" class="underline hover:text-[var(--color-secondary)]">Your first Hack Night ↗</a>
         </p>
       </div>
 
@@ -248,11 +253,11 @@ const shouldEnablePixelCursor = true;
             points="23 6 23 11 22 11 22 12 21 12 21 13 20 13 20 14 19 14 19 15 18 15 18 16 17 16 17 17 16 17 16 18 15 18 15 19 14 19 14 20 13 20 13 21 11 21 11 20 10 20 10 19 9 19 9 18 8 18 8 17 7 17 7 16 6 16 6 15 5 15 5 14 4 14 4 13 3 13 3 12 2 12 2 11 1 11 1 6 2 6 2 5 3 5 3 4 4 4 4 3 10 3 10 4 11 4 11 5 13 5 13 4 14 4 14 3 20 3 20 4 21 4 21 5 22 5 22 6 23 6"
           ></polygon></svg
         >
-        <p
+        <h2
           class="max-w-[32rem] mx-auto text-center font-pixel-hackers text-4xl md:text-6xl leading-relaxed pb-6 pt-6"
         >
           Friends
-        </p>
+        </h2>
         <p
           class="max-w-[32rem] font-polysans text-l mx-auto text-center leading-relaxed pb-8"
         >
@@ -379,7 +384,7 @@ const shouldEnablePixelCursor = true;
               >
               <br />
               <a
-                href="https://passports.purduehackers.com/"
+                href="https://blog.purduehackers.com/posts/papers-please"
                 target="_blank"
                 class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
                 >Passports</a
