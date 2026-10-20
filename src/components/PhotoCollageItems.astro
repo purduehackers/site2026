@@ -3,6 +3,7 @@ import ShipCard from './ShipCard.astro';
 import DitheredPhoto from './DitheredPhoto.astro';
 import type { LatestShip } from '../lib/ships';
 import type { LatestPost } from '../lib/blog';
+import type { HackNightPhoto } from '../lib/events';
 import img1 from '../assets/collage/img1.webp';
 import img2 from '../assets/collage/img2.webp';
 import img3 from '../assets/collage/img3.webp';
@@ -12,9 +13,10 @@ import img5 from '../assets/collage/img5.webp';
 interface Props {
   ship?: LatestShip | null;
   post?: LatestPost | null;
+  hackNightPhoto?: HackNightPhoto | null;
 }
 
-const { ship, post } = Astro.props;
+const { ship, post, hackNightPhoto } = Astro.props;
 
 // The pieces render at ~270–340px on desktop and full-width on mobile, so we
 // only ever need a fraction of each source's native resolution. Let Astro emit
@@ -61,7 +63,7 @@ const blogImage =
   target="_blank"
   class="photo-collage__piece photo-collage__piece--3 photo-collage__card photo-collage__card--blog"
   data-caption-title="Latest Blog"
-  data-caption-desc="Stories and write-ups from the community"
+  data-caption-desc={post ? `${post.title}${post.date ? ` — ${post.date}` : ''}` : 'Stories and write-ups from the community'}
 >
   <img src={blogImage} alt={blogTitle} loading="lazy" />
 </a>
@@ -69,21 +71,23 @@ const blogImage =
   href="https://ships.purduehackers.com/"
   target="_blank"
   class="photo-collage__piece photo-collage__piece--4 photo-collage__card photo-collage__card--ships"
-  data-caption-title="Latest #ship"
+  data-caption-title={ship ? 'Latest #ship' : 'Explore #ship'}
   data-caption-desc="Share what you've made in our Discord"
 >
   <ShipCard ship={ship} />
 </a>
 <a
-  href="https://events.purduehackers.com/"
+  href={hackNightPhoto?.href ?? 'https://events.purduehackers.com/'}
   target="_blank"
   class="photo-collage__piece photo-collage__piece--5 photo-collage__piece--photo"
-  data-caption-title="Hack Night"
-  data-caption-desc="Every Friday night at the HIVE (BHEE 270/280), working on technical creative projects until the last person leaves"
+  data-caption-title={hackNightPhoto?.title ?? 'Hack Night'}
+  data-caption-desc={hackNightPhoto?.caption ?? 'Every Friday night at the HIVE (BHEE 270/280), working on technical creative projects until the last person leaves'}
 >
   <DitheredPhoto
-    src={img3}
-    alt="Hack Night"
+    src={hackNightPhoto?.src ?? img3}
+    width={hackNightPhoto?.width}
+    height={hackNightPhoto?.height}
+    alt={hackNightPhoto?.alt ?? 'Hack Night'}
     widths={collageWidths}
     sizes={collageSizes}
   />

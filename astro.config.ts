@@ -12,14 +12,26 @@ const analyticsAstro = fileURLToPath(
   )
 );
 
+const eventImagePattern = {
+  protocol: 'https' as const,
+  hostname: 'cms.purduehackers.com',
+  pathname: '/api/media/file/**',
+};
+
 // https://astro.build/config
 export default defineConfig({
   output: 'server',
+  image: {
+    remotePatterns: [eventImagePattern],
+  },
   adapter: vercel({
     // Optimize images through Vercel's Image Optimization CDN in production
     // instead of running sharp inside the serverless function.
     imageService: true,
     imagesConfig: {
+      // Explicit imagesConfig is used by the Vercel optimizer as well as
+      // Astro's image service; authorize the CMS source in both.
+      remotePatterns: [eventImagePattern],
       // Vercel filters every requested width down to this allowlist, so it must
       // be a superset of the widths our <Image> components ask for (the collage
       // requests 320–1280). The larger entries are Vercel's standard device

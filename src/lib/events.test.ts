@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { formatHackNightStart, getNextHackNight } from './events';
+import { formatHackNightStart, getNextHackNight, getLatestHackNightPhoto } from './events';
 
 const now = new Date('2026-10-20T12:00:00Z');
 const event = {
@@ -35,5 +35,38 @@ describe('next Hack Night', () => {
   test('formats the Purdue date across UTC midnight and daylight saving time', () => {
     expect(formatHackNightStart(event.start)).toBe('Friday, October 23, 8pm ET');
     expect(formatHackNightStart('2026-11-14T01:30:00Z')).toBe('Friday, November 13, 8:30pm ET');
+  });
+});
+
+describe('recent Hack Night photo', () => {
+  const image = {
+    id: 3637, source: 'hack-night', mimeType: 'image/jpeg',
+    url: 'https://cms.purduehackers.com/api/media/file/photo.jpg',
+    width: 4032, height: 2268,
+  };
+  const past = { ...event, slug: '7.5', name: 'Hack Night 7.5', start: '2026-10-17T00:00:00Z' };
+
+  test('links the selected photo to its event gallery and shows the actual event date', async () => {
+    const photo = await getLatestHackNightPhoto(now, respond({ docs: [
+      { ...past, images: [] },
+      { ...past, images: [{ image }] },
+    ] }));
+    expect(photo?.href).toBe('https://events.purduehackers.com/events/hack-night/7.5#photo-3637');
+    expect(photo?.caption).toBe('October 16, 2026 — see photos from the night');
+    expect(photo?.width).toBe(4032);
+  });
+
+  test('rejects posters, unsafe sources, incomplete images and future events', async () => {
+    for (const invalid of [
+      { ...image, source: 'poster' },
+      { ...image, url: 'https://example.com/photo.jpg' },
+      { ...image, url: 'https://cms.purduehackers.com/other/photo.jpg' },
+      { ...image, width: 0 }, { ...image, mimeType: 'image/svg+xml' },
+    ]) {
+      expect(await getLatestHackNightPhoto(now, respond({ docs: [{ ...past, images: [{ image: invalid }] }] }))).toBeNull();
+    }
+    expect(await getLatestHackNightPhoto(now, respond({ docs: [{ ...event, images: [{ image }] }] }))).toBeNull();
+    expect(await getLatestHackNightPhoto(now, respond({ docs: null }))).toBeNull();
+    expect(await getLatestHackNightPhoto(now, respond({}, 503))).toBeNull();
   });
 });

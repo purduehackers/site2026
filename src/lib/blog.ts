@@ -51,7 +51,10 @@ export async function getLatestPost(): Promise<LatestPost | null> {
   if (_cache && Date.now() - _cache.at < CACHE_TTL_MS) return _cache.post;
 
   try {
-    const res = await fetch(RSS_URL, { headers: { Accept: "application/rss+xml" } });
+    const res = await fetch(RSS_URL, {
+      headers: { Accept: "application/rss+xml" },
+      signal: AbortSignal.timeout(3000),
+    });
     if (!res.ok) throw new Error(`RSS responded ${res.status}`);
     const xml = await res.text();
 
