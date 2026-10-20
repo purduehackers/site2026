@@ -1,0 +1,320 @@
+---
+import { getImage } from 'astro:assets';
+import { shows } from '../data/shows';
+import { getPixelIndices } from '../utils/dither';
+
+// Match the hero photos: 8 × 6 tiles, randomized 8ms delays, 220ms fades.
+const columns = 8;
+const rows = 6;
+const delays = getPixelIndices(columns * rows);
+const backgrounds = await Promise.all(
+  shows.map((show) =>
+    getImage({
+      src: show.image,
+      width: Math.min(1920, show.image.width),
+      format: 'webp',
+    })
+  )
+);
+---
+
+<section
+  id="the-show"
+  class="show-reel"
+  aria-labelledby="show-heading"
+  style={`--show-count: ${shows.length}; --show-accent: ${shows[0].color};`}
+>
+  <div class="show-reel__stage">
+    <div class="show-reel__backdrops" aria-hidden="true">
+      <img
+        class="show-reel__fallback"
+        src={backgrounds[0].src}
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+      {
+        shows.map((show, index) => (
+          <svg
+            class="show-reel__scene"
+            data-show-scene={show.id}
+            xmlns="http://www.w3.org/2000/svg"
+            width="100%"
+            height="100%"
+            focusable="false"
+          >
+            <defs>
+              <mask
+                id={`show-mask-${show.id}`}
+                maskUnits="objectBoundingBox"
+                maskContentUnits="objectBoundingBox"
+                x="0"
+                y="0"
+                width="1"
+                height="1"
+                style="mask-type: alpha;"
+              >
+                {delays.map((delay, tile) => (
+                  <rect
+                    class="show-reel__tile"
+                    x={(tile % columns) / columns}
+                    y={Math.floor(tile / columns) / rows}
+                    width={1 / columns + 0.0001}
+                    height={1 / rows + 0.0001}
+                    fill="white"
+                    shape-rendering="crispEdges"
+                    style={`--i: ${delay};`}
+                  />
+                ))}
+              </mask>
+            </defs>
+            {/* Filter the intact photo before masking it, so the dither and
+                cover crop stay aligned across every tile and viewport size. */}
+            <g mask={`url(#show-mask-${show.id})`}>
+              <image
+                data-src={backgrounds[index].src}
+                width="100%"
+                height="100%"
+                preserveAspectRatio={`${show.imageAlignment ?? 'xMidYMid'} slice`}
+                filter={
+                  show.id === 'waveforum' ? undefined : 'url(#ph-dither-color)'
+                }
+              />
+              {show.id === 'waveforum' && (
+                <foreignObject width="100%" height="100%">
+                  <canvas class="show-reel__shader" data-waveforum />
+                </foreignObject>
+              )}
+            </g>
+          </svg>
+        ))
+      }
+    </div>
+    <div class="show-reel__shade" aria-hidden="true"></div>
+
+    <div class="show-reel__content">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        class="show-reel__icon w-8 h-8 mx-auto"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <polygon
+          points="23 18 23 20 21 20 21 21 20 21 20 23 18 23 18 21 17 21 17 20 15 20 15 18 17 18 17 17 18 17 18 15 20 15 20 17 21 17 21 18 23 18"
+        ></polygon><polygon
+          points="23 4 23 6 21 6 21 7 20 7 20 9 18 9 18 7 17 7 17 6 15 6 15 4 17 4 17 3 18 3 18 1 20 1 20 3 21 3 21 4 23 4"
+        ></polygon><polygon
+          points="17 11 17 13 15 13 15 14 13 14 13 15 12 15 12 16 11 16 11 18 10 18 10 20 8 20 8 18 7 18 7 16 6 16 6 15 5 15 5 14 3 14 3 13 1 13 1 11 3 11 3 10 5 10 5 9 6 9 6 8 7 8 7 6 8 6 8 4 10 4 10 6 11 6 11 8 12 8 12 9 13 9 13 10 15 10 15 11 17 11"
+        ></polygon>
+      </svg>
+      <h2
+        id="show-heading"
+        class="font-pixel-hackers text-4xl md:text-6xl leading-relaxed pb-6 pt-6"
+      >
+        The Show
+      </h2>
+      <p class="font-polysans text-l leading-relaxed">
+        At the end of the semester, we hold the Show, an exhibit where our
+        community comes together to share projects made throughout the semester
+        at Hack Night and beyond.
+      </p>
+      <ul class="show-reel__list">
+        {
+          shows.map((show) => (
+            <li>
+              <a
+                class="show-reel__link font-inconsolata text-xl font-semibold uppercase"
+                href={show.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-show-link={show.id}
+                data-color={show.color}
+                style={`--show-color: ${show.color};`}
+              >
+                {show.name}: {show.season}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initShowReel } from '../scripts/showReel';
+  const reel = document.querySelector<HTMLElement>('.show-reel');
+  if (reel) {
+    const cleanup = initShowReel(reel);
+    document.addEventListener('astro:before-swap', cleanup, { once: true });
+    if (import.meta.hot) import.meta.hot.dispose(cleanup);
+  }
+</script>
+
+<style>
+  .show-reel {
+    position: relative;
+    width: calc(100% + 4rem);
+    margin: 0 -2rem 18rem;
+    color: var(--color-bg);
+    text-align: center;
+  }
+
+  .show-reel__stage {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    place-items: center;
+    min-height: 100svh;
+    padding: 6rem 2rem;
+    overflow: clip;
+    background: #000;
+  }
+
+  .show-reel[data-pinned] {
+    height: calc(100svh + var(--show-count) * 80svh);
+  }
+
+  .show-reel[data-pinned] .show-reel__stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+  }
+
+  .show-reel__backdrops,
+  .show-reel__scene,
+  .show-reel__fallback,
+  .show-reel__shade {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .show-reel__backdrops {
+    z-index: -2;
+  }
+
+  .show-reel__fallback {
+    object-fit: cover;
+  }
+
+  .show-reel__shader {
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    animation: waveforum-hue 60s linear infinite;
+    animation-play-state: paused;
+  }
+
+  .show-reel__shader[data-ready] {
+    opacity: 1;
+  }
+
+  .show-reel__shader[data-running] {
+    animation-play-state: running;
+  }
+
+  @keyframes waveforum-hue {
+    to {
+      filter: hue-rotate(360deg);
+    }
+  }
+
+  .show-reel[data-enhanced] .show-reel__fallback {
+    display: none;
+  }
+
+  .show-reel__scene {
+    visibility: hidden;
+    transition: visibility 0s 620ms;
+  }
+
+  .show-reel__scene[data-active] {
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  .show-reel__tile {
+    opacity: 0;
+    transition: opacity 220ms ease-out calc(var(--i) * 8ms);
+  }
+
+  .show-reel__scene[data-active] .show-reel__tile {
+    opacity: 1;
+  }
+
+  .show-reel__shade {
+    z-index: -1;
+    transition: opacity 220ms ease-out;
+    background:
+      linear-gradient(
+        0deg,
+        #000 0%,
+        transparent 22%,
+        transparent 78%,
+        #000 100%
+      ),
+      radial-gradient(ellipse at center, #000b 0%, #0006 60%, #0003 100%);
+  }
+
+  .show-reel[data-show='waveforum'] .show-reel__shade {
+    opacity: 0.4;
+  }
+
+  .show-reel__content {
+    width: 100%;
+    max-width: 32rem;
+    text-shadow: 0 2px 16px #000;
+  }
+
+  .show-reel__icon {
+    color: var(--show-accent);
+    transition: color 220ms ease-out;
+  }
+
+  .show-reel__list {
+    display: grid;
+    justify-items: center;
+    gap: 0.25rem;
+    margin-top: 1.5rem;
+  }
+
+  .show-reel__link {
+    display: inline-block;
+    position: relative;
+    padding: 0.5rem 0.75rem;
+    color: #fffbf1b3;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    transition: color 220ms ease-out;
+  }
+
+  .show-reel__link[data-active],
+  .show-reel__link:hover,
+  .show-reel__link:focus-visible {
+    color: var(--show-color);
+  }
+
+  .show-reel a:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .show-reel__scene,
+    .show-reel__tile,
+    .show-reel__link,
+    .show-reel__shade,
+    .show-reel__icon {
+      transition: none;
+    }
+
+    .show-reel__shader {
+      animation: none;
+    }
+  }
+</style>
