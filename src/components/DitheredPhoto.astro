@@ -3,13 +3,19 @@ import { Image, getImage } from 'astro:assets';
 import { getPixelIndices } from '../utils/dither';
 
 interface Props {
-  src: ImageMetadata;
+  src: ImageMetadata | string;
+  width?: number;
+  height?: number;
   alt: string;
   widths: number[];
   sizes: string;
 }
 
 const { src, alt, widths, sizes } = Astro.props;
+const width = typeof src === 'string' ? Astro.props.width : src.width;
+const height = typeof src === 'string' ? Astro.props.height : src.height;
+if (!width || !height) throw new Error('DitheredPhoto requires image dimensions');
+const remoteDimensions = typeof src === 'string' ? { width, height } : {};
 const revealColumns = 8;
 const revealRows = 6;
 const revealPixelCount = revealColumns * revealRows;
@@ -17,7 +23,7 @@ const revealPixelCount = revealColumns * revealRows;
 // delay so colour gradually creeps through the photo instead of sweeping by row.
 const revealDelays = getPixelIndices(revealPixelCount);
 const displayAspectRatio = 4 / 3;
-const sourceAspectRatio = src.width / src.height;
+const sourceAspectRatio = width / height;
 // Match the desktop image's `object-fit: cover` crop. CSS backgrounds size
 // relative to one tile, so convert the full image's cover dimensions to tiles.
 const backgroundWidth =
@@ -33,7 +39,9 @@ const backgroundWidthInTiles = backgroundWidth / 100;
 // raw import (up to ~8000px) made the first hover fetch and decode the
 // original, which hitched. 960w is the variant the srcset already picks for
 // these ~340px pieces on 2x screens, so it is usually cached by hover time.
-const tileImage = await getImage({ src, width: 960 });
+const tileImage = typeof src === 'string'
+  ? await getImage({ src, width: 960, height: Math.round(960 / sourceAspectRatio) })
+  : await getImage({ src, width: 960 });
 const backgroundHeightInTiles = backgroundHeight / 100;
 ---
 
@@ -48,6 +56,7 @@ const backgroundHeightInTiles = backgroundHeight / 100;
   <Image
     class="dphoto__layer dphoto__layer--color"
     src={src}
+    {...remoteDimensions}
     alt={alt}
     widths={widths}
     sizes={sizes}
@@ -57,6 +66,7 @@ const backgroundHeightInTiles = backgroundHeight / 100;
   <Image
     class="dphoto__layer dphoto__layer--bw"
     src={src}
+    {...remoteDimensions}
     alt=""
     aria-hidden="true"
     widths={widths}

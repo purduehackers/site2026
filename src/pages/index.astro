@@ -8,7 +8,7 @@ import PhotoCollageItems from '../components/PhotoCollageItems.astro';
 import ShipCard from '../components/ShipCard.astro';
 import { getLatestShip } from '../lib/ships';
 import { getLatestPost } from '../lib/blog';
-import { EVENTS_HREF, formatHackNightStart, getNextHackNight } from '../lib/events';
+import { EVENTS_HREF, formatHackNightStart, getNextHackNight, getLatestHackNightPhoto } from '../lib/events';
 import SocialPreviewMetadata from '../components/SocialPreviewMetadata.astro';
 import Sprite from '../components/Sprite.astro';
 import DitherFilters from '../components/DitherFilters.astro';
@@ -18,10 +18,11 @@ import { DITHER_BAND_ROWS, GLIDER_CELL_SIZE } from '../constants/gliderGrid';
 // that much room under its content so the ramp never runs into the CTA.
 const ditherBandPx = DITHER_BAND_ROWS * GLIDER_CELL_SIZE;
 
-const [latestShip, latestPost, nextHackNight] = await Promise.all([
+const [latestShip, latestPost, nextHackNight, hackNightPhoto] = await Promise.all([
   getLatestShip(),
   getLatestPost(),
   getNextHackNight(),
+  getLatestHackNightPhoto(),
 ]);
 
 const blogHref = latestPost?.link ?? 'https://blog.purduehackers.com/';
@@ -111,7 +112,7 @@ const shouldEnablePixelCursor = true;
       data-header-dark
       class="photo-collage photo-collage--desktop relative z-[3] hidden overflow-visible bg-black md:block"
     >
-      <PhotoCollageItems ship={latestShip} post={latestPost} />
+      <PhotoCollageItems ship={latestShip} post={latestPost} hackNightPhoto={hackNightPhoto} />
     </div>
     <div class="photo-caption" id="photo-caption">
       <p class="photo-caption__title"></p>
@@ -337,7 +338,7 @@ const shouldEnablePixelCursor = true;
 
       <!-- mobile-only: ships + blog cards after Community -->
       <div class="md:hidden w-full max-w-2xl flex flex-col gap-4 mb-72">
-        <p class="photo-collage__section-label">Latest Ship</p>
+        <p class="photo-collage__section-label">{latestShip ? 'Latest Ship' : 'Explore Ships'}</p>
         <a
           href="https://ships.purduehackers.com/"
           target="_blank"
@@ -479,7 +480,7 @@ const shouldEnablePixelCursor = true;
       data-header-dark
       class="photo-collage photo-collage--mobile relative z-[2] w-full md:hidden"
     >
-      <PhotoCollageItems ship={latestShip} post={latestPost} />
+      <PhotoCollageItems ship={latestShip} post={latestPost} hackNightPhoto={hackNightPhoto} />
     </div>
 
     <section
