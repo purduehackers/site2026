@@ -1,0 +1,231 @@
+---
+import type { MessageImage, MessageReaction } from '../lib/communityFeed';
+
+interface Props {
+  channel?: string;
+  username: string;
+  usernameColor?: string;
+  avatarUrl: string;
+  timeLabel?: string;
+  timestamp?: string;
+  contentHtml?: string;
+  images?: MessageImage[];
+  reactions?: MessageReaction[];
+  image?: {
+    url: string;
+    alt?: string;
+    width?: number;
+    height?: number;
+  } | null;
+}
+
+const {
+  channel = '🚢ship',
+  username,
+  usernameColor = '#f2f3f5',
+  avatarUrl,
+  timeLabel,
+  timestamp,
+  contentHtml = '',
+  images = [],
+  reactions = [],
+  image,
+} = Astro.props;
+const visibleImages = images.slice(0, 4);
+---
+
+<div class="ship-channel-header">
+  <span class="ship-channel-header__icon" aria-hidden="true">
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M20.317 4.3698a19.7913 19.7913 0 0 0-4.8851-1.5152.0741.0741 0 0 0-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 0 0-.0785-.037 19.7363 19.7363 0 0 0-4.8852 1.515.0699.0699 0 0 0-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 0 0 .0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 0 0 .0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 0 0-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 0 1-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 0 1 .0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 0 1 .0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 0 1-.0066.1276 12.2986 12.2986 0 0 1-1.873.8914.0766.0766 0 0 0-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 0 0 .0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 0 0 .0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 0 0-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"
+      ></path>
+    </svg>
+  </span>
+  <span class="ship-channel-header__name">#{channel}</span>
+</div>
+<div class="ship-message">
+  <img
+    class="ship-message__avatar"
+    src={avatarUrl}
+    alt=""
+    width="40"
+    height="40"
+    loading="lazy"
+  />
+  <div class="ship-message__main">
+    <div class="ship-message__head">
+      <span class="ship-message__user" style={`color: ${usernameColor}`}
+        >{username}</span
+      >
+      {
+        timeLabel &&
+          (timestamp ? (
+            <time class="ship-message__time" datetime={timestamp}>
+              {timeLabel}
+            </time>
+          ) : (
+            <span class="ship-message__time">{timeLabel}</span>
+          ))
+      }
+    </div>
+    <div class="ship-message__body">
+      <slot><Fragment set:html={contentHtml} /></slot>
+    </div>
+    {
+      images.length > 0 ? (
+        <div class="discord-gallery" data-count={visibleImages.length}>
+          {visibleImages.map((attachment, index) => (
+            <div class="discord-gallery__item">
+              <img
+                src={attachment.url}
+                alt={attachment.alt}
+                width={attachment.width}
+                height={attachment.height}
+                loading="lazy"
+                decoding="async"
+              />
+              {index === 3 && images.length > 4 && (
+                <span class="discord-gallery__more">
+                  +{images.length - 4}
+                  <span class="sr-only"> more images in Discord</span>
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        image && (
+          <img
+            class="ship-message__image"
+            src={image.url}
+            alt={image.alt ?? ''}
+            width={image.width}
+            height={image.height}
+            loading="lazy"
+          />
+        )
+      )
+    }
+    {
+      reactions.length > 0 && (
+        <ul class="discord-reactions" aria-label="Message reactions">
+          {reactions.map((reaction) => (
+            <li aria-label={`${reaction.name}: ${reaction.count} reactions`}>
+              {reaction.imageUrl ? (
+                <img
+                  src={reaction.imageUrl}
+                  alt={`:${reaction.name}:`}
+                  width="18"
+                  height="18"
+                  loading="lazy"
+                />
+              ) : (
+                <span aria-hidden="true">{reaction.name}</span>
+              )}
+              <span>{reaction.count}</span>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</div>
+
+<style>
+  .discord-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+    margin-top: 8px;
+    overflow: hidden;
+    border-radius: 8px;
+    aspect-ratio: 1.35;
+  }
+
+  .discord-gallery[data-count='1'] {
+    grid-template-columns: 1fr;
+    aspect-ratio: auto;
+  }
+
+  .discord-gallery[data-count='3'] {
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+  }
+
+  .discord-gallery[data-count='3'] .discord-gallery__item:first-child {
+    grid-row: span 2;
+  }
+
+  .discord-gallery[data-count='4'] {
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+  }
+
+  .discord-gallery__item {
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    background: #232428;
+  }
+
+  .discord-gallery img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .discord-gallery[data-count='1'] img {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 320px;
+    margin: auto;
+    object-fit: contain;
+  }
+
+  .discord-gallery__more {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    background: #0009;
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .discord-reactions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .discord-reactions li {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 6px;
+    border: 1px solid #5865f259;
+    border-radius: 6px;
+    background: #5865f21a;
+    color: #c9cdfb;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  .discord-reactions img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+  }
+</style>
