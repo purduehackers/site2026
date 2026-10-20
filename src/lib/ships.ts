@@ -368,8 +368,11 @@ function escapeHtml(text: string): string {
   );
 }
 
-async function renderShipContent(content: string): Promise<string> {
-  const truncated = smartTruncate(content, 50);
+export async function renderShipContent(
+  content: string,
+  maxWords = 50
+): Promise<string> {
+  const truncated = smartTruncate(content, maxWords);
   if (!truncated.trim()) return '';
   try {
     return String(await markdownProcessor.process(truncated));

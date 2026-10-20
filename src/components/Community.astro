@@ -1,0 +1,194 @@
+---
+import CommunityMessages from './CommunityMessages.astro';
+import DiscordChannel from './DiscordChannel.astro';
+import { getPixelIndices } from '../utils/dither';
+
+const joinPixels = getPixelIndices(40);
+---
+
+<div id="projects" class="community-section mb-72 relative w-full scroll-mt-24">
+  <div class="community-section__copy">
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      class="w-8 h-8 mx-auto text-[var(--color-secondary)]"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <polygon points="3 17 4 17 4 18 3 18 3 20 1 20 1 17 2 17 2 16 3 16 3 17"
+      ></polygon><polygon
+        points="4 5 3 5 3 3 4 3 4 2 6 2 6 3 7 3 7 5 6 5 6 6 4 6 4 5"
+      ></polygon><polygon
+        points="23 17 23 20 21 20 21 18 20 18 20 17 21 17 21 16 22 16 22 17 23 17"
+      ></polygon><polygon
+        points="20 16 19 16 19 20 18 20 18 21 17 21 17 20 16 20 16 17 17 17 17 14 18 14 18 12 17 12 17 13 16 13 16 14 8 14 8 13 7 13 7 12 6 12 6 14 7 14 7 17 8 17 8 20 7 20 7 21 6 21 6 20 5 20 5 16 4 16 4 15 3 15 3 14 2 14 2 11 3 11 3 8 4 8 4 7 6 7 6 8 7 8 7 10 8 10 8 11 9 11 9 7 15 7 15 11 16 11 16 10 17 10 17 8 18 8 18 7 20 7 20 8 21 8 21 11 22 11 22 14 21 14 21 15 20 15 20 16"
+      ></polygon><polygon
+        points="18 5 17 5 17 3 18 3 18 2 20 2 20 3 21 3 21 5 20 5 20 6 18 6 18 5"
+      ></polygon>
+    </svg>
+    <p
+      class="max-w-[32rem] mx-auto font-pixel-hackers text-4xl md:text-6xl leading-relaxed pb-6 pt-6"
+    >
+      Community
+    </p>
+    <p class="max-w-[32rem] mx-auto font-polysans text-l leading-relaxed">
+      The heart of Purdue Hackers is our <a
+        href="https://discord.gg/5paFjKzdPE"
+        target="_blank"
+        class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 motion-reduce:transition-none"
+        >Discord</a
+      > community with 3000+ people. Share what you've made in <DiscordChannel
+        name="ship"
+      />, chat about rainbows in <DiscordChannel name="lounge" />, and get
+      technical help in <DiscordChannel name="code" />. Find people who push you
+      to be your best, and make awesome things together.
+    </p>
+    <br />
+    <p class="max-w-[32rem] mx-auto font-polysans text-l leading-relaxed pb-8">
+      We have lots of cool artifacts too, including <a
+        href="https://blog.purduehackers.com/posts/papers-please"
+        target="_blank"
+        class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 motion-reduce:transition-none md:whitespace-nowrap"
+        >custom hacker passports</a
+      >, weekly acrylic badges designed and cut by members, <a
+        href="https://sig.horse/"
+        target="_blank"
+        class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 motion-reduce:transition-none md:whitespace-nowrap"
+        >a journal of projects done over summer</a
+      >, and more.
+    </p>
+    <a
+      href="https://discord.gg/5paFjKzdPE"
+      target="_blank"
+      class="join-session-btn"
+      style="background: var(--color-bg); --pixel-cols: 6; --pixel-color: var(--color-bg); --pixel-color-hover: var(--color-secondary); --label-color: black;"
+    >
+      <span class="join-session-btn__pixels" aria-hidden="true">
+        {
+          joinPixels.map((delayIndex) => (
+            <span
+              class="join-session-btn__pixel"
+              style={`--i: ${delayIndex}`}
+            />
+          ))
+        }
+      </span>
+      <span class="join-session-btn__label pointer-events-none">join us</span>
+    </a>
+  </div>
+  <div class="community-section__feed" data-community-feed>
+    <CommunityMessages />
+  </div>
+</div>
+
+<style>
+  .community-section {
+    display: grid;
+    align-items: start;
+    gap: 3rem;
+    max-width: 72rem;
+  }
+
+  .community-section__copy {
+    min-width: 0;
+  }
+
+  .community-section__feed {
+    min-width: 0;
+    width: 100%;
+    max-width: 30rem;
+    margin-inline: auto;
+  }
+
+  @media (min-width: 64rem) {
+    .community-section {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: clamp(3rem, 6vw, 6rem);
+    }
+
+    .community-section__copy {
+      position: sticky;
+      top: 8rem;
+      text-align: left;
+    }
+
+    .community-section__copy > svg,
+    .community-section__copy > p {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    .community-section__feed {
+      padding-top: 2rem;
+    }
+  }
+</style>
+
+<script>
+  const feed = document.querySelector<HTMLElement>('[data-community-feed]');
+  if (feed) {
+    let visible = false;
+    let pending = false;
+
+    const refresh = async () => {
+      if (
+        !visible ||
+        pending ||
+        document.visibilityState !== 'visible' ||
+        feed.contains(document.activeElement)
+      )
+        return;
+
+      pending = true;
+      try {
+        const response = await fetch('/api/community-feed', {
+          signal: AbortSignal.timeout(10000),
+        });
+        if (!response.ok) return;
+        const fragment = new DOMParser().parseFromString(
+          await response.text(),
+          'text/html'
+        );
+        const next = fragment.querySelector('[data-community-messages]');
+        const current = feed.querySelector('[data-community-messages]');
+        // Keep focus stable if someone tabs into the cards during the request.
+        if (
+          next &&
+          current &&
+          !feed.contains(window.document.activeElement) &&
+          next.outerHTML !== current.outerHTML
+        )
+          current.replaceWith(next);
+      } catch {
+        // Keep the last successful render, or the dated local examples offline.
+      } finally {
+        pending = false;
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible) void refresh();
+      },
+      { rootMargin: '200px' }
+    );
+    observer.observe(feed);
+    const interval = window.setInterval(refresh, 60000);
+    const onVisibilityChange = () => {
+      if (!document.hidden) void refresh();
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    window.addEventListener(
+      'pagehide',
+      (event) => {
+        if (event.persisted) return;
+        observer.disconnect();
+        window.clearInterval(interval);
+        document.removeEventListener('visibilitychange', onVisibilityChange);
+      },
+      { once: true }
+    );
+  }
+</script>

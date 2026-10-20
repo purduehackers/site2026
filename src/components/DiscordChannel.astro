@@ -1,0 +1,24 @@
+---
+interface Props {
+  name: string;
+}
+
+const { name } = Astro.props;
+---
+
+<span class="discord-channel">#{name}</span>
+
+<style>
+  .discord-channel {
+    display: inline;
+    padding: 0.05em 0.3em 0.12em;
+    border-radius: 0.2em;
+    background: #5865f23d;
+    color: #c9ceff;
+    font-family: var(--font-discord);
+    font-weight: 600;
+    white-space: nowrap;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+</style>

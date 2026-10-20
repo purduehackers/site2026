@@ -1,0 +1,29 @@
+---
+import CommunityMessages from '../../components/CommunityMessages.astro';
+import { getCommunityFeed } from '../../lib/communityFeed';
+
+export const partial = true;
+export const prerender = false;
+
+let messages;
+try {
+  messages = await getCommunityFeed();
+} catch (error) {
+  console.error(
+    error instanceof Error ? error.message : 'Community feed unavailable'
+  );
+  return new Response('Community feed unavailable', {
+    status: 503,
+    headers: { 'Cache-Control': 'no-store' },
+  });
+}
+
+// Independent of the homepage's hourly ISR; signed attachment URLs and reaction
+// counts are refreshed along with the posts.
+Astro.response.headers.set(
+  'Cache-Control',
+  'public, max-age=0, s-maxage=60, stale-while-revalidate=300'
+);
+---
+
+<CommunityMessages messages={messages} />
