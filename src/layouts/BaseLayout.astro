@@ -15,6 +15,7 @@ const { title = 'Purdue Hackers' } = Astro.props;
     <script
       defer
       src="https://umami.purduehackers.com/script.js"
+      data-domains="purduehackers.com,www.purduehackers.com"
       data-website-id="6b1a85c2-a54b-44ef-82c5-3c8ae34d8ec5"></script>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/glider.svg" />
@@ -104,12 +105,16 @@ const { title = 'Purdue Hackers' } = Astro.props;
         <nav class="hidden md:flex gap-8 header-links">
           <a
             href="https://discord.gg/5paFjKzdPE"
+            data-umami-event="website_discord_click"
+            data-umami-event-placement="header"
             target="_blank"
             class="nav-link text-base text-black tracking-wide font-semibold"
             >DISCORD</a
           >
           <a
             href="https://events.purduehackers.com/"
+            data-umami-event="website_event_click"
+            data-umami-event-placement="header"
             target="_blank"
             class="nav-link text-base text-black tracking-wide font-semibold"
             >EVENTS</a
@@ -122,6 +127,8 @@ const { title = 'Purdue Hackers' } = Astro.props;
           >
           <a
             href="https://grants.purduehackers.com/"
+            data-umami-event="website_microgrants_click"
+            data-umami-event-placement="header"
             target="_blank"
             class="nav-link text-base text-black tracking-wide font-semibold"
             >MICROGRANTS</a
@@ -156,11 +163,15 @@ const { title = 'Purdue Hackers' } = Astro.props;
       >
         <a
           href="https://discord.gg/5paFjKzdPE"
+          data-umami-event="website_discord_click"
+          data-umami-event-placement="mobile_menu"
           target="_blank"
           class="mobile-menu__link">DISCORD</a
         >
         <a
           href="https://events.purduehackers.com/"
+          data-umami-event="website_event_click"
+          data-umami-event-placement="mobile_menu"
           target="_blank"
           class="mobile-menu__link">EVENTS</a
         >
@@ -171,6 +182,8 @@ const { title = 'Purdue Hackers' } = Astro.props;
         >
         <a
           href="https://grants.purduehackers.com/"
+          data-umami-event="website_microgrants_click"
+          data-umami-event-placement="mobile_menu"
           target="_blank"
           class="mobile-menu__link">MICROGRANTS</a
         >
