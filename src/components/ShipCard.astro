@@ -11,14 +11,14 @@ interface Props {
 
 const { ship } = Astro.props;
 
-const shipUser = ship?.username ?? 'Ray';
-const shipTime = ship?.timeAgo ?? '3d ago';
+const shipUser = ship?.username ?? 'Purdue Hackers';
+const shipTime = ship?.timeAgo ?? '';
 const shipAvatar = ship?.avatarUrl ?? DEFAULT_AVATAR_URL;
 const shipColor = ship?.usernameColor ?? DEFAULT_USERNAME_COLOR;
 const shipImage = ship?.image ?? null;
 const shipBodyHtml =
   ship?.contentHtml ??
-  '<p>Shipped privacy options for Purdue Hackers — opt out of data collection like in Commit Overflow. Change settings with /privacy.</p>';
+  '<p>See the projects and progress our community is sharing on Ships.</p>';
 ---
 
 <div class="ship-channel-header">

@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { stories } from '../data/stories';
+---
+
+<BaseLayout
+  title="People & projects we back — Purdue Hackers"
+  description="Meet hackers building ambitious software, hardware, and design projects with Purdue Hackers. Explore their work, the support they received, and what happened next."
+>
+  <main
+    class="mx-auto max-w-4xl px-6 pt-36 pb-24 font-polysans leading-relaxed"
+  >
+    <a href="/" class="font-inconsolata underline">← Purdue Hackers</a>
+    <h1 class="font-pixel-hackers text-5xl md:text-7xl leading-tight mt-8 mb-8">
+      People & projects we back
+    </h1>
+    <h2 class="text-2xl font-semibold mb-4">
+      What does Purdue Hackers help people build?
+    </h2>
+    <p>
+      We back highly talented, curious people working on ambitious ideas across
+      software, hardware, and design. That support takes different forms:
+      <a href="https://grants.purduehackers.com/" class="underline"
+        >project funding</a
+      >, collaborators at <a href="/hack-night" class="underline">Hack Night</a
+      >, and opportunities to share work through exhibitions and talks. These
+      stories show what that looks like in practice.
+    </p>
+    <p class="font-inconsolata text-sm mt-4">
+      Sources reviewed <time datetime="2026-10-20">October 20, 2026</time>.
+    </p>
+    {
+      stories.map((story) => (
+        <article
+          id={story.id}
+          class="border-t border-black/20 mt-12 pt-10 scroll-mt-28"
+        >
+          <p class="font-inconsolata uppercase font-semibold text-[var(--color-primary)]">
+            {story.name}
+          </p>
+          <h2 class="font-pixel-hackers text-3xl md:text-4xl my-4">
+            {story.title}
+          </h2>
+          <p>{story.work}</p>
+          <h3 class="font-semibold mt-5 mb-2">How PH supported the work</h3>
+          <p>{story.support}</p>
+          <h3 class="font-semibold mt-5 mb-2">What happened next</h3>
+          <p>{story.outcome}</p>
+          <ul class="mt-5 flex flex-wrap gap-x-6 gap-y-2 font-inconsolata">
+            {story.links.map((link) => (
+              <li>
+                <a class="underline" href={link.href}>
+                  {link.label} ↗
+                </a>
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))
+    }
+    <section class="border-t border-black/20 mt-12 pt-10">
+      <h2 class="font-pixel-hackers text-3xl mb-4">
+        See what people are making now
+      </h2>
+      <p>
+        Follow new work on <a
+          href="https://ships.purduehackers.com/"
+          class="underline">Ships</a
+        >, explore the <a
+          href="https://burst.purduehackers.com/"
+          class="underline">BURST</a
+        > and
+        <a href="https://spill.purduehackers.com/" class="underline">spill</a> exhibitions,
+        or watch <a href="https://bento.purduehackers.com/" class="underline"
+          >BENTO talks</a
+        >.
+      </p>
+      <p class="mt-4">
+        At Purdue and working on an idea? <a
+          href="/hack-night"
+          class="underline">Come build with us at Hack Night.</a>
+      </p>
+    </section>
+  </main>
+</BaseLayout>
