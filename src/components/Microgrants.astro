@@ -1,0 +1,49 @@
+---
+import { getPixelIndices } from '../utils/dither';
+import type { FundedProject } from '../lib/grants';
+
+interface Props {
+  projects: FundedProject[];
+}
+const { projects } = Astro.props;
+const pixels = getPixelIndices(40);
+---
+
+<div id="microgrants" class="mb-72 relative" aria-labelledby="microgrants-title">
+  <img src="/ph.svg" alt="" class="w-8 h-8 mx-auto" aria-hidden="true" />
+  <h2
+    id="microgrants-title"
+    class="max-w-[32rem] font-pixel-hackers text-4xl md:text-6xl leading-relaxed pb-6 pt-6"
+  >Microgrants</h2>
+  <p class="max-w-[32rem] font-polysans text-l leading-relaxed">
+    We back ambitious student projects at Purdue with microgrants of
+    <span class="highlight">up to $1,000</span>. Apply for funding to bring an idea
+    in software, hardware, or design to life.
+  </p>
+  {projects.length > 0 && (
+    <div class="max-w-[32rem] pt-6 font-polysans text-l leading-relaxed">
+      <p class="font-inconsolata uppercase font-semibold">Projects we've backed</p>
+      <ul class="mt-4 space-y-4">
+        {projects.map((project) => (
+          <li>
+            <p><span class="highlight">{project.name}</span> by {project.authors}</p>
+            <p>{project.description}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+  <a
+    href="https://grants.purduehackers.com/"
+    target="_blank"
+    class="join-session-btn mt-8"
+    style="background: var(--color-bg); --pixel-cols: 6; --pixel-color: var(--color-bg); --pixel-color-hover: var(--color-secondary); --label-color: black;"
+  >
+    <span class="join-session-btn__pixels" aria-hidden="true">
+      {pixels.map((delayIndex) => (
+        <span class="join-session-btn__pixel" style={`--i: ${delayIndex}`} />
+      ))}
+    </span>
+    <span class="join-session-btn__label pointer-events-none">Explore microgrants</span>
+  </a>
+</div>
