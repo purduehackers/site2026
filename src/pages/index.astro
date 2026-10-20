@@ -8,6 +8,8 @@ import PhotoCollageItems from '../components/PhotoCollageItems.astro';
 import ShipCard from '../components/ShipCard.astro';
 import { getLatestShip } from '../lib/ships';
 import { getLatestPost } from '../lib/blog';
+import { getFundedProjects } from '../lib/grants';
+import Microgrants from '../components/Microgrants.astro';
 import { EVENTS_HREF, formatHackNightStart, getNextHackNight, getLatestHackNightPhoto } from '../lib/events';
 import SocialPreviewMetadata from '../components/SocialPreviewMetadata.astro';
 import Sprite from '../components/Sprite.astro';
@@ -18,11 +20,12 @@ import { DITHER_BAND_ROWS, GLIDER_CELL_SIZE } from '../constants/gliderGrid';
 // that much room under its content so the ramp never runs into the CTA.
 const ditherBandPx = DITHER_BAND_ROWS * GLIDER_CELL_SIZE;
 
-const [latestShip, latestPost, nextHackNight, hackNightPhoto] = await Promise.all([
+const [latestShip, latestPost, nextHackNight, hackNightPhoto, fundedProjects] = await Promise.all([
   getLatestShip(),
   getLatestPost(),
   getNextHackNight(),
   getLatestHackNightPhoto(),
+  getFundedProjects(),
 ]);
 
 const blogHref = latestPost?.link ?? 'https://blog.purduehackers.com/';
@@ -357,6 +360,8 @@ const shouldEnablePixelCursor = true;
           <img src={blogImage} alt={blogTitle} loading="lazy" />
         </a>
       </div>
+
+      <Microgrants projects={fundedProjects} />
 
       <!-- 4 -->
       <div class="mb-72 relative">
