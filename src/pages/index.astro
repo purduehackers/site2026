@@ -5,6 +5,7 @@ import { getPixelIndices } from '../utils/dither';
 import LogoGrid from '../components/LogoSoup';
 import sponsorLogos from '../data/sponsors.normalized.json';
 import PhotoCollageItems from '../components/PhotoCollageItems.astro';
+import HackNightPhotos from '../components/HackNightPhotos.astro';
 import ShipCard from '../components/ShipCard.astro';
 import { getLatestShip } from '../lib/ships';
 import { getLatestPost } from '../lib/blog';
@@ -168,7 +169,7 @@ const shouldEnablePixelCursor = true;
       </div>
 
       <!-- 2 -->
-      <div id="hack-night" class="mb-72 relative">
+      <div id="hack-night" class="mb-72 relative w-full max-w-[32rem] scroll-mt-24">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -200,31 +201,7 @@ const shouldEnablePixelCursor = true;
             >Discord</a
           >. Ends when the last person leaves (often until 6am or later).
         </p>
-        <br />
-        <p class="max-w-[36rem] font-polysans text-l leading-relaxed mb-4">
-          A typical Hack Night schedule looks something like this:
-        </p>
-        <table class="font-inconsolata text-l md:text-xl mx-auto">
-          <tbody>
-            <tr>
-              <td class="highlight pr-4 py-1 text-right">D~5~5|5 (8 pm):</td>
-              <td class="py-1 uppercase text-left">Hacking begins</td>
-            </tr>
-            <!-- may want to elaborate on what sessions are -->
-            <tr>
-              <td class="highlight pr-4 py-1 text-right">E~0~0|0 (9 pm):</td>
-              <td class="py-1 uppercase text-left">Session 1</td>
-            </tr>
-            <tr>
-              <td class="highlight pr-4 py-1 text-right">E~A~A|A (10 pm):</td>
-              <td class="py-1 uppercase text-left">Session 2</td>
-            </tr>
-            <tr>
-              <td class="highlight pr-4 py-1 text-right">0~0~0 (12 am):</td>
-              <td class="py-1 uppercase text-left">Checkpoints</td>
-            </tr>
-          </tbody>
-        </table>
+        <HackNightPhotos />
         <p class="max-w-[32rem] pt-6 font-polysans text-l leading-relaxed">
           If you go to Purdue &mdash; whether you've never written code before
           or are highly technical, whether you're an art major or a CS major
