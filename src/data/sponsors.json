@@ -70,5 +70,15 @@
     "src": "/logos/duckietown-color.png",
     "url": "https://duckietown.com",
     "scale": 2
+  },
+  {
+    "name": "Cognition",
+    "src": "/logos/cognition-color.svg",
+    "url": "https://cognition.ai"
+  },
+  {
+    "name": "Adobe",
+    "src": "/logos/adobe-color.svg",
+    "url": "https://www.adobe.com"
   }
 ]
