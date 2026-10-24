@@ -1,5 +1,4 @@
 ---
-import { getImage } from 'astro:assets';
 import { shows } from '../data/shows';
 import { getPixelIndices } from '../utils/dither';
 
@@ -7,15 +6,6 @@ import { getPixelIndices } from '../utils/dither';
 const columns = 8;
 const rows = 6;
 const delays = getPixelIndices(columns * rows);
-const backgrounds = await Promise.all(
-  shows.map((show) =>
-    getImage({
-      src: show.image,
-      width: Math.min(1920, show.image.width),
-      format: 'webp',
-    })
-  )
-);
 ---
 
 <section
@@ -28,65 +18,64 @@ const backgrounds = await Promise.all(
     <div class="show-reel__backdrops" aria-hidden="true">
       <img
         class="show-reel__fallback"
-        src={backgrounds[0].src}
+        src={shows[0].image.src}
         alt=""
         loading="lazy"
         decoding="async"
       />
       {
-        shows.map((show, index) => (
-          <svg
+        shows.map((show) => (
+          <div
             class="show-reel__scene"
             data-show-scene={show.id}
-            xmlns="http://www.w3.org/2000/svg"
-            width="100%"
-            height="100%"
-            focusable="false"
+            style={`mask-image: url(#show-mask-${show.id});`}
           >
-            <defs>
-              <mask
-                id={`show-mask-${show.id}`}
-                maskUnits="objectBoundingBox"
-                maskContentUnits="objectBoundingBox"
-                x="0"
-                y="0"
-                width="1"
-                height="1"
-                style="mask-type: alpha;"
-              >
-                {delays.map((delay, tile) => (
-                  <rect
-                    class="show-reel__tile"
-                    x={(tile % columns) / columns}
-                    y={Math.floor(tile / columns) / rows}
-                    width={1 / columns + 0.0001}
-                    height={1 / rows + 0.0001}
-                    fill="white"
-                    shape-rendering="crispEdges"
-                    style={`--i: ${delay};`}
-                  />
-                ))}
-              </mask>
-            </defs>
-            {/* Filter the intact photo before masking it, so the dither and
-                cover crop stay aligned across every tile and viewport size. */}
-            <g mask={`url(#show-mask-${show.id})`}>
-              <image
-                data-src={backgrounds[index].src}
-                width="100%"
-                height="100%"
-                preserveAspectRatio={`${show.imageAlignment ?? 'xMidYMid'} slice`}
-                filter={
-                  show.id === 'waveforum' ? undefined : 'url(#ph-dither-color)'
-                }
-              />
-              {show.id === 'waveforum' && (
-                <foreignObject width="100%" height="100%">
-                  <canvas class="show-reel__shader" data-waveforum />
-                </foreignObject>
-              )}
-            </g>
-          </svg>
+            <svg
+              class="show-reel__masks"
+              xmlns="http://www.w3.org/2000/svg"
+              width="0"
+              height="0"
+              focusable="false"
+            >
+              <defs>
+                <mask
+                  id={`show-mask-${show.id}`}
+                  maskUnits="objectBoundingBox"
+                  maskContentUnits="objectBoundingBox"
+                  x="0"
+                  y="0"
+                  width="1"
+                  height="1"
+                  style="mask-type: alpha;"
+                >
+                  {delays.map((delay, tile) => (
+                    <rect
+                      class="show-reel__tile"
+                      x={(tile % columns) / columns}
+                      y={Math.floor(tile / columns) / rows}
+                      width={1 / columns + 0.0001}
+                      height={1 / rows + 0.0001}
+                      fill="white"
+                      shape-rendering="crispEdges"
+                      style={`--i: ${delay};`}
+                    />
+                  ))}
+                </mask>
+              </defs>
+            </svg>
+            <img
+              class="show-reel__photo"
+              data-src={show.image.src}
+              width={show.image.width}
+              height={show.image.height}
+              alt=""
+              decoding="async"
+              style={`object-position: ${show.imagePosition ?? 'center'};`}
+            />
+            {show.id === 'waveforum' && (
+              <canvas class="show-reel__shader" data-waveforum />
+            )}
+          </div>
         ))
       }
     </div>
@@ -184,6 +173,8 @@ const backgrounds = await Promise.all(
 
   .show-reel__backdrops,
   .show-reel__scene,
+  .show-reel__photo,
+  .show-reel__shader,
   .show-reel__fallback,
   .show-reel__shade {
     position: absolute;
@@ -197,8 +188,16 @@ const backgrounds = await Promise.all(
     z-index: -2;
   }
 
-  .show-reel__fallback {
+  .show-reel__fallback,
+  .show-reel__photo {
     object-fit: cover;
+  }
+
+  .show-reel__masks {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
   }
 
   .show-reel__shader {

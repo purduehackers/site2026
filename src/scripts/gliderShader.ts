@@ -61,7 +61,9 @@ function buildBayer(size: number): number[][] {
     m.push([]);
     for (let x = 0; x < size; x++) {
       const quadrant = (y < size / 2 ? 0 : 2) + (x < size / 2 ? 0 : 1);
-      m[y].push(half[y % (size / 2)][x % (size / 2)] * 4 + [0, 2, 3, 1][quadrant]);
+      m[y].push(
+        half[y % (size / 2)][x % (size / 2)] * 4 + [0, 2, 3, 1][quadrant]
+      );
     }
   }
   return m;
@@ -451,8 +453,7 @@ function buildDitherMask(cols: number, rows: number, bandRows: number) {
       const level =
         Math.pow(t, RAMP_EASE) + (waterline(col) - 0.5) * WOBBLE_AMP * (1 - t);
       const threshold =
-        (bayerRow[col % BAYER_N] +
-          (hash2(col, row) - 0.5) * THRESHOLD_JITTER) /
+        (bayerRow[col % BAYER_N] + (hash2(col, row) - 0.5) * THRESHOLD_JITTER) /
         BAYER_MAX;
       const solid = level >= SOLID_LEVEL;
       const ink = solid || level > threshold;
@@ -520,10 +521,7 @@ function gunLayout(
   // and only then drag the gun left across the copy.
   const fall = Math.max(
     GUN_MIN_FALL,
-    Math.min(
-      GUN_ROWS_ABOVE_BAND,
-      cols - desiredX - GUN_WIDTH - GUN_MUZZLE_GAP
-    )
+    Math.min(GUN_ROWS_ABOVE_BAND, cols - desiredX - GUN_WIDTH - GUN_MUZZLE_GAP)
   );
   const x = Math.max(
     2,
@@ -740,6 +738,7 @@ export function initGliderShader(
 
   // Energy-efficient animation loop
   let isTabVisible = !document.hidden;
+  let isInViewport = false;
   let lastStepTime = 0;
   let animationId: number | null = null;
   let stopped = false;
@@ -763,6 +762,16 @@ export function initGliderShader(
   const host = canvas.parentElement;
   const ro = host ? new ResizeObserver(handleResize) : null;
   if (host && ro) ro.observe(host);
+
+  // The hero's GPU simulation must not compete with the Show reel and header
+  // once it is off screen. Resume shortly before it scrolls back into view.
+  const visibilityObserver = new IntersectionObserver(
+    ([entry]) => {
+      isInViewport = entry.isIntersecting;
+    },
+    { rootMargin: '200px' }
+  );
+  visibilityObserver.observe(host ?? canvas);
 
   // Click and drag on the hero to draw cells. They show straight away but stay
   // out of the sim until PAINT_DELAY_MS after the last one, then go live
@@ -882,7 +891,7 @@ export function initGliderShader(
   const loop = (timestamp: number) => {
     if (stopped) return;
 
-    if (isTabVisible) {
+    if (isTabVisible && isInViewport) {
       if (timestamp - lastStepTime >= speedMs) {
         step();
         render();
@@ -904,6 +913,7 @@ export function initGliderShader(
     document.removeEventListener('visibilitychange', handleVisibilityChange);
     window.removeEventListener('resize', handleResize);
     ro?.disconnect();
+    visibilityObserver.disconnect();
     clearTimeout(commitTimer);
     hero?.removeEventListener('pointerdown', onPointerDown);
     hero?.removeEventListener('pointermove', onPointerMove);

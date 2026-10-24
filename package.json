@@ -9,7 +9,8 @@
     "astro": "astro",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "logos:normalize": "node scripts/normalize-logos.mjs"
+    "logos:normalize": "node scripts/normalize-logos.mjs",
+    "shows:dither": "node scripts/dither-show-images.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.3",
@@ -38,7 +39,8 @@
     "@types/three": "^0.183.1",
     "@vercel/config": "^0.5.5",
     "prettier": "^3.8.1",
-    "prettier-plugin-astro": "^0.14.1"
+    "prettier-plugin-astro": "^0.14.1",
+    "sharp": "^0.34.5"
   },
   "overrides": {
     "vite": "^7.3.2"

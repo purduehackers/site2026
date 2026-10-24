@@ -1,7 +1,7 @@
 import waveforum from '../assets/shows/waveforum.jpg';
-import bento from '../assets/shows/bento-dj.webp';
-import spill from '../assets/shows/spill-robot.webp';
-import burst from '../assets/shows/burst.webp';
+import bento from '../assets/shows/dithered/bento-dj.webp';
+import spill from '../assets/shows/dithered/spill-robot.webp';
+import burst from '../assets/shows/dithered/burst.webp';
 
 export const shows = [
   {
@@ -21,7 +21,7 @@ export const shows = [
     href: 'https://bento.purduehackers.com/',
     color: '#b9a3ff',
     image: bento,
-    imageAlignment: 'xMaxYMid',
+    imagePosition: 'right center',
     imageSource: 'User-provided Bento DJ presentation photograph',
   },
   {

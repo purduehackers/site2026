@@ -4,7 +4,7 @@ export function initShowReel(reel: HTMLElement) {
   const stage = reel.querySelector<HTMLElement>('.show-reel__stage')!;
   const content = reel.querySelector<HTMLElement>('.show-reel__content')!;
   const scenes = Array.from(
-    reel.querySelectorAll<SVGSVGElement>('[data-show-scene]')
+    reel.querySelectorAll<HTMLElement>('[data-show-scene]')
   );
   const links = Array.from(
     reel.querySelectorAll<HTMLAnchorElement>('[data-show-link]')
@@ -66,9 +66,10 @@ export function initShowReel(reel: HTMLElement) {
     if (loaded) return;
     loaded = true;
     reel
-      .querySelectorAll<SVGImageElement>('image[data-src]')
+      .querySelectorAll<HTMLImageElement>('img[data-src]')
       .forEach((image) => {
-        image.setAttribute('href', image.dataset.src!);
+        image.src = image.dataset.src!;
+        void image.decode().catch(() => {});
       });
   }
 
