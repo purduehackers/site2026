@@ -17,6 +17,7 @@ export function initShowReel(reel: HTMLElement) {
   let visible = false;
   let active = -1;
   let frame = 0;
+  let revealTimer = 0;
   let nearby = false;
   let loaded = false;
 
@@ -57,6 +58,16 @@ export function initShowReel(reel: HTMLElement) {
       scene.toggleAttribute('data-active', i === index);
       links[i].toggleAttribute('data-active', i === index);
     });
+    clearTimeout(revealTimer);
+    scenes.forEach((scene) => delete scene.dataset.revealed);
+    // Masks are only needed during the reveal. Removing them also prevents a
+    // stale browser mask texture from leaving a decoded photo hidden.
+    revealTimer = window.setTimeout(
+      () => {
+        scenes[index].dataset.revealed = '';
+      },
+      motion.matches ? 0 : 620
+    );
     reel.dataset.show = links[index].dataset.showLink;
     reel.style.setProperty('--show-accent', links[index].dataset.color!);
     syncShader();
@@ -150,6 +161,7 @@ export function initShowReel(reel: HTMLElement) {
   return () => {
     disposed = true;
     cancelAnimationFrame(frame);
+    clearTimeout(revealTimer);
     observer.disconnect();
     visibilityObserver.disconnect();
     resizeObserver.disconnect();

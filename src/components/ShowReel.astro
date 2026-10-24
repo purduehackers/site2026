@@ -6,6 +6,20 @@ import { getPixelIndices } from '../utils/dither';
 const columns = 8;
 const rows = 6;
 const delays = getPixelIndices(columns * rows);
+const revealDuration = (columns * rows - 1) * 8 + 220;
+// Local gradient masks avoid WebKit's stale painting of referenced SVG masks.
+const maskImages = delays
+  .map((delay) => {
+    const alpha = `clamp(0, calc((var(--show-reveal) * ${revealDuration} - ${delay * 8}) / 220), 1)`;
+    return `linear-gradient(rgb(255 255 255 / ${alpha}) 0 0)`;
+  })
+  .join(',');
+const maskPositions = delays
+  .map(
+    (_, tile) =>
+      `${((tile % columns) / (columns - 1)) * 100}% ${(Math.floor(tile / columns) / (rows - 1)) * 100}%`
+  )
+  .join(',');
 ---
 
 <section
@@ -28,41 +42,8 @@ const delays = getPixelIndices(columns * rows);
           <div
             class="show-reel__scene"
             data-show-scene={show.id}
-            style={`mask-image: url(#show-mask-${show.id});`}
+            style={`--show-mask: ${maskImages}; mask-position: ${maskPositions}; mask-size: calc(${100 / columns}% + 0.1px) calc(${100 / rows}% + 0.1px); --show-reveal-duration: ${revealDuration}ms;`}
           >
-            <svg
-              class="show-reel__masks"
-              xmlns="http://www.w3.org/2000/svg"
-              width="0"
-              height="0"
-              focusable="false"
-            >
-              <defs>
-                <mask
-                  id={`show-mask-${show.id}`}
-                  maskUnits="objectBoundingBox"
-                  maskContentUnits="objectBoundingBox"
-                  x="0"
-                  y="0"
-                  width="1"
-                  height="1"
-                  style="mask-type: alpha;"
-                >
-                  {delays.map((delay, tile) => (
-                    <rect
-                      class="show-reel__tile"
-                      x={(tile % columns) / columns}
-                      y={Math.floor(tile / columns) / rows}
-                      width={1 / columns + 0.0001}
-                      height={1 / rows + 0.0001}
-                      fill="white"
-                      shape-rendering="crispEdges"
-                      style={`--i: ${delay};`}
-                    />
-                  ))}
-                </mask>
-              </defs>
-            </svg>
             <img
               class="show-reel__photo"
               data-src={show.image.src}
@@ -142,6 +123,12 @@ const delays = getPixelIndices(columns * rows);
 </script>
 
 <style>
+  @property --show-reveal {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+  }
+
   .show-reel {
     position: relative;
     width: calc(100% + 4rem);
@@ -193,13 +180,6 @@ const delays = getPixelIndices(columns * rows);
     object-fit: cover;
   }
 
-  .show-reel__masks {
-    position: absolute;
-    width: 0;
-    height: 0;
-    overflow: hidden;
-  }
-
   .show-reel__shader {
     display: block;
     width: 100%;
@@ -228,22 +208,23 @@ const delays = getPixelIndices(columns * rows);
   }
 
   .show-reel__scene {
+    --show-reveal: 0;
+    mask-image: var(--show-mask);
+    mask-repeat: no-repeat;
     visibility: hidden;
-    transition: visibility 0s 620ms;
+    transition:
+      --show-reveal var(--show-reveal-duration) linear,
+      visibility 0s 620ms;
   }
 
   .show-reel__scene[data-active] {
+    --show-reveal: 1;
     visibility: visible;
     transition-delay: 0s;
   }
 
-  .show-reel__tile {
-    opacity: 0;
-    transition: opacity 220ms ease-out calc(var(--i) * 8ms);
-  }
-
-  .show-reel__scene[data-active] .show-reel__tile {
-    opacity: 1;
+  .show-reel__scene[data-revealed] {
+    mask-image: none;
   }
 
   .show-reel__shade {
@@ -305,7 +286,6 @@ const delays = getPixelIndices(columns * rows);
 
   @media (prefers-reduced-motion: reduce) {
     .show-reel__scene,
-    .show-reel__tile,
     .show-reel__link,
     .show-reel__shade,
     .show-reel__icon {
