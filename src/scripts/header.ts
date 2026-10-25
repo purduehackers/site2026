@@ -7,8 +7,8 @@ if (header) {
     const darkSection = getCollageDarkAnchor();
     if (!darkSection) return;
     const rect = darkSection.getBoundingClientRect();
-    // On phones the collage comes after Friends; the content (including the
-    // pinned Show) is already dark long before that mobile collage arrives.
+    // Phones use the dark content section as their anchor; the collage is
+    // desktop-only.
     const contentTop = document
       .querySelector('.photo-collage-after')
       ?.getBoundingClientRect().top;
