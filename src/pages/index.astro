@@ -7,7 +7,6 @@ import sponsorLogos from '../data/sponsors.normalized.json';
 import PhotoCollageItems from '../components/PhotoCollageItems.astro';
 import HackNightPhotos from '../components/HackNightPhotos.astro';
 import Community from '../components/Community.astro';
-import ShipCard from '../components/ShipCard.astro';
 import ShowReel from '../components/ShowReel.astro';
 import { getLatestShip } from '../lib/ships';
 import { getLatestPost } from '../lib/blog';
@@ -24,11 +23,6 @@ const [latestShip, latestPost] = await Promise.all([
   getLatestShip(),
   getLatestPost(),
 ]);
-
-const blogHref = latestPost?.link ?? 'https://blog.purduehackers.com/';
-const blogTitle = latestPost?.title ?? 'Latest Purdue Hackers blog post';
-const blogImage =
-  latestPost?.ogImage ?? 'https://blog.purduehackers.com/og/posts/sighorse.png';
 
 const buildPixels = getPixelIndices(50);
 const backPixels = getPixelIndices(40);
@@ -212,28 +206,6 @@ const shouldEnablePixelCursor = true;
       </div>
 
       <Community />
-
-      <!-- mobile-only: ships + blog cards after Community -->
-      <div class="md:hidden w-full max-w-2xl flex flex-col gap-4 mb-72">
-        <p class="photo-collage__section-label">Latest Ship</p>
-        <a
-          href="https://ships.purduehackers.com/"
-          target="_blank"
-          class="photo-collage__card photo-collage__card--ships"
-        >
-          <ShipCard ship={latestShip} />
-        </a>
-        <p class="photo-collage__section-label" style="margin-top: 0.5rem;">
-          Latest Blog
-        </p>
-        <a
-          href={blogHref}
-          target="_blank"
-          class="photo-collage__card photo-collage__card--blog"
-        >
-          <img src={blogImage} alt={blogTitle} loading="lazy" />
-        </a>
-      </div>
 
       <!-- 4 -->
       <ShowReel />

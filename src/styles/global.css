@@ -276,15 +276,6 @@ body.menu-open .mobile-menu-btn {
   pointer-events: auto;
   will-change: transform;
 }
-.photo-collage__section-label {
-  font-family: var(--font-inconsolata);
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  color: var(--color-bg);
-  letter-spacing: 0.05em;
-  padding: 0 0;
-}
 .photo-collage__piece--photo {
   display: block;
   text-decoration: none;
