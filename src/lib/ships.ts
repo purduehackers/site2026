@@ -11,6 +11,7 @@ import type { Node } from 'unist';
 import type { Element } from 'hast';
 
 import { getTurso } from './turso';
+import { formatRelativeTime } from './relativeTime';
 
 export interface ShipImage {
   url: string;
@@ -24,6 +25,7 @@ export interface LatestShip {
   avatarUrl: string;
   contentHtml: string;
   timeAgo: string;
+  shippedAt: string;
   image: ShipImage | null;
 }
 
@@ -382,20 +384,6 @@ export async function renderShipContent(
   }
 }
 
-function relativeTime(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
-  const seconds = Math.floor(diff / 1000);
-  if (seconds < 60) return 'just now';
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
-  const days = Math.floor(hours / 24);
-  if (days < 30) return `${days}d ago`;
-  const months = Math.floor(days / 30);
-  return `${months}mo ago`;
-}
-
 export async function getLatestShip(): Promise<LatestShip | null> {
   try {
     const result = await getTurso().execute(
@@ -413,7 +401,8 @@ export async function getLatestShip(): Promise<LatestShip | null> {
         ? String(row.avatar_url)
         : defaultAvatarUrl(userId),
       contentHtml: await renderShipContent(String(row.content ?? '')),
-      timeAgo: relativeTime(String(row.shipped_at)),
+      timeAgo: formatRelativeTime(String(row.shipped_at)),
+      shippedAt: String(row.shipped_at),
       image: firstImageAttachment(String(row.attachments ?? '[]')),
     };
   } catch (e) {

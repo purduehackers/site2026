@@ -1,0 +1,17 @@
+---
+import { formatRelativeTime, startRelativeTime } from '../lib/relativeTime';
+
+interface Props {
+  datetime: string;
+  class?: string;
+}
+
+const { datetime, class: className } = Astro.props;
+const timestamp = Date.parse(datetime);
+const iso = Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : '';
+// Only code is serialized here; the timestamp stays in an escaped attribute.
+const initialize = `(${startRelativeTime.toString()})(${formatRelativeTime.toString()});`;
+---
+
+<time class={className} datetime={iso}>{formatRelativeTime(iso)}</time>
+<script is:inline set:html={initialize} />

@@ -4,6 +4,11 @@ import { fileURLToPath } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@astrojs/react';
 import vercel from '@astrojs/vercel';
+import {
+  IMAGE_WIDTHS,
+  astroRemotePatterns,
+  vercelRemotePatterns,
+} from './src/lib/images';
 
 const analyticsAstro = fileURLToPath(
   new URL(
@@ -15,21 +20,21 @@ const analyticsAstro = fileURLToPath(
 // https://astro.build/config
 export default defineConfig({
   output: 'server',
+  image: { remotePatterns: astroRemotePatterns },
   adapter: vercel({
     // Optimize images through Vercel's Image Optimization CDN in production
     // instead of running sharp inside the serverless function.
     imageService: true,
     imagesConfig: {
-      // Vercel filters every requested width down to this allowlist, so it must
-      // be a superset of the widths our <Image> components ask for (the collage
-      // requests 320–1280). The larger entries are Vercel's standard device
-      // sizes, kept for any full-bleed imagery.
-      sizes: [320, 480, 640, 750, 828, 960, 1080, 1200, 1280, 1920, 2048, 3840],
+      sizes: IMAGE_WIDTHS,
+      // Explicitly pass the Vercel patterns: this adapter version drops Astro
+      // patterns that specify a protocol when copying them into Build Output.
+      remotePatterns: vercelRemotePatterns,
       // Serve AVIF when the browser supports it, falling back to WebP.
       formats: ['image/avif', 'image/webp'],
-      // Sources live under /_astro with content-hashed, immutable filenames, so
-      // optimized variants can be cached aggressively.
-      minimumCacheTTL: 60 * 60 * 24 * 365,
+      // Remote blog art can change at the same URL. Keep its minimum to a day;
+      // local /_astro sources retain their longer, immutable upstream lifetime.
+      minimumCacheTTL: 60 * 60 * 24,
     },
     // Incremental Static Regeneration. The homepage is server-rendered and reads
     // the latest "ship" from Turso, but it isn't personalized — so let Vercel

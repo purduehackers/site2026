@@ -6,6 +6,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "test": "bun test",
     "astro": "astro",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

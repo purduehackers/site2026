@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import { hackNightPhotos } from '../data/hackNightPhotos';
+import { IMAGE_QUALITY, photoWidths } from '../lib/images';
 ---
 
 <section class="hack-night-photos" aria-label="Life at Hack Night">
@@ -33,8 +34,10 @@ import { hackNightPhotos } from '../data/hackNightPhotos';
                   <Image
                     src={photo.src}
                     alt={copy ? '' : photo.alt}
-                    widths={[320, 480, 640, 960]}
-                    sizes="(min-width: 1280px) 384px, (min-width: 768px) 30vw, 264px"
+                    width={640}
+                    widths={photoWidths(Math.min(photo.src.width, 1280))}
+                    sizes={`(min-width: 80rem) ${(16 * photo.src.width) / photo.src.height}rem, (min-width: 55rem) ${(20 * photo.src.width) / photo.src.height}vw, ${(11 * photo.src.width) / photo.src.height}rem`}
+                    quality={IMAGE_QUALITY}
                     loading="lazy"
                     decoding="async"
                   />

@@ -1,15 +1,15 @@
 ---
-import { Image, getImage } from 'astro:assets';
+import { Image } from 'astro:assets';
 import { getPixelIndices } from '../utils/dither';
+import { IMAGE_QUALITY, photoWidths } from '../lib/images';
 
 interface Props {
   src: ImageMetadata;
   alt: string;
-  widths: number[];
-  sizes: string;
+  desktopWidth: number;
 }
 
-const { src, alt, widths, sizes } = Astro.props;
+const { src, alt, desktopWidth } = Astro.props;
 const revealColumns = 8;
 const revealRows = 6;
 const revealPixelCount = revealColumns * revealRows;
@@ -18,6 +18,12 @@ const revealPixelCount = revealColumns * revealRows;
 const revealDelays = getPixelIndices(revealPixelCount);
 const displayAspectRatio = 4 / 3;
 const sourceAspectRatio = src.width / src.height;
+const widths = photoWidths(Math.min(src.width, 1920));
+// Account for the portion cropped by object-fit: cover as well as the CSS box.
+const desktopSourceWidth = Math.ceil(
+  desktopWidth * Math.max(1, sourceAspectRatio / displayAspectRatio)
+);
+const sizes = `(min-width: 768px) ${desktopSourceWidth}px, max(100vw, ${75 * sourceAspectRatio}vh)`;
 // Match the desktop image's `object-fit: cover` crop. CSS backgrounds size
 // relative to one tile, so convert the full image's cover dimensions to tiles.
 const backgroundWidth =
@@ -29,11 +35,6 @@ const backgroundHeight =
   Math.max(revealRows, (revealRows * displayAspectRatio) / sourceAspectRatio) *
   100;
 const backgroundWidthInTiles = backgroundWidth / 100;
-// The reveal tiles paint the photo as a CSS background. Pointing that at the
-// raw import (up to ~8000px) made the first hover fetch and decode the
-// original, which hitched. 960w is the variant the srcset already picks for
-// these ~340px pieces on 2x screens, so it is usually cached by hover time.
-const tileImage = await getImage({ src, width: 960 });
 const backgroundHeightInTiles = backgroundHeight / 100;
 ---
 
@@ -43,7 +44,8 @@ const backgroundHeightInTiles = backgroundHeight / 100;
 }
 <span
   class="dphoto"
-  style={`--dphoto-image: url(${tileImage.src}); --dphoto-background-width: ${backgroundWidth}%; --dphoto-background-height: ${backgroundHeight}%;`}
+  data-dithered-photo
+  style={`--dphoto-background-width: ${backgroundWidth}%; --dphoto-background-height: ${backgroundHeight}%;`}
 >
   <Image
     class="dphoto__layer dphoto__layer--color"
@@ -51,6 +53,8 @@ const backgroundHeightInTiles = backgroundHeight / 100;
     alt={alt}
     widths={widths}
     sizes={sizes}
+    width={640}
+    quality={IMAGE_QUALITY}
     loading="lazy"
     decoding="async"
   />
@@ -61,6 +65,8 @@ const backgroundHeightInTiles = backgroundHeight / 100;
     aria-hidden="true"
     widths={widths}
     sizes={sizes}
+    width={640}
+    quality={IMAGE_QUALITY}
     loading="lazy"
     decoding="async"
   />
@@ -82,3 +88,26 @@ const backgroundHeightInTiles = backgroundHeight / 100;
     }
   </span>
 </span>
+
+<script>
+  // Reuse the exact responsive image the browser decoded. A fixed CSS URL
+  // downloaded a second variant for every photo, even before the first hover.
+  document
+    .querySelectorAll<HTMLElement>('[data-dithered-photo]')
+    .forEach((photo) => {
+      const image = photo.querySelector<HTMLImageElement>(
+        '.dphoto__layer--color'
+      );
+      if (!image) return;
+      const sync = () => {
+        if (image.currentSrc && image.naturalWidth) {
+          photo.style.setProperty(
+            '--dphoto-image',
+            `url("${image.currentSrc}")`
+          );
+        }
+      };
+      image.addEventListener('load', sync);
+      if (image.complete) sync();
+    });
+</script>

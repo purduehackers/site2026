@@ -1,4 +1,5 @@
 import { DashCascade } from './waveforum/engine';
+import { measureShowReel } from '../utils/showReelLayout';
 
 export function initShowReel(reel: HTMLElement) {
   const stage = reel.querySelector<HTMLElement>('.show-reel__stage')!;
@@ -19,7 +20,7 @@ export function initShowReel(reel: HTMLElement) {
   let frame = 0;
   let revealTimer = 0;
   let nearby = false;
-  let loaded = false;
+  const loaded = new Set<number>();
 
   function syncShader() {
     if (!shader) return;
@@ -52,6 +53,7 @@ export function initShowReel(reel: HTMLElement) {
   }
 
   function activate(index: number) {
+    loadImages(index);
     if (index === active) return;
     active = index;
     scenes.forEach((scene, i) => {
@@ -73,15 +75,25 @@ export function initShowReel(reel: HTMLElement) {
     syncShader();
   }
 
-  function loadImages() {
-    if (loaded) return;
-    loaded = true;
-    reel
-      .querySelectorAll<HTMLImageElement>('img[data-src]')
-      .forEach((image) => {
-        image.src = image.dataset.src!;
-        void image.decode().catch(() => {});
-      });
+  function loadImages(index: number) {
+    // Fetch the active scene and its next neighbor as they approach view.
+    for (const i of [index, index + 1]) {
+      if (i >= scenes.length || loaded.has(i)) continue;
+      const image = scenes[i].querySelector<HTMLImageElement>('img[data-src]');
+      if (!image) continue;
+      loaded.add(i);
+      image.addEventListener(
+        'load',
+        () => {
+          if (!disposed && i === active) reel.dataset.imageReady = '';
+        },
+        { once: true }
+      );
+      image.sizes = image.dataset.sizes!;
+      image.srcset = image.dataset.srcset!;
+      image.src = image.dataset.src!;
+      void image.decode().catch(() => {});
+    }
   }
 
   function update() {
@@ -100,8 +112,7 @@ export function initShowReel(reel: HTMLElement) {
   function measure() {
     // Keep every link reachable in short/zoomed viewports. CSS sticky supplies
     // the pin; wheel, touch, keyboard and scrollbar scrolling stay native.
-    const enoughRoom = content.offsetHeight + 192 <= window.innerHeight;
-    reel.toggleAttribute('data-pinned', !motion.matches && enoughRoom);
+    measureShowReel(reel);
     shader?.resize();
     shader?.redraw();
     syncShader();
@@ -112,7 +123,6 @@ export function initShowReel(reel: HTMLElement) {
     ([entry]) => {
       nearby = entry.isIntersecting;
       if (nearby) {
-        loadImages();
         loadShader();
         schedule();
       }
@@ -138,7 +148,6 @@ export function initShowReel(reel: HTMLElement) {
   function onFocus(event: FocusEvent) {
     const index = links.findIndex((link) => link === event.target);
     if (index >= 0) {
-      loadImages();
       activate(index);
     }
   }
@@ -177,5 +186,6 @@ export function initShowReel(reel: HTMLElement) {
     delete canvas.dataset.running;
     delete reel.dataset.enhanced;
     delete reel.dataset.pinned;
+    delete reel.dataset.imageReady;
   };
 }
