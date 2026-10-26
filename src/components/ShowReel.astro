@@ -1,6 +1,25 @@
 ---
+import { getImage } from 'astro:assets';
 import { shows } from '../data/shows';
 import { getPixelIndices } from '../utils/dither';
+import { IMAGE_QUALITY, photoWidths } from '../lib/images';
+import { measureShowReel } from '../utils/showReelLayout';
+
+const backgrounds = await Promise.all(
+  shows.map((show) =>
+    getImage({
+      src: show.image,
+      width: Math.min(1280, show.image.width),
+      widths: photoWidths(Math.min(2560, show.image.width)),
+      quality: IMAGE_QUALITY,
+    })
+  )
+);
+// Cover a full-height stage, including the source pixels cropped on phones.
+const backgroundSizes = shows.map(
+  (show) => `max(100vw, ${(100 * show.image.width) / show.image.height}svh)`
+);
+const initializeLayout = `(${measureShowReel.toString()})(document.currentScript.previousElementSibling);`;
 
 // Match the hero photos: 8 × 6 tiles, randomized 8ms delays, 220ms fades.
 const columns = 8;
@@ -25,6 +44,7 @@ const maskPositions = delays
 <section
   id="the-show"
   class="show-reel"
+  data-show={shows[0].id}
   aria-labelledby="show-heading"
   style={`--show-count: ${shows.length}; --show-accent: ${shows[0].color};`}
 >
@@ -32,13 +52,17 @@ const maskPositions = delays
     <div class="show-reel__backdrops" aria-hidden="true">
       <img
         class="show-reel__fallback"
-        src={shows[0].image.src}
+        src={backgrounds[0].src}
+        srcset={backgrounds[0].srcSet.attribute}
+        sizes={backgroundSizes[0]}
+        width={shows[0].image.width}
+        height={shows[0].image.height}
         alt=""
         loading="lazy"
         decoding="async"
       />
       {
-        shows.map((show) => (
+        shows.map((show, index) => (
           <div
             class="show-reel__scene"
             data-show-scene={show.id}
@@ -46,7 +70,9 @@ const maskPositions = delays
           >
             <img
               class="show-reel__photo"
-              data-src={show.image.src}
+              data-src={backgrounds[index].src}
+              data-srcset={backgrounds[index].srcSet.attribute}
+              data-sizes={backgroundSizes[index]}
               width={show.image.width}
               height={show.image.height}
               alt=""
@@ -85,9 +111,9 @@ const maskPositions = delays
         The Show
       </h2>
       <p class="font-polysans text-l leading-relaxed">
-        At the end of the year, we hold the Show, an exhibit where our
-        community comes together to share projects made throughout the semester
-        at Hack Night and beyond.
+        At the end of the year, we hold the Show, an exhibit where our community
+        comes together to share projects made throughout the semester at Hack
+        Night and beyond.
       </p>
       <ul class="show-reel__list">
         {
@@ -99,6 +125,7 @@ const maskPositions = delays
                 target="_blank"
                 rel="noopener noreferrer"
                 data-show-link={show.id}
+                data-active={show === shows[0] ? '' : undefined}
                 data-color={show.color}
                 style={`--show-color: ${show.color};`}
               >
@@ -111,6 +138,7 @@ const maskPositions = delays
     </div>
   </div>
 </section>
+<script is:inline set:html={initializeLayout} />
 
 <script>
   import { initShowReel } from '../scripts/showReel';
@@ -203,7 +231,7 @@ const maskPositions = delays
     }
   }
 
-  .show-reel[data-enhanced] .show-reel__fallback {
+  .show-reel[data-image-ready] .show-reel__fallback {
     display: none;
   }
 

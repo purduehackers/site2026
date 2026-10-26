@@ -1,5 +1,7 @@
 ---
 import type { MessageImage, MessageReaction } from '../lib/communityFeed';
+import RelativeTime from './RelativeTime.astro';
+import RemoteImage from './RemoteImage.astro';
 
 interface Props {
   channel?: string;
@@ -8,6 +10,7 @@ interface Props {
   avatarUrl: string;
   timeLabel?: string;
   timestamp?: string;
+  relativeTimestamp?: boolean;
   contentHtml?: string;
   images?: MessageImage[];
   reactions?: MessageReaction[];
@@ -26,6 +29,7 @@ const {
   avatarUrl,
   timeLabel,
   timestamp,
+  relativeTimestamp = false,
   contentHtml = '',
   images = [],
   reactions = [],
@@ -49,13 +53,14 @@ const visibleImages = images.slice(0, 4);
   <span class="ship-channel-header__name">#{channel}</span>
 </div>
 <div class="ship-message">
-  <img
+  <RemoteImage
     class="ship-message__avatar"
     src={avatarUrl}
     alt=""
-    width="40"
-    height="40"
-    loading="lazy"
+    width={40}
+    height={40}
+    widths={[40, 80, 160]}
+    sizes="40px"
   />
   <div class="ship-message__main">
     <div class="ship-message__head">
@@ -64,7 +69,9 @@ const visibleImages = images.slice(0, 4);
       >
       {
         timeLabel &&
-          (timestamp ? (
+          (timestamp && relativeTimestamp ? (
+            <RelativeTime class="ship-message__time" datetime={timestamp} />
+          ) : timestamp ? (
             <time class="ship-message__time" datetime={timestamp}>
               {timeLabel}
             </time>
@@ -81,13 +88,17 @@ const visibleImages = images.slice(0, 4);
         <div class="discord-gallery" data-count={visibleImages.length}>
           {visibleImages.map((attachment, index) => (
             <div class="discord-gallery__item">
-              <img
+              <RemoteImage
                 src={attachment.url}
                 alt={attachment.alt}
                 width={attachment.width}
                 height={attachment.height}
-                loading="lazy"
-                decoding="async"
+                widths={[240, 320, 480, 640, 800, 960]}
+                sizes={
+                  visibleImages.length === 1
+                    ? '(min-width: 768px) 400px, calc(100vw - 112px)'
+                    : '(min-width: 768px) 200px, calc((100vw - 112px) / 2)'
+                }
               />
               {index === 3 && images.length > 4 && (
                 <span class="discord-gallery__more">
@@ -100,13 +111,14 @@ const visibleImages = images.slice(0, 4);
         </div>
       ) : (
         image && (
-          <img
+          <RemoteImage
             class="ship-message__image"
             src={image.url}
             alt={image.alt ?? ''}
             width={image.width}
             height={image.height}
-            loading="lazy"
+            widths={[240, 320, 480, 640, 800]}
+            sizes="(min-width: 768px) 272px, calc(100vw - 112px)"
           />
         )
       )
@@ -173,14 +185,14 @@ const visibleImages = images.slice(0, 4);
     background: #232428;
   }
 
-  .discord-gallery img {
+  .discord-gallery :global(img) {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 
-  .discord-gallery[data-count='1'] img {
+  .discord-gallery[data-count='1'] :global(img) {
     width: auto;
     max-width: 100%;
     height: auto;

@@ -9,7 +9,8 @@ import { type VercelConfig, routes } from '@vercel/config/v1';
 //     in astro.config.ts — that owns document caching, so there's no rule for it.
 //   - Vercel Image Optimization responses (`/_vercel/image?...`) are cached by
 //     Vercel's optimizer itself, driven by `imagesConfig.minimumCacheTTL` in
-//     astro.config.ts (one year); their headers can't be overridden here.
+//     astro.config.ts (one day minimum, or the source's longer cache lifetime);
+//     their headers can't be overridden here.
 export const config: VercelConfig = {
   headers: [
     // Astro's build output — JS, CSS, the self-hosted web fonts, and the images
