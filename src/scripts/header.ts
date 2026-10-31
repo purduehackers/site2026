@@ -4,7 +4,9 @@ const header = document.getElementById('site-header');
 if (header) {
   const siteHeader = header;
   function updateHeader() {
-    const darkSection = getCollageDarkAnchor();
+    const darkSection =
+      document.querySelector<HTMLElement>('[data-header-dark-start]') ??
+      getCollageDarkAnchor();
     if (!darkSection) return;
     const rect = darkSection.getBoundingClientRect();
     // Phones use the dark content section as their anchor; the collage is

@@ -1,0 +1,551 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import SocialPreviewMetadata from '../components/SocialPreviewMetadata.astro';
+import LogoGrid from '../components/LogoSoup';
+import sponsorLogos from '../data/sponsors.normalized.json';
+import { getPixelIndices } from '../utils/dither';
+import hackNightPhoto from '../assets/collage/img3.webp';
+import burstPhoto from '../assets/collage/img1.webp';
+import spillPhoto from '../assets/collage/img4.webp';
+
+export const prerender = true;
+
+const title = 'Support Purdue Hackers | Donate or Sponsor';
+const description =
+  'Purdue Hackers backs highly talented, curious individuals working on ambitious ideas across software, hardware, and design.';
+const donationUrl = 'https://hcb.hackclub.com/donations/start/purdue-hackers';
+const emailUrl = 'mailto:phackers@purdue.edu';
+const sponsorUrl = `${emailUrl}?subject=${encodeURIComponent('Sponsoring Purdue Hackers')}`;
+const supportUrl = `${emailUrl}?subject=${encodeURIComponent('Supporting Purdue Hackers')}`;
+const lightButtonStyle =
+  'background: var(--color-bg); --pixel-cols: 10; --pixel-color: var(--color-bg); --pixel-color-hover: var(--color-secondary); --label-color: black;';
+const donationPixels = getPixelIndices(50);
+const sponsorPixels = getPixelIndices(50);
+const heroActions = [
+  {
+    label: 'donate',
+    href: '#donate',
+    event: 'sponsors_hero_donate',
+    color: 'var(--color-primary)',
+    pixels: getPixelIndices(50),
+  },
+  {
+    label: 'sponsor PH',
+    href: '#partner',
+    event: 'sponsors_hero_partner',
+    color: 'black',
+    pixels: getPixelIndices(50),
+  },
+];
+---
+
+<BaseLayout title={title}>
+  <Fragment slot="head">
+    <meta name="description" content={description} />
+    <SocialPreviewMetadata title={title} description={description} />
+  </Fragment>
+
+  <main class="sponsors-page">
+    <section class="sponsors-header shell" aria-labelledby="sponsors-title">
+      <div class="hero-intro">
+        <p class="eyebrow">Purdue Hackers · Since 2013</p>
+        <h1 id="sponsors-title">Back hackers with ambitious ideas.</h1>
+        <p class="hero-copy">
+          We back highly talented and curious individuals working on ambitious
+          ideas across software, hardware, and design.
+        </p>
+        <div class="hero-actions">
+          {
+            heroActions.map(({ label, href, event, color, pixels }) => (
+              <a
+                href={href}
+                class="join-session-btn"
+                style={`--pixel-cols: 10; --pixel-color: ${color}; --pixel-color-hover: ${color === 'black' ? 'var(--color-primary)' : 'black'};`}
+                data-umami-event={event}
+              >
+                <span class="join-session-btn__pixels" aria-hidden="true">
+                  {pixels.map((delayIndex) => (
+                    <span
+                      class="join-session-btn__pixel"
+                      style={`--i: ${delayIndex}`}
+                    />
+                  ))}
+                </span>
+                <span class="join-session-btn__label">{label}</span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+      <figure class="hero-photo">
+        <Image
+          src={hackNightPhoto}
+          alt="Hackers gathered around laptops, working together at Hack Night."
+          widths={[480, 640, 960, 1280]}
+          sizes="(min-width: 1232px) 508px, (min-width: 768px) 42vw, calc(100vw - 48px)"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <figcaption>
+          <span>Hack Night</span>
+          <a href="https://events.purduehackers.com/"
+            >Fridays, 8pm <span aria-hidden="true">↗</span></a
+          >
+        </figcaption>
+      </figure>
+    </section>
+
+    <div class="sponsors-body" data-header-dark-start>
+      <div class="shell">
+        <section class="culture" aria-labelledby="culture-title">
+          <div class="section-layout culture-intro">
+            <div>
+              <p class="eyebrow">Life at Purdue Hackers</p>
+              <h2 id="culture-title">How we<br />support hackers.</h2>
+            </div>
+            <div class="section-copy">
+              <p>
+                Every Friday, Hack Night brings people together to work on their
+                own ideas. At midnight, we pause for Checkpoints: a chance to
+                show progress, ask for help, and see what everyone else is
+                making. The night ends when the last person leaves.
+              </p>
+              <p>
+                Microgrants help pay for the work. The Show gives it an
+                audience. Each semester, we turn a space into an exhibition of
+                what hackers have made across software, hardware, and design.
+              </p>
+              <a class="text-link" href="https://ships.purduehackers.com/"
+                >See what hackers are shipping <span aria-hidden="true">↗</span
+                ></a
+              >
+            </div>
+          </div>
+          <div class="show-photos">
+            <figure>
+              <Image
+                src={burstPhoto}
+                alt="Visitors try a game surrounded by artwork at Burst, our 2024 Show."
+                widths={[480, 640, 960, 1280]}
+                sizes="(min-width: 1200px) 552px, (min-width: 768px) 46vw, calc(100vw - 48px)"
+                loading="lazy"
+              />
+              <figcaption>
+                <span>Burst ✷</span>
+                <span>The Show, 2024</span>
+              </figcaption>
+            </figure>
+            <figure>
+              <Image
+                src={spillPhoto}
+                alt="People gather around a demo under hanging lights at Spill, our 2025 Show."
+                widths={[480, 640, 960, 1280]}
+                sizes="(min-width: 1200px) 552px, (min-width: 768px) 46vw, calc(100vw - 48px)"
+                loading="lazy"
+              />
+              <figcaption>
+                <span>Spill ≋</span>
+                <span>The Show, 2025</span>
+              </figcaption>
+            </figure>
+          </div>
+          <p class="community-note">
+            <span>Every Friday in person.</span>
+            <span>3,000+ in our online community.</span>
+          </p>
+        </section>
+
+        <section class="friends" aria-labelledby="friends-title">
+          <h2 id="friends-title" class="eyebrow">Backed by friends at</h2>
+          <LogoGrid logos={sponsorLogos} showGrid={false} />
+          <p class="individual-friends">
+            And friends like <a href="https://www.paulgraham.com/"
+              >Paul Graham</a
+            >
+            and <a href="https://mitchellh.com/">Mitchell Hashimoto</a>.
+          </p>
+        </section>
+
+        <section
+          id="donate"
+          class="section-layout support-section"
+          aria-labelledby="donate-title"
+        >
+          <div>
+            <p class="eyebrow">Donate</p>
+            <h2 id="donate-title">Back their work.</h2>
+          </div>
+          <div class="section-copy">
+            <p>
+              Your donation funds microgrants, shared tools, Hack Night, and The
+              Show—the support that helps hackers take an idea further.
+            </p>
+            <p>
+              Sustained funding lets us support more people and give them room
+              to pursue difficult, original work that takes time.
+            </p>
+            <a
+              href={donationUrl}
+              class="join-session-btn section-action"
+              style={lightButtonStyle}
+              data-umami-event="sponsors_donate_checkout"
+            >
+              <span class="join-session-btn__pixels" aria-hidden="true">
+                {
+                  donationPixels.map((delayIndex) => (
+                    <span
+                      class="join-session-btn__pixel"
+                      style={`--i: ${delayIndex}`}
+                    />
+                  ))
+                }
+              </span>
+              <span class="join-session-btn__label">donate to PH</span>
+            </a>
+            <p class="action-note">
+              Give through HCB. For a larger gift or recurring support,
+              <a href={supportUrl} data-umami-event="sponsors_support_email"
+                >email us</a
+              >.
+            </p>
+          </div>
+        </section>
+
+        <section
+          id="partner"
+          class="section-layout support-section"
+          aria-labelledby="partner-title"
+        >
+          <div>
+            <p class="eyebrow">Sponsor</p>
+            <h2 id="partner-title">Work with<br />Purdue Hackers.</h2>
+          </div>
+          <div class="section-copy">
+            <p>
+              Help hackers pursue their ideas, and get to know the people behind
+              the work. Bring your engineers to Hack Night, share tools and
+              technical expertise, or meet the community at The Show.
+            </p>
+            <p>
+              Our sponsors typically give
+              <strong class="contribution">$2,000–$3,000.</strong> We’re looking for
+              partners who want to make a larger, lasting commitment, too.
+            </p>
+            <p>
+              Tell us which ideas or fields you’re interested in, and how you’d
+              like to support the people working on them.
+            </p>
+            <a
+              href={sponsorUrl}
+              class="join-session-btn section-action"
+              style={lightButtonStyle}
+              data-umami-event="sponsors_partner_email"
+            >
+              <span class="join-session-btn__pixels" aria-hidden="true">
+                {
+                  sponsorPixels.map((delayIndex) => (
+                    <span
+                      class="join-session-btn__pixel"
+                      style={`--i: ${delayIndex}`}
+                    />
+                  ))
+                }
+              </span>
+              <span class="join-session-btn__label">talk sponsorship</span>
+            </a>
+            <p class="action-note">
+              <a href={emailUrl}>phackers@purdue.edu</a>
+            </p>
+          </div>
+        </section>
+
+        <footer class="sponsors-footer">
+          <p>
+            Need a W-9, invoice, or another way to give?
+            <a href={emailUrl}>phackers@purdue.edu</a>
+          </p>
+          <a href="/" class="home-link">Purdue Hackers ↗</a>
+        </footer>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  :global(body:has(.sponsors-page) #site-header) {
+    background: var(--color-bg);
+  }
+  :global(body:has(.sponsors-page) #site-header.header-over-dark),
+  :global(body.menu-open:has(.sponsors-page) #site-header) {
+    background: black;
+  }
+  .sponsors-page {
+    font-family: var(--font-polysans), sans-serif;
+  }
+  .shell {
+    width: min(100% - 5rem, 72rem);
+    margin-inline: auto;
+  }
+  .sponsors-header {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    align-items: center;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    padding-block: 9rem 5rem;
+  }
+  .eyebrow {
+    font-family: var(--font-inconsolata), monospace;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  h1,
+  h2:not(.eyebrow) {
+    font-family: var(--font-pixel-hackers), fantasy;
+    font-weight: normal;
+    text-wrap: balance;
+  }
+  h1 {
+    margin-block: 1rem 1.5rem;
+    max-width: 10em;
+    font-size: clamp(2.75rem, 5.2vw, 4rem);
+    line-height: 1.08;
+    text-wrap: initial;
+  }
+  .hero-copy {
+    max-width: 30rem;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1.75rem;
+  }
+  figure {
+    margin: 0;
+    min-width: 0;
+  }
+  figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  .hero-photo img {
+    aspect-ratio: 6 / 5;
+    object-position: 55% center;
+  }
+  figcaption {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    padding-top: 0.875rem;
+    font-family: var(--font-inconsolata), monospace;
+    font-size: 0.9375rem;
+    line-height: 1.4;
+  }
+  figcaption > :first-child {
+    font-weight: 700;
+  }
+  .hero-photo figcaption a {
+    text-decoration: none;
+  }
+  .hero-photo figcaption a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+  .sponsors-body {
+    background: black;
+    color: var(--color-bg);
+  }
+  .culture {
+    padding-top: 0.5rem;
+  }
+  .culture-intro {
+    border-top: 0;
+  }
+  .culture .eyebrow {
+    margin-bottom: 1rem;
+    color: var(--color-secondary);
+  }
+  .show-photos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  .show-photos img {
+    aspect-ratio: 3 / 2;
+  }
+  .show-photos figcaption > :last-child {
+    color: rgb(255 251 241 / 65%);
+  }
+  .community-note {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.5rem;
+    justify-content: center;
+    padding-block: 2.75rem;
+    font-family: var(--font-inconsolata), monospace;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  .friends {
+    padding-block: 3.5rem;
+    border-top: 1px solid rgb(255 251 241 / 25%);
+    text-align: center;
+  }
+  .friends h2 {
+    margin-bottom: 2.5rem;
+  }
+  .individual-friends {
+    margin-top: 2rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    text-wrap: balance;
+  }
+  .section-layout {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    column-gap: 4.5rem;
+    padding-block: 4.5rem;
+  }
+  .support-section {
+    border-top: 1px solid rgb(255 251 241 / 25%);
+  }
+  h2:not(.eyebrow) {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    line-height: 1.15;
+  }
+  .support-section .eyebrow {
+    margin-bottom: 1rem;
+    color: var(--color-secondary);
+  }
+  .section-copy {
+    max-width: 35rem;
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+  .section-copy > p + p {
+    margin-top: 1.25rem;
+  }
+  .section-action {
+    margin-top: 1.75rem;
+  }
+  .text-link {
+    display: inline-block;
+    margin-top: 1.5rem;
+    font-family: var(--font-inconsolata), monospace;
+    font-size: 1rem;
+  }
+  .section-copy .action-note {
+    margin-top: 1.25rem;
+    font-size: 0.9375rem;
+  }
+  .contribution {
+    color: var(--color-secondary);
+    white-space: nowrap;
+  }
+  a:not(.join-session-btn):not(.home-link) {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  a:not(.join-session-btn):hover {
+    color: var(--color-secondary);
+  }
+  a:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 5px;
+  }
+  #donate,
+  #partner {
+    scroll-margin-top: 5rem;
+  }
+  .sponsors-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 2rem;
+    padding-block: 2rem;
+    border-top: 1px solid rgb(255 251 241 / 25%);
+    font-family: var(--font-inconsolata), monospace;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  .sponsors-footer p {
+    max-width: 28rem;
+  }
+  .home-link {
+    flex-shrink: 0;
+  }
+  @media (min-width: 768px) and (max-width: 899px) {
+    .sponsors-header {
+      grid-template-columns: 1.2fr 1fr;
+      gap: 2rem;
+    }
+    h1 {
+      font-size: 2.75rem;
+    }
+    .hero-copy {
+      font-size: 1rem;
+    }
+    .hero-photo img {
+      aspect-ratio: 3 / 4;
+    }
+    .section-layout {
+      gap: 2.5rem;
+    }
+  }
+  @media (max-width: 767px) {
+    .shell {
+      width: calc(100% - 3rem);
+    }
+    .sponsors-header {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      padding-block: 7rem 3rem;
+    }
+    h1 {
+      max-width: 11em;
+      font-size: clamp(2.5rem, 8.5vw, 3.5rem);
+    }
+    .hero-photo img {
+      aspect-ratio: 4 / 3;
+    }
+    .hero-copy,
+    .section-copy {
+      font-size: 1rem;
+    }
+    .section-layout {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      padding-block: 3rem;
+    }
+    .community-note {
+      display: block;
+      padding-block: 2rem;
+      text-align: center;
+    }
+    .community-note span {
+      display: block;
+    }
+    .show-photos {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .friends {
+      padding-block: 3rem;
+    }
+    .sponsors-footer {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+  }
+</style>
