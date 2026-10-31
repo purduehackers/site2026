@@ -1,19 +1,19 @@
-import waveforum from '../assets/shows/waveforum.jpg';
+// import waveforum from '../assets/shows/waveforum.jpg';
 import bento from '../assets/shows/dithered/bento-dj.webp';
 import spill from '../assets/shows/dithered/spill-robot.webp';
 import burst from '../assets/shows/dithered/burst.webp';
 
 export const shows = [
-  {
-    id: 'waveforum',
-    name: 'Waveforum',
-    season: 'Fall 2026',
-    href: 'https://waveforum.purduehackers.com/',
-    color: '#83e5f5',
-    image: waveforum,
-    // Static fallback for the live Waveforum shader.
-    imageSource: 'https://waveforum.purduehackers.com/',
-  },
+//   {
+//     id: 'waveforum',
+//     name: 'Waveforum',
+//     season: 'Fall 2026',
+//     href: 'https://waveforum.purduehackers.com/',
+//     color: '#83e5f5',
+//     image: waveforum,
+//     // Static fallback for the live Waveforum shader.
+//     imageSource: 'https://waveforum.purduehackers.com/',
+//   },
   {
     id: 'bento',
     name: 'BENTO',
