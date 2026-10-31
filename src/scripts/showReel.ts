@@ -11,7 +11,7 @@ export function initShowReel(reel: HTMLElement) {
     reel.querySelectorAll<HTMLAnchorElement>('[data-show-link]')
   );
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const canvas = reel.querySelector<HTMLCanvasElement>('[data-waveforum]')!;
+  const canvas = reel.querySelector<HTMLCanvasElement>('[data-waveforum]');
   let shader: DashCascade | undefined;
   let shaderRequested = false;
   let disposed = false;
@@ -23,7 +23,7 @@ export function initShowReel(reel: HTMLElement) {
   const loaded = new Set<number>();
 
   function syncShader() {
-    if (!shader) return;
+    if (!canvas || !shader) return;
     const running =
       visible && active === 0 && !document.hidden && !motion.matches;
     canvas.toggleAttribute('data-running', running);
@@ -35,7 +35,7 @@ export function initShowReel(reel: HTMLElement) {
   }
 
   function loadShader() {
-    if (shaderRequested || disposed) return;
+    if (!canvas || shaderRequested || disposed) return;
     shaderRequested = true;
     try {
       shader = new DashCascade(canvas);
@@ -136,7 +136,7 @@ export function initShowReel(reel: HTMLElement) {
   });
 
   function movePointer(event: PointerEvent) {
-    if (active !== 0 || !visible) return;
+    if (!canvas || active !== 0 || !visible) return;
     const rect = canvas.getBoundingClientRect();
     shader?.setPointer(event.clientX - rect.left, event.clientY - rect.top);
   }
@@ -182,8 +182,10 @@ export function initShowReel(reel: HTMLElement) {
     stage.removeEventListener('pointerleave', leavePointer);
     document.removeEventListener('visibilitychange', syncShader);
     shader?.destroy();
-    delete canvas.dataset.ready;
-    delete canvas.dataset.running;
+    if (canvas) {
+      delete canvas.dataset.ready;
+      delete canvas.dataset.running;
+    }
     delete reel.dataset.enhanced;
     delete reel.dataset.pinned;
     delete reel.dataset.imageReady;
