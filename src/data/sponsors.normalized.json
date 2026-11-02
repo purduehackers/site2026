@@ -32,12 +32,12 @@
     "transform": "translate(0em, 0.0563em)"
   },
   {
-    "name": "Million",
-    "src": "/logos/million-color.svg",
-    "url": "https://million.dev",
-    "width": 109,
-    "height": 18,
-    "transform": "translate(0em, -0.0146em)"
+    "name": "Cognition",
+    "src": "/logos/cognition-color.svg",
+    "url": "https://cognition.com",
+    "width": 111,
+    "height": 24,
+    "transform": "translate(0em, -0.0229em)"
   },
   {
     "name": "Kleiner Perkins",
@@ -117,6 +117,14 @@
     "url": "https://duckietown.com",
     "width": 219,
     "height": 49,
+    "transform": "translate(0em, -0.0146em)"
+  },
+  {
+    "name": "Million",
+    "src": "/logos/million-color.svg",
+    "url": "https://million.dev",
+    "width": 109,
+    "height": 18,
     "transform": "translate(0em, -0.0146em)"
   }
 ]
