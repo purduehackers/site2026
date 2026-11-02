@@ -51,7 +51,8 @@ export default function LogoGrid({
             target={logo.url ? '_blank' : undefined}
             style={{
               width: `${logo.width / BASE_SIZE}em`,
-              height: `${logo.height / BASE_SIZE}em`,
+              maxWidth: '100%',
+              aspectRatio: `${logo.width} / ${logo.height}`,
               transform: logo.transform ?? undefined,
             }}
           >
