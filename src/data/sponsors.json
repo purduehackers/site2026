@@ -72,6 +72,11 @@
     "scale": 2
   },
   {
+    "name": "AndyMark",
+    "src": "/logos/andymark-color.png",
+    "url": "https://andymark.com/"
+  },
+  {
     "name": "Million",
     "src": "/logos/million-color.svg",
     "url": "https://million.dev"
