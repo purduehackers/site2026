@@ -40,6 +40,14 @@
     "transform": "translate(0em, -0.0229em)"
   },
   {
+    "name": "PlanetScale",
+    "src": "/logos/planetscale-color.svg",
+    "url": "https://planetscale.com",
+    "width": 124,
+    "height": 20,
+    "transform": null
+  },
+  {
     "name": "Kleiner Perkins",
     "src": "/logos/kp-color.svg",
     "url": "https://www.kleinerperkins.com",
