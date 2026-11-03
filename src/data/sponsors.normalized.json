@@ -120,12 +120,12 @@
     "transform": "translate(0em, -0.0396em)"
   },
   {
-    "name": "Duckietown",
-    "src": "/logos/duckietown-color.png",
-    "url": "https://duckietown.com",
-    "width": 164,
-    "height": 37,
-    "transform": "translate(0em, -0.0104em)"
+    "name": "Million",
+    "src": "/logos/million-color.svg",
+    "url": "https://million.dev",
+    "width": 109,
+    "height": 18,
+    "transform": "translate(0em, -0.0146em)"
   },
   {
     "name": "AndyMark",
@@ -136,11 +136,11 @@
     "transform": "translate(0em, -0.0187em)"
   },
   {
-    "name": "Million",
-    "src": "/logos/million-color.svg",
-    "url": "https://million.dev",
-    "width": 109,
-    "height": 18,
-    "transform": "translate(0em, -0.0146em)"
+    "name": "Duckietown",
+    "src": "/logos/duckietown-color.png",
+    "url": "https://duckietown.com",
+    "width": 164,
+    "height": 37,
+    "transform": "translate(0em, -0.0104em)"
   }
 ]
