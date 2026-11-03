@@ -80,7 +80,8 @@
     "src": "/logos/bechtel-color.png",
     "url": "https://www.purdue.edu/bidc/",
     "scale": 2,
-    "columns": 2
+    "columns": 2,
+    "preserveContrast": true
   },
   {
     "name": "AndyMark",

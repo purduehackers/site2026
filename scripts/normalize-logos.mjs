@@ -82,6 +82,7 @@ const normalized = sponsors.map((sponsor, index) => {
     height: logo.normalizedHeight,
     transform: transform ?? null,
     ...(sponsor.columns ? { columns: sponsor.columns } : {}),
+    ...(sponsor.preserveContrast ? { preserveContrast: true } : {}),
   };
 });
 
