@@ -22,12 +22,14 @@
   {
     "name": "Cognition",
     "src": "/logos/cognition-color.svg",
-    "url": "https://cognition.com"
+    "url": "https://cognition.com",
+    "brandColor": "#2200ff"
   },
   {
     "name": "PlanetScale",
     "src": "/logos/planetscale-color.svg",
-    "url": "https://planetscale.com"
+    "url": "https://planetscale.com",
+    "brandColor": "#f35815"
   },
   {
     "name": "Kleiner Perkins",
@@ -43,7 +45,8 @@
   {
     "name": "SpaceXAI",
     "src": "/logos/spacexai-color.svg",
-    "url": "https://x.ai"
+    "url": "https://x.ai",
+    "brandColor": "#b0b0b0"
   },
   {
     "name": "Paper",
@@ -92,6 +95,7 @@
     "name": "Duckietown",
     "src": "/logos/duckietown-color.png",
     "url": "https://duckietown.com",
-    "scale": 1.5
+    "scale": 1.5,
+    "brandClip": "inset(0 69% 0 0)"
   }
 ]

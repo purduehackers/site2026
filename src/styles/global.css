@@ -223,6 +223,11 @@ body.menu-open .mobile-menu-btn {
   opacity: 0;
   transition: opacity 0.2s ease;
 }
+.logo-grid-img--tint {
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
 .logo-grid-cell:hover .logo-grid-img--brand,
 .logo-grid-cell:focus-visible .logo-grid-img--brand {
   opacity: 1;

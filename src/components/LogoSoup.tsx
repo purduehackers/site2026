@@ -14,6 +14,10 @@ export interface NormalizedLogo {
   columns?: number;
   /** Preserve opaque light/dark detail that a flat white silhouette would lose. */
   preserveContrast?: boolean;
+  /** Optional solid color for the hover/focus layer. */
+  brandColor?: string;
+  /** Restrict the color reveal to part of the artwork, leaving the rest white. */
+  brandClip?: string;
 }
 
 interface LogoGridProps {
@@ -77,16 +81,30 @@ export default function LogoGrid({
                 logo.preserveContrast ? { filter: 'grayscale(1)' } : undefined
               }
             />
-            <img
-              src={logo.src}
-              alt=""
-              aria-hidden="true"
-              width={logo.width}
-              height={logo.height}
-              loading="lazy"
-              decoding="async"
-              className="logo-grid-img logo-grid-img--brand"
-            />
+            {logo.brandColor ? (
+              <span
+                aria-hidden="true"
+                className="logo-grid-img logo-grid-img--brand logo-grid-img--tint"
+                style={{
+                  backgroundColor: logo.brandColor,
+                  maskImage: `url("${logo.src}")`,
+                }}
+              />
+            ) : (
+              <img
+                src={logo.src}
+                alt=""
+                aria-hidden="true"
+                width={logo.width}
+                height={logo.height}
+                loading="lazy"
+                decoding="async"
+                className="logo-grid-img logo-grid-img--brand"
+                style={
+                  logo.brandClip ? { clipPath: logo.brandClip } : undefined
+                }
+              />
+            )}
           </Cell>
         );
       })}

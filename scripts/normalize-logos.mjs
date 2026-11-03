@@ -83,6 +83,8 @@ const normalized = sponsors.map((sponsor, index) => {
     transform: transform ?? null,
     ...(sponsor.columns ? { columns: sponsor.columns } : {}),
     ...(sponsor.preserveContrast ? { preserveContrast: true } : {}),
+    ...(sponsor.brandColor ? { brandColor: sponsor.brandColor } : {}),
+    ...(sponsor.brandClip ? { brandClip: sponsor.brandClip } : {}),
   };
 });
 
