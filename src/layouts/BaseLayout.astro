@@ -2,12 +2,26 @@
 import '../styles/global.css';
 import { Font } from 'astro:assets';
 import Analytics from '@vercel/analytics/astro';
+import SocialPreviewMetadata from '../components/SocialPreviewMetadata.astro';
 
 interface Props {
   title?: string;
+  description?: string;
 }
 
-const { title = 'Purdue Hackers' } = Astro.props;
+const {
+  title = 'Purdue Hackers — Backing hackers with ambitious ideas',
+  description = 'Purdue Hackers backs highly talented and curious individuals working on ambitious ideas across software, hardware, and design.',
+} = Astro.props;
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': 'https://www.purduehackers.com/#organization',
+  name: 'Purdue Hackers',
+  url: 'https://www.purduehackers.com/',
+  description: 'A community at Purdue backing hackers with ambitious ideas across software, hardware, and design.',
+  sameAs: ['https://github.com/purduehackers'],
+};
 ---
 
 <html lang="en">
@@ -20,6 +34,8 @@ const { title = 'Purdue Hackers' } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/glider.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+    <SocialPreviewMetadata title={title} description={description} />
+    <script type="application/ld+json" set:html={JSON.stringify(organization).replace(/</g, '\\u003c')} />
 
     <slot name="head"></slot>
 
