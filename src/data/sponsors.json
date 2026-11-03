@@ -71,10 +71,9 @@
     "url": "https://www.cloudflare.com"
   },
   {
-    "name": "Duckietown",
-    "src": "/logos/duckietown-color.png",
-    "url": "https://duckietown.com",
-    "scale": 1.5
+    "name": "Million",
+    "src": "/logos/million-color.svg",
+    "url": "https://million.dev"
   },
   {
     "name": "AndyMark",
@@ -82,8 +81,9 @@
     "url": "https://andymark.com/"
   },
   {
-    "name": "Million",
-    "src": "/logos/million-color.svg",
-    "url": "https://million.dev"
+    "name": "Duckietown",
+    "src": "/logos/duckietown-color.png",
+    "url": "https://duckietown.com",
+    "scale": 1.5
   }
 ]
