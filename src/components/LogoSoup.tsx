@@ -10,6 +10,8 @@ export interface NormalizedLogo {
   height: number;
   /** Optical-center nudge, already expressed in em. Null when already centered. */
   transform?: string | null;
+  /** Extra grid space for wide lockups whose lettering needs a larger size. */
+  columns?: number;
 }
 
 interface LogoGridProps {
@@ -54,6 +56,7 @@ export default function LogoGrid({
               maxWidth: '100%',
               aspectRatio: `${logo.width} / ${logo.height}`,
               transform: logo.transform ?? undefined,
+              gridColumn: logo.columns ? `span ${logo.columns}` : undefined,
             }}
           >
             {/* Two copies of the same artwork: a white silhouette at rest, with

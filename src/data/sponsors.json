@@ -76,6 +76,13 @@
     "url": "https://million.dev"
   },
   {
+    "name": "Bechtel Innovation Design Center",
+    "src": "/logos/bechtel-color.png",
+    "url": "https://www.purdue.edu/bidc/",
+    "scale": 2,
+    "columns": 2
+  },
+  {
     "name": "AndyMark",
     "src": "/logos/andymark-color.png",
     "url": "https://andymark.com/"

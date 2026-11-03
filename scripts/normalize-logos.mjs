@@ -81,6 +81,7 @@ const normalized = sponsors.map((sponsor, index) => {
     width: logo.normalizedWidth,
     height: logo.normalizedHeight,
     transform: transform ?? null,
+    ...(sponsor.columns ? { columns: sponsor.columns } : {}),
   };
 });
 
