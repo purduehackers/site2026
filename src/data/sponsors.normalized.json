@@ -115,9 +115,17 @@
     "name": "Duckietown",
     "src": "/logos/duckietown-color.png",
     "url": "https://duckietown.com",
-    "width": 219,
-    "height": 49,
-    "transform": "translate(0em, -0.0146em)"
+    "width": 164,
+    "height": 37,
+    "transform": "translate(0em, -0.0104em)"
+  },
+  {
+    "name": "AndyMark",
+    "src": "/logos/andymark-color.png",
+    "url": "https://andymark.com/",
+    "width": 110,
+    "height": 20,
+    "transform": "translate(0em, -0.0187em)"
   },
   {
     "name": "Million",

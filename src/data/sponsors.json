@@ -69,7 +69,12 @@
     "name": "Duckietown",
     "src": "/logos/duckietown-color.png",
     "url": "https://duckietown.com",
-    "scale": 2
+    "scale": 1.5
+  },
+  {
+    "name": "AndyMark",
+    "src": "/logos/andymark-color.png",
+    "url": "https://andymark.com/"
   },
   {
     "name": "Million",
