@@ -12,6 +12,8 @@ export interface NormalizedLogo {
   transform?: string | null;
   /** Extra grid space for wide lockups whose lettering needs a larger size. */
   columns?: number;
+  /** Preserve opaque light/dark detail that a flat white silhouette would lose. */
+  preserveContrast?: boolean;
 }
 
 interface LogoGridProps {
@@ -59,8 +61,9 @@ export default function LogoGrid({
               gridColumn: logo.columns ? `span ${logo.columns}` : undefined,
             }}
           >
-            {/* Two copies of the same artwork: a white silhouette at rest, with
-                the brand-coloured original fading in over it on hover. The colour
+            {/* Two copies of the same artwork: monochrome at rest, with
+                the brand-coloured original fading in over it on hover. Logos
+                with opaque internal detail retain their grayscale contrast. The colour
                 swap can't be a filter transition — see the note in global.css. */}
             <img
               src={logo.src}
@@ -70,6 +73,9 @@ export default function LogoGrid({
               loading="lazy"
               decoding="async"
               className="logo-grid-img logo-grid-img--wash"
+              style={
+                logo.preserveContrast ? { filter: 'grayscale(1)' } : undefined
+              }
             />
             <img
               src={logo.src}
