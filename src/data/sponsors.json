@@ -41,9 +41,9 @@
   },
   { "name": "Zed", "src": "/logos/zed-color.svg", "url": "https://zed.dev" },
   {
-    "name": "Walmart",
-    "src": "/logos/walmart-color.svg",
-    "url": "https://www.walmart.com"
+    "name": "SpaceXAI",
+    "src": "/logos/spacexai-color.svg",
+    "url": "https://x.ai"
   },
   {
     "name": "Paper",
@@ -61,9 +61,9 @@
     "url": "https://thebrowser.company"
   },
   {
-    "name": "SpaceXAI",
-    "src": "/logos/spacexai-color.svg",
-    "url": "https://x.ai"
+    "name": "Walmart",
+    "src": "/logos/walmart-color.svg",
+    "url": "https://www.walmart.com"
   },
   {
     "name": "Cloudflare",
