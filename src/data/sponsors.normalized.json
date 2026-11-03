@@ -128,6 +128,15 @@
     "transform": "translate(0em, -0.0146em)"
   },
   {
+    "name": "Bechtel Innovation Design Center",
+    "src": "/logos/bechtel-color.png",
+    "url": "https://www.purdue.edu/bidc/",
+    "width": 319,
+    "height": 31,
+    "transform": "translate(0em, 0.0271em)",
+    "columns": 2
+  },
+  {
     "name": "AndyMark",
     "src": "/logos/andymark-color.png",
     "url": "https://andymark.com/",
