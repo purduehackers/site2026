@@ -128,6 +128,14 @@
     "transform": "translate(0em, -0.0187em)"
   },
   {
+    "name": "PlanetScale",
+    "src": "/logos/planetscale-color.svg",
+    "url": "https://planetscale.com",
+    "width": 124,
+    "height": 20,
+    "transform": null
+  },
+  {
     "name": "Million",
     "src": "/logos/million-color.svg",
     "url": "https://million.dev",

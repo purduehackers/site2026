@@ -77,6 +77,11 @@
     "url": "https://andymark.com/"
   },
   {
+    "name": "PlanetScale",
+    "src": "/logos/planetscale-color.svg",
+    "url": "https://planetscale.com"
+  },
+  {
     "name": "Million",
     "src": "/logos/million-color.svg",
     "url": "https://million.dev"
