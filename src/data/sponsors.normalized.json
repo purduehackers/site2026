@@ -72,12 +72,12 @@
     "transform": null
   },
   {
-    "name": "Walmart",
-    "src": "/logos/walmart-color.svg",
-    "url": "https://www.walmart.com",
-    "width": 97,
-    "height": 18,
-    "transform": "translate(0em, -0.0187em)"
+    "name": "SpaceXAI",
+    "src": "/logos/spacexai-color.svg",
+    "url": "https://x.ai",
+    "width": 148,
+    "height": 19,
+    "transform": "translate(0em, -0.0687em)"
   },
   {
     "name": "Paper",
@@ -104,12 +104,12 @@
     "transform": "translate(0em, 0.0646em)"
   },
   {
-    "name": "SpaceXAI",
-    "src": "/logos/spacexai-color.svg",
-    "url": "https://x.ai",
-    "width": 148,
-    "height": 19,
-    "transform": "translate(0em, -0.0687em)"
+    "name": "Walmart",
+    "src": "/logos/walmart-color.svg",
+    "url": "https://www.walmart.com",
+    "width": 97,
+    "height": 18,
+    "transform": "translate(0em, -0.0187em)"
   },
   {
     "name": "Cloudflare",
