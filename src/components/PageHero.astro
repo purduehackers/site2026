@@ -1,0 +1,68 @@
+---
+/**
+ * Inner-page hero: graph paper, one giant headline, one sentence, and an
+ * optional Conway's Life field. Slots: `title`, `lede`, default (actions),
+ * `aside` (the page's signature object).
+ */
+import type { Cell } from '../constants/gliderGrid';
+
+export interface Seed {
+  cells: Cell[];
+  at: [number, number];
+  atSmall?: [number, number];
+}
+
+interface Props {
+  seeds?: Seed[];
+  color?: string;
+  speed?: number;
+  /** Smallest title size, for long single words on phones. */
+  titleMin?: string;
+  /** Largest title size, for long single words beside an aside. */
+  titleMax?: string;
+}
+
+const {
+  seeds,
+  color = '#fcd202',
+  speed = 160,
+  titleMin,
+  titleMax,
+} = Astro.props;
+---
+
+<section
+  class="pg-hero grid-bg"
+  data-life-host={seeds ? '' : undefined}
+  style={[
+    titleMin && `--h1-min: ${titleMin}`,
+    titleMax && `--h1-max: ${titleMax}`,
+  ]
+    .filter(Boolean)
+    .join('; ') || undefined}
+>
+  {
+    seeds && (
+      <canvas
+        data-life
+        data-seeds={JSON.stringify(seeds)}
+        data-color={color}
+        data-speed={speed}
+        data-cell="12"
+        aria-hidden="true"
+      />
+    )
+  }
+  <div class="wrap pg-hero__layout">
+    <div>
+      <h1 class="ph-headline enter"><slot name="title" /></h1>
+      <p class="pg-hero__lede enter" style="--i: 2"><slot name="lede" /></p>
+      <div class="pg-hero__actions enter" style="--i: 4"><slot /></div>
+    </div>
+    <slot name="aside" />
+  </div>
+</section>
+
+<script>
+  import '../scripts/lifeField';
+</script>

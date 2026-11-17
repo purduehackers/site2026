@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './ph.css';
 
 @theme inline {
   --font-whyte: var(--font-whyte), system-ui, -apple-system, sans-serif;

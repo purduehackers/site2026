@@ -1,0 +1,311 @@
+---
+import footerImage from '../assets/footer.webp';
+import { NAV } from '../data/site';
+---
+
+<footer
+  data-header-dark
+  class="site-footer relative min-h-screen w-full flex flex-col justify-end"
+>
+  <!-- Keep the pixel art lossless, fingerprinted and lazy. It is already
+       only 820px wide, so upscaling it through the optimizer adds no detail. -->
+  <img
+    src={footerImage.src}
+    width={footerImage.width}
+    height={footerImage.height}
+    alt=""
+    aria-hidden="true"
+    class="absolute inset-0 h-full w-full object-cover pointer-events-none"
+    style="image-rendering: pixelated;"
+    loading="lazy"
+    decoding="async"
+  />
+  <div class="absolute inset-0 z-[1] w-full h-full" aria-hidden="true">
+    <div
+      id="pixel-blast-root"
+      class="w-full h-full"
+      aria-label="PixelBlast interactive dither overlay"
+    >
+    </div>
+  </div>
+  <div
+    class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none"
+    aria-hidden="true"
+  >
+  </div>
+  <div
+    class="relative z-10 flex flex-col-reverse md:flex-row flex-wrap items-start md:items-end justify-between gap-8 px-8 py-8 md:px-12 md:py-12 pointer-events-none"
+  >
+    <div
+      id="footer-made-with"
+      class="font-inconsolata text-[var(--color-bg)] text-left pointer-events-auto"
+    >
+      <p
+        class="text-sm font-semibold md:text-base uppercase tracking-wide opacity-90"
+      >
+        made with <span
+          id="made-with-rotate"
+          style="display:inline-block;transition:opacity 0.3s ease;"
+          >spills</span
+        >
+        <br />
+        <a
+          href="https://hcb.hackclub.com/donations/start/purdue-hackers"
+          target="_blank"
+          class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+          >Donate [via Hack Club, a 501(c)(3)]</a
+        >
+        <br />
+        <a
+          href="mailto:phackers@purdue.edu"
+          class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+          >Contact us</a
+        >
+      </p>
+    </div>
+    <div
+      class="flex flex-wrap justify-end gap-x-10 gap-y-8 md:gap-16 font-inconsolata text-[var(--color-bg)]"
+    >
+      <nav class="text-right" aria-label="Footer">
+        <p
+          class="text-sm md:text-base font-semibold uppercase tracking-wide opacity-90 text-[var(--color-bg)]"
+        >
+          explore
+        </p>
+        <p class="mt-2 text-lg md:text-xl uppercase text-[var(--color-bg)]">
+          {
+            [...NAV, { label: 'Shows', href: '/shows' }].map((item) => (
+              <>
+                <a
+                  href={item.href}
+                  class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+                >
+                  {item.label}
+                </a>
+                <br />
+              </>
+            ))
+          }
+        </p>
+      </nav>
+      <div class="text-right">
+        <p
+          class="text-sm md:text-base font-semibold uppercase tracking-wide opacity-90 text-[var(--color-bg)]"
+        >
+          more from us
+        </p>
+        <p class="mt-2 text-lg md:text-xl uppercase text-[var(--color-bg)]">
+          <a
+            href="https://ships.purduehackers.com/"
+            target="_blank"
+            class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+            >Ships</a
+          >
+          <br />
+          <a
+            href="https://merch.purduehackers.com/"
+            target="_blank"
+            class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+            >Merchandise</a
+          >
+          <br />
+          <a
+            href="https://ring.purduehackers.com/"
+            target="_blank"
+            class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+            >Webring</a
+          >
+          <br />
+          <a
+            href="https://sig.horse/"
+            target="_blank"
+            class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+            >SIGHORSE</a
+          >
+          <br />
+          <a
+            href="https://commit.purduehackers.com/"
+            target="_blank"
+            class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+            >Commit Overflow</a
+          >
+          <br />
+          <a
+            href="https://phack.rs/roles"
+            target="_blank"
+            class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+            >Hiring</a
+          >
+          <br />
+          <!-- easter egg: invisible until the pointer comes within ~20px (see initLunarEgg) or it receives keyboard focus; once revealed it stays -->
+          <a
+            id="lunar-egg"
+            href="https://lunar.purduehackers.com/"
+            target="_blank"
+            class="lunar-egg footer-overlay-link underline hover:text-[var(--color-secondary)] font-semibold"
+            >Lunar</a
+          >
+        </p>
+      </div>
+      <div class="text-right">
+        <p
+          class="text-sm md:text-base font-semibold uppercase tracking-wide opacity-90 text-[var(--color-bg)]"
+        >
+          find us on
+        </p>
+        <p class="mt-2 text-lg md:text-xl uppercase text-[var(--color-bg)]">
+          <a
+            href="https://discord.gg/5paFjKzdPE"
+            target="_blank"
+            class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+            >Discord</a
+          >
+          <br />
+          <a
+            href="https://github.com/purduehackers"
+            target="_blank"
+            class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+            >GitHub</a
+          >
+          <br />
+          <a
+            href="https://www.instagram.com/purduehackers/"
+            target="_blank"
+            class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+            >Instagram</a
+          >
+          <br />
+          <a
+            href="https://www.linkedin.com/company/purdue-hackers/"
+            target="_blank"
+            class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+            >LinkedIn</a
+          >
+          <br />
+          <a
+            href="https://x.com/purduehackers/"
+            target="_blank"
+            class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+            >Twitter</a
+          >
+          <br />
+          <a
+            href="https://www.youtube.com/@PurdueHackers/"
+            target="_blank"
+            class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
+            >YouTube</a
+          >
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  import { initPixelBlast } from '../scripts/PixelBlast';
+  const MADE_WITH_OPTIONS = [
+    'astro',
+    'bees',
+    'spills',
+    'bursts ✷',
+    'the abyss...',
+    'friendship and love',
+    'the power of awestruck',
+    'horse feed electrolytes',
+    'vercel',
+    'eggz',
+    'kiwis',
+    'one william dollars',
+    'acrylic from canal plastics',
+    'blackberry jam',
+    'pear and prosciutto croissants',
+  ];
+  function initMadeWith() {
+    const span = document.getElementById('made-with-rotate');
+    const container = document.getElementById('footer-made-with');
+    if (!span || !container) return;
+    let index = 2; // start at "spills"
+    let intervalId: ReturnType<typeof setInterval> | null = null;
+    const slowMs = 2500;
+    const fastMs = 500;
+    const fadeDuration = 200;
+    let fading = false;
+    function update() {
+      const el = document.getElementById('made-with-rotate');
+      if (!el || fading) return;
+      fading = true;
+      el.style.opacity = '0';
+      setTimeout(() => {
+        index = (index + 1) % MADE_WITH_OPTIONS.length;
+        el.textContent = MADE_WITH_OPTIONS[index];
+        el.style.opacity = '1';
+        fading = false;
+      }, fadeDuration);
+    }
+    function startInterval(ms: number) {
+      if (intervalId) clearInterval(intervalId);
+      intervalId = setInterval(update, ms);
+    }
+    startInterval(slowMs);
+    container.addEventListener('mouseenter', () => startInterval(fastMs));
+    container.addEventListener('mouseleave', () => startInterval(slowMs));
+  }
+  function initLunarEgg() {
+    const link = document.getElementById('lunar-egg');
+    const zone = link?.closest('section');
+    if (!link || !zone) return;
+    const RADIUS = 20; // px around the link's box that counts as "near"
+    // once found, it stays found: reveal is one-shot and the listener goes away
+    function reveal() {
+      link!.classList.add('is-near');
+      zone!.removeEventListener('pointermove', onMove);
+    }
+    function onMove(e: PointerEvent) {
+      const r = link!.getBoundingClientRect();
+      if (
+        e.clientX >= r.left - RADIUS &&
+        e.clientX <= r.right + RADIUS &&
+        e.clientY >= r.top - RADIUS &&
+        e.clientY <= r.bottom + RADIUS
+      ) {
+        reveal();
+      }
+    }
+    zone.addEventListener('pointermove', onMove, { passive: true });
+    link.addEventListener('focus', reveal, { once: true });
+  }
+  function init() {
+    const root = document.getElementById('pixel-blast-root');
+    if (root) {
+      const cleanup = initPixelBlast(root, {
+        variant: 'square',
+        pixelSize: 2,
+        color: '#000000',
+        patternScale: 4.5,
+        patternDensity: 1.5,
+        pixelSizeJitter: 0,
+        enableRipples: true,
+        rippleSpeed: 0.3,
+        rippleThickness: 0.15,
+        rippleIntensityScale: 2,
+        liquid: false,
+        liquidStrength: 0.12,
+        liquidRadius: 1.2,
+        liquidWobbleSpeed: 5,
+        speed: 0.5,
+        edgeFade: 0,
+        topFade: 0.25,
+        transparent: true,
+      });
+      document.addEventListener('astro:before-swap', cleanup, { once: true });
+    }
+
+    initMadeWith();
+    initLunarEgg();
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+</script>

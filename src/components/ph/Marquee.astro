@@ -1,0 +1,29 @@
+---
+import "./marquee.css";
+
+type Props = {
+  text: string;
+  repeat?: number;
+  duration?: string;
+  reverse?: boolean;
+  class?: string;
+};
+
+const { text, repeat = 12, duration = "60s", reverse = false, class: className } = Astro.props;
+---
+
+<div
+  data-reverse={reverse ? "" : undefined}
+  class:list={["ph-marquee flex w-full overflow-hidden whitespace-nowrap select-none", className]}
+  style={`--duration: ${duration}`}
+>
+  {
+    [0, 1].map((copy) => (
+      <div class="ph-marquee__track flex shrink-0" aria-hidden={copy === 1 ? "true" : undefined}>
+        {Array.from({ length: repeat }, () => (
+          <span class="pr-6">{text}</span>
+        ))}
+      </div>
+    ))
+  }
+</div>

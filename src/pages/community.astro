@@ -1,0 +1,361 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Scene from '../components/Scene.astro';
+import Exhibit from '../components/Exhibit.astro';
+import DitherFilters from '../components/DitherFilters.astro';
+import ShipCard from '../components/ShipCard.astro';
+import RemoteImage from '../components/RemoteImage.astro';
+import DitherButton from '../components/ph/DitherButton.astro';
+import Button from '../components/ph/Button.astro';
+import Link from '../components/ph/Link.astro';
+import RevealRow from '../components/ph/RevealRow.astro';
+import LightningText from '../components/ph/LightningText.astro';
+import { FIGURE_EIGHT, TOAD, TUMBLER } from '../constants/gliderGrid';
+import { getLatestShip } from '../lib/ships';
+import { getLatestPost } from '../lib/blog';
+import { DISCORD_URL } from '../data/site';
+import badgeWall from '../assets/sites/burst-07.webp';
+import phone from '../assets/sites/burst-13.webp';
+import printer from '../assets/sites/burst-17.webp';
+import passports from '../assets/sites/burst-05.webp';
+import sign from '../assets/sites/grant-sign.png';
+import sighorse from '../assets/sites/sighorse-table.webp';
+
+const [ship, post] = await Promise.all([getLatestShip(), getLatestPost()]);
+const BLOG = 'https://blog.purduehackers.com/posts';
+const OG = 'https://blog.purduehackers.com/og/posts';
+
+const artifacts = [
+  {
+    title: 'Passports',
+    meta: 'Booklet + NFC',
+    text: 'Handmade booklets with an NFC chip inside. Official IDs for the Republic of Hackerland.',
+    href: `${BLOG}/papers-please`,
+    image: passports.src,
+  },
+  {
+    title: 'The Sign',
+    meta: 'Meter-tall glider',
+    text: 'Lights up in a colour representation of the current time.',
+    href: `${BLOG}/sign`,
+    image: sign.src,
+  },
+  {
+    title: 'Lightning Time',
+    meta: 'A clock',
+    text: 'The day in hexadecimal, with three colours for every moment.',
+    href: `${BLOG}/lightning-time`,
+    image: `${OG}/lightning-time.png`,
+  },
+  {
+    title: 'Door Opener',
+    meta: 'Hardware',
+    text: 'Scan a passport, the door to Hack Night opens.',
+    href: `${BLOG}/door-opener-2`,
+    image: `${OG}/door-opener-2.png`,
+  },
+  {
+    title: 'SIGHORSE',
+    meta: 'Journal',
+    text: 'A parody academic journal of a summer’s worth of projects.',
+    href: 'https://sig.horse/',
+    image: sighorse.src,
+  },
+];
+
+const sites = [
+  ['ships', 'Projects people finished, newest first', 'https://ships.purduehackers.com/'],
+  ['blog', 'How things got made', 'https://blog.purduehackers.com/'],
+  ['events', 'Every event, with photos', 'https://events.purduehackers.com/'],
+  ['ring', 'A webring of member sites', 'https://ring.purduehackers.com/'],
+  ['shelter', 'Projects looking for a new maintainer', 'https://shelter.purduehackers.com/'],
+  ['evergreen', 'How we run things, written down', 'https://evergreen.purduehackers.com/'],
+  ['github', 'Nearly all of it is open source', 'https://github.com/purduehackers'],
+  ['merch', 'The boutique and the archive', 'https://merch.purduehackers.com/'],
+  ['ask', 'Ask a question about Purdue Hackers', 'https://ask.purduehackers.com/'],
+] as const;
+---
+
+<BaseLayout
+  title="Community"
+  description="The Purdue Hackers community: a 3000+ person Discord, the live #ship feed, the blog, the artifacts members have built for each other (passports, badges, the Sign, Lightning Time), and every satellite site."
+>
+  <main id="main" class="ph-scope dark" data-header-dark>
+    <DitherFilters />
+    <PageHero
+      color="#efb9ff"
+      speed={200}
+      titleMin="3.9rem"
+      titleMax="7.75rem"
+      seeds={[
+        { cells: FIGURE_EIGHT, at: [0.62, 0.2], atSmall: [0.75, 0.1] },
+        { cells: TUMBLER, at: [0.9, 0.22], atSmall: [0.35, 0.12] },
+        { cells: TOAD, at: [0.76, 0.14], atSmall: [2, 2] },
+      ]}
+    >
+      <Fragment slot="title">Community</Fragment>
+      <Fragment slot="lede">
+        <span class="hl-pink">3000+ people</span> on Discord, a room full of them
+        on Fridays, and the strange things they make for each other.
+      </Fragment>
+      <DitherButton href={DISCORD_URL} target="_blank" rel="noopener" cols={10}
+        >join the discord</DitherButton
+      >
+      <Button href="#artifacts" variant="outline" size="lg" iconEnd="arrow-down"
+        >artifacts</Button
+      >
+
+      <div slot="aside" class="live">
+        {
+          ship && (
+            <a
+              class="live__card photo-collage__card--ships"
+              href="https://ships.purduehackers.com/"
+              target="_blank"
+              rel="noopener"
+              aria-label="Latest ship, on ships.purduehackers.com"
+            >
+              <ShipCard ship={ship} />
+              <span class="live__plate">Latest in #ship</span>
+            </a>
+          )
+        }
+        {
+          post && (
+            <a
+              class="live__card live__card--post"
+              href={post.link}
+              target="_blank"
+              rel="noopener"
+            >
+              <RemoteImage
+                src={post.ogImage}
+                alt={post.title}
+                width={640}
+                height={336}
+                loading="eager"
+              />
+              <span class="live__plate">Latest on the blog</span>
+            </a>
+          )
+        }
+      </div>
+    </PageHero>
+
+    <section class="discord">
+      <div class="wrap discord__grid">
+        <p class="discord__line">
+          <b>#ship</b> what you made. Get unstuck in <b>#code</b>. Everything
+          else, mostly rainbows, in <b>#lounge</b>.
+        </p>
+        <p>
+          Anyone can join the server, Purdue or not. Spaces, tools and funding
+          are for Purdue students and longstanding members.
+          <Link href="/hack-night">Meet us in person</Link>
+        </p>
+      </div>
+    </section>
+
+    <Scene title="Made for ourselves" id="artifacts">
+      <Fragment slot="lede">
+        Nobody needed a passport office or a hex clock. It is
+        <LightningText>Lightning Time</LightningText> right now, by the way.
+      </Fragment>
+      <Exhibit
+        class="wall"
+        photos={[
+          {
+            src: badgeWall,
+            alt: 'Visitors looking at a wall covered in colourful acrylic badges.',
+            label: 'Badges',
+            note: 'BURST, 2024',
+            href: `${BLOG}/the-best-badge`,
+            col: '1 / span 6',
+            tilt: -1.5,
+          },
+          {
+            src: phone,
+            alt: 'A visitor holding the handset of a rotary phone on a plinth.',
+            label: 'Phone Bell',
+            note: 'it is the doorbell',
+            href: 'https://burst.purduehackers.com/',
+            col: '6 / span 4',
+            drop: '8rem',
+            tilt: 2,
+            z: 4,
+          },
+          {
+            src: printer,
+            alt: 'A receipt printer on a gallery wall above a pile of printed paper.',
+            label: 'Awestruck Printer',
+            href: 'https://burst.purduehackers.com/',
+            col: '9 / span 4',
+            drop: '1rem',
+            tilt: -1,
+          },
+        ]}
+      />
+      <div class="rows">
+        {
+          artifacts.map((item) => (
+            <RevealRow
+              title={item.title}
+              meta={item.meta}
+              href={item.href}
+              image={item.image}
+              description={item.text}
+            />
+          ))
+        }
+      </div>
+      <p class="rows__foot">
+        Plus Wack Hacker, the bot that runs half the server, a Hack Night
+        dashboard and more on
+        <Link href="https://github.com/purduehackers">GitHub</Link>.
+      </p>
+    </Scene>
+
+    <section class="more" aria-label="More Purdue Hackers sites">
+      <ul class="wrap sites">
+        {
+          sites.map(([name, text, href], i) => (
+            <li data-reveal style={`--i: ${i % 3}`}>
+              <a href={href} target="_blank" rel="noopener">
+                <b>{name}</b>
+                <span>{text}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .live {
+    display: grid;
+    gap: 1.25rem;
+    width: min(100%, 26rem);
+    justify-self: end;
+  }
+  .live__card {
+    display: block;
+    padding: 8px 8px 0;
+    background: var(--ph-cream);
+    color: var(--ph-black);
+    rotate: -1.5deg;
+    box-shadow: 0 18px 40px rgb(0 0 0 / 0.55);
+    transition: rotate 0.3s cubic-bezier(0.2, 0, 0, 1);
+  }
+  .live__card--post {
+    rotate: 1.5deg;
+    margin-left: 2.5rem;
+  }
+  .live__card:hover,
+  .live__card:focus-visible {
+    rotate: 0deg;
+  }
+  .live__card :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .live__plate {
+    display: block;
+    padding: 7px 2px 8px;
+    font-family: var(--ph-font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  @media (max-width: 1023px) {
+    .live {
+      justify-self: start;
+    }
+    .live__card--post {
+      margin-left: 0;
+    }
+  }
+
+  .discord {
+    padding-block: 2.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .discord__grid {
+    display: grid;
+    gap: 1rem 4rem;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .discord__grid {
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    }
+  }
+  .discord__line {
+    font-size: clamp(1.3rem, 2.6vw, 2rem);
+    line-height: 1.25;
+  }
+  .discord__line b {
+    font-family: var(--ph-font-mono);
+    color: var(--ph-yellow);
+  }
+
+  :global(.wall) {
+    margin-bottom: 4rem;
+  }
+  .rows {
+    border-top: 1px solid var(--foreground);
+    font-size: 1.15rem;
+  }
+  .rows__foot {
+    margin-top: 1.5rem;
+    font-size: 15px;
+  }
+
+  /* the other sites: names first, one plain line each */
+  .more {
+    padding-block: clamp(3rem, 6vw, 5rem) clamp(4rem, 8vw, 6rem);
+  }
+  .sites {
+    display: grid;
+    gap: 0 clamp(1.5rem, 4vw, 3.5rem);
+  }
+  @media (min-width: 640px) {
+    .sites {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1024px) {
+    .sites {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .sites a {
+    display: grid;
+    gap: 0.35rem;
+    padding-block: 1.1rem 1.25rem;
+    border-top: 1px solid var(--border);
+    transition: color 0.15s;
+  }
+  .sites b {
+    font-family: var(--ph-font-pixel);
+    font-weight: 400;
+    font-size: clamp(2rem, 3.4vw, 2.75rem);
+    line-height: 1;
+  }
+  .sites span {
+    font-size: 15px;
+    color: var(--muted-foreground);
+  }
+  .sites a:hover,
+  .sites a:focus-visible {
+    color: var(--ph-yellow);
+  }
+  .sites a:hover span,
+  .sites a:focus-visible span {
+    color: var(--foreground);
+  }
+</style>

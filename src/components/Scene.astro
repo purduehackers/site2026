@@ -1,0 +1,34 @@
+---
+/** One block of an inner page: a headline, at most one sentence, then content. */
+interface Props {
+  title?: string;
+  id?: string;
+  class?: string;
+}
+const { title, id, class: className } = Astro.props;
+const headingId = id ? `${id}-title` : undefined;
+---
+
+<section
+  class:list={['scene', className]}
+  id={id}
+  aria-labelledby={title ? headingId : undefined}
+>
+  <div class="wrap">
+    {
+      title && (
+        <div class="scene__head">
+          <h2 class="ph-headline" id={headingId}>
+            {title}
+          </h2>
+          {Astro.slots.has('lede') && (
+            <p>
+              <slot name="lede" />
+            </p>
+          )}
+        </div>
+      )
+    }
+    <slot />
+  </div>
+</section>

@@ -1,0 +1,292 @@
+---
+/**
+ * The makerspace as an illustrated 3D room (scripts/roomGuide.ts) beside the
+ * registry Tabs that hold the real equipment list. Picking an area in the
+ * drawing selects its tab and the other way round. Without WebGL the stage
+ * shows the photo the drawing is based on; the tabs work either way.
+ * Equipment mirrors makerspace.purduehackers.com/#equipment.
+ */
+import { Image } from 'astro:assets';
+import Tabs from './ph/Tabs.astro';
+import TabPanel from './ph/TabPanel.astro';
+import hive from '../assets/sites/hive-hero.webp';
+
+const areas = [
+  {
+    value: 'print',
+    label: '3D printing',
+    spot: 'Printer shelf',
+    line: 'Two enclosed printers. Ask in #makerspace before bringing your own filament.',
+    groups: [
+      [
+        'Bambu Lab H2D Pro',
+        'Dual nozzle, multicolour with AMS. 350 × 320 × 325 mm total.',
+      ],
+      ['Prusa CORE One', 'Single nozzle. 250 × 220 × 270 mm.'],
+      ['Filament', 'PLA, and PETG in limited stock.'],
+    ],
+  },
+  {
+    value: 'electronics',
+    label: 'Electronics',
+    spot: 'Electronics bench',
+    line: 'Enough to take a board from a bag of parts to blinking. No reflow oven or hot plate.',
+    groups: [
+      [
+        'Soldering',
+        'Soldering irons, a Pinecil with heat-set insert tips, a hot-air gun.',
+      ],
+      [
+        'Wire',
+        'JST and ferrule crimpers, wire strippers, cutters, tweezers.',
+      ],
+      [
+        'Prototyping',
+        'Microcontrollers, breadboards, wire, a resistor kit, assorted parts.',
+      ],
+    ],
+  },
+  {
+    value: 'tools',
+    label: 'Tools',
+    spot: 'Workbench',
+    line: 'For the holes you forgot to model. Safety glasses on for the drill and the Dremel.',
+    groups: [
+      ['Power', 'Drill and bits, Dremel, multitool.'],
+      [
+        'Hand',
+        'iFixit precision screwdrivers, Allen keys, a socket set, pliers, files, sandpaper.',
+      ],
+    ],
+  },
+  {
+    value: 'storage',
+    label: 'Storage',
+    line: 'Project lockers, so a build in progress can stay here instead of crossing campus with you. Ask in #makerspace for one.',
+    groups: [],
+  },
+];
+---
+
+<div class="room" data-room>
+  <div class="room__stage" data-room-stage>
+    <Image
+      src={hive}
+      alt="The HIVE makerspace: a shared table, an electronics bench, a shelf of 3D printers and a workbench."
+      class="room__photo"
+      widths={[480, 800, 1280]}
+      sizes="(min-width: 1024px) 720px, 100vw"
+    />
+    <canvas aria-hidden="true"></canvas>
+    {
+      areas
+        .filter((area) => area.spot)
+        .map((area, i) => (
+          <button type="button" class="room__spot" data-zone={area.value}>
+            <span aria-hidden="true">{i + 1}</span>
+            <span class="room__spot-name">{area.spot}</span>
+          </button>
+        ))
+    }
+  </div>
+  <div class="room__info">
+    <Tabs
+      tabs={areas.map(({ value, label }) => ({ value, label }))}
+      label="Equipment by area"
+    >
+      {
+        areas.map((area) => (
+          <TabPanel value={area.value} class="room__panel">
+            <p class="room__line">{area.line}</p>
+            {area.groups.length > 0 && (
+              <dl>
+                {area.groups.map(([name, text]) => (
+                  <div>
+                    <dt>{name}</dt>
+                    <dd>{text}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+          </TabPanel>
+        ))
+      }
+    </Tabs>
+    <p class="room__note">
+      An illustration drawn from a photo of the room. Not to scale, and things
+      move around.
+    </p>
+  </div>
+</div>
+
+<script>
+  // Three.js loads only when the room is about to scroll into view.
+  document.querySelectorAll<HTMLElement>('[data-room]').forEach((room) => {
+    const stage = room.querySelector<HTMLElement>('[data-room-stage]');
+    const tabs = room.querySelector<HTMLElement>('[data-ph-tabs]');
+    if (!stage || !tabs) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        io.disconnect();
+        import('../scripts/roomGuide').then(({ initRoom }) =>
+          initRoom(stage, tabs)
+        );
+      },
+      { rootMargin: '300px 0px' }
+    );
+    io.observe(stage);
+  });
+</script>
+
+<style>
+  .room {
+    display: grid;
+    gap: 2.5rem clamp(2.5rem, 5vw, 5rem);
+    align-items: start;
+  }
+  @media (min-width: 1024px) {
+    .room {
+      grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    }
+  }
+  .room__stage {
+    container-type: inline-size;
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    touch-action: pan-y;
+  }
+  .room__stage :global(.room__photo) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .room__stage canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    visibility: hidden;
+    cursor: grab;
+  }
+  .room__stage[data-ready] canvas {
+    visibility: visible;
+  }
+  .room__stage[data-ready] :global(.room__photo) {
+    visibility: hidden;
+  }
+  /* Hotspots: real buttons, placed by the script over their area. */
+  .room__spot {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: none;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.2rem 0.5rem 0.2rem 0.2rem;
+    background: var(--ph-black);
+    border: 1px solid var(--foreground);
+    color: var(--foreground);
+    font-family: var(--ph-font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+    transition:
+      background-color 0.15s,
+      color 0.15s,
+      scale 0.15s var(--ph-ease);
+  }
+  .room__stage[data-ready] .room__spot {
+    display: inline-flex;
+  }
+  .room__spot > span:first-child {
+    display: grid;
+    place-items: center;
+    width: 1.3rem;
+    height: 1.3rem;
+    background: var(--foreground);
+    color: var(--ph-black);
+  }
+  .room__spot:hover,
+  .room__spot[data-on] {
+    background: var(--ph-yellow);
+    border-color: var(--ph-yellow);
+    color: var(--ph-black);
+  }
+  .room__spot[data-on] > span:first-child {
+    background: var(--ph-black);
+    color: var(--ph-yellow);
+  }
+  .room__spot:active {
+    scale: 0.97;
+  }
+  /* narrow stages: number badges, named only when picked or focused; the
+     name always stays for screen readers */
+  @container (max-width: 560px) {
+    .room__spot:not([data-on], :focus-visible) {
+      padding: 0.2rem;
+    }
+    .room__spot:not([data-on], :focus-visible) .room__spot-name {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+
+  .room__info :global(.room__panel) {
+    padding-top: 0.75rem;
+  }
+  .room__line {
+    max-width: 30rem;
+    font-size: 1.2rem;
+    line-height: 1.35;
+    text-wrap: pretty;
+  }
+  .room__info dl {
+    display: grid;
+    margin-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .room__info dl > div {
+    display: grid;
+    grid-template-columns: 9.5rem 1fr;
+    gap: 0.25rem 1rem;
+    padding-block: 0.85rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .room__info dt {
+    font-family: var(--ph-font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding-top: 0.15rem;
+  }
+  .room__info dd {
+    font-size: 15px;
+    line-height: 1.45;
+  }
+  @media (max-width: 480px) {
+    .room__info dl > div {
+      grid-template-columns: 1fr;
+    }
+  }
+  .room__note {
+    margin-top: 1.5rem;
+    font-size: 13px;
+    color: var(--muted-foreground);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .room__spot {
+      transition: none;
+    }
+  }
+</style>

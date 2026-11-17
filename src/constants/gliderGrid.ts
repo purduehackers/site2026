@@ -108,3 +108,9 @@ export const TUMBLER = pic([
   '..O...O..',
   '..OO.OO..',
 ]);
+
+/** Lightweight spaceship: crosses the field and wraps. */
+export const LWSS = pic(['.OOOO', 'O...O', '....O', 'O..O.']);
+
+/** R-pentomino: five cells that take over a thousand steps to settle. */
+export const R_PENTOMINO = pic(['.OO', 'OO.', '.O.']);

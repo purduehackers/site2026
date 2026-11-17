@@ -1,0 +1,18 @@
+---
+type Props = {
+  class?: string;
+};
+
+const { class: className } = Astro.props;
+---
+
+<ol
+  class:list={[
+    "flex flex-col gap-2 [counter-reset:ph-item]",
+    "[&>li]:flex [&>li]:gap-2 [&>li]:leading-[1.35] [&>li]:[counter-increment:ph-item]",
+    "[&>li]:before:w-[18px] [&>li]:before:shrink-0 [&>li]:before:font-mono [&>li]:before:font-medium [&>li]:before:content-[counter(ph-item)]",
+    className,
+  ]}
+>
+  <slot />
+</ol>

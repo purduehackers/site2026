@@ -1,0 +1,39 @@
+---
+import Link from "./Link.astro";
+import "./reveal-row.css";
+
+type Props = {
+  title: string;
+  href?: string;
+  meta?: string;
+  image?: string;
+  description?: string;
+  class?: string;
+};
+
+const { title, href, meta, image, description, class: className } = Astro.props;
+---
+
+<div
+  data-ph-reveal
+  class:list={[
+    "ph-reveal-row relative -mx-3 grid items-baseline gap-x-4 border-b border-border px-3 py-3 transition-colors duration-150 ease-quint hover:bg-foreground/[0.03] sm:grid-cols-[minmax(0,1fr)_auto]",
+    className,
+  ]}
+>
+  <span class="truncate leading-[1.35]">{href ? <Link href={href}>{title}</Link> : title}</span>
+  {meta && <span class="truncate text-[13px] leading-[1.35] sm:text-right">{meta}</span>}
+
+  <div class="ph-reveal-row__card">
+    <div class="ph-reveal-row__frame aspect-square w-[232px] border border-border">
+      {image ? <img class="size-full object-cover" src={image} alt="" loading="lazy" decoding="async" /> : <div class="dither-field size-full" />}
+    </div>
+    {description && <p class="ph-reveal-row__text text-[13px] leading-[1.4]">{description}</p>}
+  </div>
+</div>
+
+<script>
+  import { attachReveal } from "./reveal";
+
+  for (const row of document.querySelectorAll<HTMLElement>("[data-ph-reveal]")) attachReveal(row);
+</script>

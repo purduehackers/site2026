@@ -9,6 +9,7 @@ export const IMAGE_WIDTHS = [
 // Declare both from the same small list instead of allowing arbitrary hosts.
 const remoteSources = [
   { hostname: 'blog.purduehackers.com', path: '/og/posts/' },
+  { hostname: 'cms.purduehackers.com', path: '/api/media/file/' },
   { hostname: 'cdn.discordapp.com', path: '/avatars/' },
   { hostname: 'cdn.discordapp.com', path: '/embed/avatars/' },
   { hostname: 'cdn.discordapp.com', path: '/attachments/' },

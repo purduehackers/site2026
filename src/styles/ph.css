@@ -1,0 +1,204 @@
+/* Purdue Hackers theme, vendored from https://components.purduehackers.com/r/ph.css
+   Local changes, kept narrow so the file can be re-synced:
+   1. Remote @font-face blocks removed; the font stacks point at the fonts
+      this site already self-hosts through Astro (<Font cssVariable>).
+   2. Body font-size/letter-spacing moved from the base layer to .ph-scope
+      (see site.css) so the homepage's own type scale is untouched. */
+
+@custom-variant dark (&:is(.dark *));
+
+/* No rounded corners: removes Tailwind's radius scale, so rounded-* does nothing. */
+@theme {
+  --radius-*: initial;
+}
+
+@theme inline {
+  --font-sans: var(--ph-font-sans);
+  --font-mono: var(--ph-font-mono);
+  --font-pixel: var(--ph-font-pixel);
+
+  --ease-quint: cubic-bezier(0.2, 0, 0, 1);
+
+  --color-ph-black: var(--ph-black);
+  --color-ph-cream: var(--ph-cream);
+  --color-ph-yellow: var(--ph-yellow);
+  --color-ph-purple: var(--ph-purple);
+  --color-ph-white: var(--ph-white);
+  --color-ph-pink: var(--ph-pink);
+  --color-ph-orange: var(--ph-orange);
+  --color-ph-lime: var(--ph-lime);
+  --color-ph-teal: var(--ph-teal);
+  --color-ph-blue: var(--ph-blue);
+  --color-ph-periwinkle: var(--ph-periwinkle);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-rule: var(--rule);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --ph-font-sans: var(--font-polysans), ui-sans-serif, system-ui, sans-serif;
+  --ph-font-mono: var(--font-inconsolata), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ph-font-pixel: var(--font-pixel-hackers), var(--font-inconsolata), monospace;
+  --ph-ease: cubic-bezier(0.2, 0, 0, 1);
+
+  --ph-black: #000000;
+  --ph-cream: #fbf7ec;
+  --ph-yellow: #fcd202;
+  --ph-purple: #7d3bff;
+  --ph-white: #ffffff;
+  --ph-pink: #efb9ff;
+  --ph-orange: #ff9300;
+  --ph-lime: #a5e209;
+  --ph-teal: #01beb2;
+  --ph-blue: #0084ff;
+  --ph-periwinkle: #7688ff;
+
+  --background: var(--ph-cream);
+  --foreground: var(--ph-black);
+  --card: var(--ph-white);
+  --card-foreground: var(--ph-black);
+  --primary: var(--ph-purple);
+  --primary-foreground: var(--ph-cream);
+  --secondary: var(--ph-yellow);
+  --secondary-foreground: var(--ph-black);
+  --accent: var(--ph-blue);
+  --accent-foreground: var(--ph-cream);
+  --muted: #efebe0;
+  --muted-foreground: var(--ph-black);
+  --border: #e2ded4;
+  --input: #c6c3ba;
+  --rule: #c6c3ba;
+  --ring: var(--ph-black);
+}
+
+.dark {
+  --background: var(--ph-black);
+  --foreground: var(--ph-white);
+  --card: #0d0d0d;
+  --card-foreground: var(--ph-white);
+  --primary: var(--ph-yellow);
+  --primary-foreground: var(--ph-black);
+  --secondary: var(--ph-pink);
+  --secondary-foreground: var(--ph-black);
+  --accent: var(--ph-pink);
+  --accent-foreground: var(--ph-black);
+  --muted: #1a1a1a;
+  --muted-foreground: #ffffffb3;
+  --border: #262626;
+  --input: #4d4d4d;
+  --rule: #4d4d4d;
+  --ring: var(--ph-white);
+}
+
+@layer base {
+  html {
+    background: var(--background);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  ::selection {
+    background: var(--ph-yellow);
+    color: var(--ph-black);
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+@utility measure {
+  width: 480px;
+  max-width: calc(100vw - 32px);
+  margin-inline: auto;
+}
+
+@utility dither-field {
+  background-image: repeating-conic-gradient(var(--rule) 0% 25%, transparent 0% 50%);
+  background-size: 2px 2px;
+}
+
+@utility ph-headline {
+  font-family: var(--ph-font-pixel);
+  line-height: 0.85;
+  letter-spacing: 0;
+}
+
+@utility ph-subheadline {
+  font-family: var(--ph-font-mono);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+@utility enter {
+  animation: ph-enter 300ms var(--ph-ease) backwards;
+  animation-delay: calc(var(--i, 0) * 40ms);
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes ph-enter {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@utility grid-bg {
+  background-image:
+    linear-gradient(var(--grid-color, color-mix(in oklab, var(--foreground) 10%, transparent)) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color, color-mix(in oklab, var(--foreground) 10%, transparent)) 1px, transparent 1px);
+  background-size: var(--grid-size, 30px) var(--grid-size, 30px);
+}
+
+/* Moves on a transformed pseudo-element so it stays on the compositor. */
+@utility grid-bg-animated {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+
+  &::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: calc(-1 * var(--grid-size, 30px)) 0 0 calc(-1 * var(--grid-size, 30px));
+    background-image:
+      linear-gradient(var(--grid-color, color-mix(in oklab, var(--foreground) 6%, transparent)) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-color, color-mix(in oklab, var(--foreground) 6%, transparent)) 1px, transparent 1px);
+    background-size: var(--grid-size, 30px) var(--grid-size, 30px);
+    animation: ph-grid-move 4s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::before {
+      animation: none;
+    }
+  }
+}
+
+@keyframes ph-grid-move {
+  to {
+    transform: translate3d(var(--grid-size, 30px), var(--grid-size, 30px), 0);
+  }
+}

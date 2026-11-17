@@ -1,0 +1,597 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Scene from '../components/Scene.astro';
+import Exhibit from '../components/Exhibit.astro';
+import DitherFilters from '../components/DitherFilters.astro';
+import DitherButton from '../components/ph/DitherButton.astro';
+import Button from '../components/ph/Button.astro';
+import Link from '../components/ph/Link.astro';
+import EventCard from '../components/ph/EventCard.astro';
+import SegmentedToggle from '../components/ph/SegmentedToggle.astro';
+import Marquee from '../components/ph/Marquee.astro';
+import { getImage } from 'astro:assets';
+import { LWSS } from '../constants/gliderGrid';
+import {
+  KIND_CATEGORY,
+  calendarMonth,
+  eventDate,
+  getEventPhotos,
+  getEvents,
+  groupByMonth,
+  splitEvents,
+  type SiteEvent,
+} from '../lib/events';
+import { IMAGE_QUALITY, canOptimizeRemoteImage } from '../lib/images';
+import { EVENTS_URL } from '../data/site';
+import sighorse from '../assets/sites/sighorse-table.webp';
+
+const events = await getEvents();
+const { upcoming, past } = splitEvents(events ?? []);
+const recent = past.slice(0, 12);
+const month = calendarMonth(events ?? []);
+const waveforumAhead = Date.now() < Date.parse('2026-12-06T05:00:00Z');
+
+// Each card gets the event's first photo, like events.purduehackers.com.
+const photos = await getEventPhotos(
+  [...upcoming, ...recent].flatMap((e) => (e.photoId ? [e.photoId] : []))
+);
+const thumbs = new Map<SiteEvent, string>();
+await Promise.all(
+  [...upcoming, ...recent].map(async (event) => {
+    const url = event.photoId ? photos.get(event.photoId) : undefined;
+    const src =
+      url && canOptimizeRemoteImage(url)
+        ? (
+            await getImage({
+              src: url,
+              width: 240,
+              height: 240,
+              fit: 'cover',
+              quality: IMAGE_QUALITY,
+            }).catch(() => null)
+          )?.src
+        : undefined;
+    thumbs.set(event, src ?? '/event-placeholder.svg');
+  })
+);
+const card = (event: SiteEvent) => ({
+  title: event.name,
+  href: event.url,
+  date: `${eventDate.weekday(event.start)}, ${eventDate.month(event.start)} ${eventDate.day(event.start)}`,
+  time: eventDate.time(event.start),
+  location: event.location ?? undefined,
+  category: KIND_CATEGORY[event.kind],
+  image: thumbs.get(event),
+});
+
+const words = [
+  {
+    name: 'Workshop',
+    kind: 'workshop',
+    text: 'A beginner-friendly build. Everyone makes the same small thing, then makes it their own. This fall: Rust, personal websites, applying to YC.',
+  },
+  {
+    name: 'Session',
+    kind: 'hack-night',
+    text: 'A member teaches something they care about, right in the middle of Hack Night. Anyone can run one.',
+  },
+  {
+    name: 'Circle',
+    kind: 'hack-night',
+    text: 'A small group that meets at every Hack Night for a semester around one interest. Right now: Art Circle.',
+  },
+  {
+    name: 'Guest',
+    kind: 'special',
+    text: 'Talks, AMAs and lunches with people whose work we admire. Listed as Special on the calendar.',
+  },
+] as const;
+---
+
+<BaseLayout
+  title="Events"
+  description="What is on at Purdue Hackers: the live calendar of Hack Nights, workshops, guest talks and callouts, plus what Sessions, Circles and Checkpoints are, and programs like Commit Overflow and SIGHORSE."
+>
+  <main id="main" class="ph-scope dark" data-header-dark>
+    <DitherFilters />
+    <PageHero
+      color="#efb9ff"
+      speed={110}
+      seeds={[
+        { cells: LWSS, at: [0.9, 0.3], atSmall: [0.8, 0.1] },
+        { cells: LWSS, at: [0.7, 0.5], atSmall: [0.3, 0.14] },
+        { cells: LWSS, at: [0.55, 0.22], atSmall: [2, 2] },
+        { cells: LWSS, at: [0.82, 0.72], atSmall: [2, 2] },
+      ]}
+    >
+      <Fragment slot="title">Events</Fragment>
+      <Fragment slot="lede">
+        <Link href="/hack-night">Hack Night</Link> is the weekly one. Around it:
+        <span class="hl-pink">workshops, guests,</span> and a show when the semester
+        ends.
+      </Fragment>
+      <DitherButton href="#calendar" cols={9}>what’s on</DitherButton>
+      <Button href="/shows" variant="outline" size="lg" iconEnd="arrow-right"
+        >the shows</Button
+      >
+    </PageHero>
+
+    <Scene title="What the words mean" class="words-scene">
+      <dl class="words">
+        {
+          words.map((word, i) => (
+            <div data-reveal style={`--i: ${i}`}>
+              <dt class="ph-headline" data-kind={word.kind}>
+                {word.name}
+              </dt>
+              <dd>{word.text}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </Scene>
+
+    <Scene title="On the calendar" id="calendar">
+      <Fragment slot="lede">
+        Live from <Link href={EVENTS_URL}>events.purduehackers.com</Link>.
+        Times are Eastern.
+      </Fragment>
+      {
+        events && upcoming.length + recent.length > 0 ? (
+          <div class="cal">
+            <div class="cal__main">
+              {upcoming.length > 0 && (
+                <section class="cal__group" aria-labelledby="cal-soon">
+                  <h3 class="cal__label" id="cal-soon">
+                    Coming up
+                  </h3>
+                  <ol class="cal__list">
+                    {upcoming.map((event) => (
+                      <li data-kind={event.kind}>
+                        <EventCard {...card(event)} />
+                      </li>
+                    ))}
+                  </ol>
+                </section>
+              )}
+              {recent.length > 0 && (
+                <section class="cal__group" aria-labelledby="cal-past">
+                  <div class="cal__past-head">
+                    <h3 class="cal__label" id="cal-past">
+                      Recently
+                    </h3>
+                    <SegmentedToggle
+                      name="kind"
+                      label="Filter recent events"
+                      options={[
+                        { value: 'all', label: 'All' },
+                        { value: 'hack-night', label: 'Hack nights' },
+                        { value: 'workshop', label: 'Workshops' },
+                        { value: 'special', label: 'Guests' },
+                      ]}
+                    />
+                  </div>
+                  {groupByMonth(recent).map((group) => (
+                    <div class="cal__month" data-month>
+                      <h4>{group.month}</h4>
+                      <ol class="cal__list">
+                        {group.events.map((event) => (
+                          <li data-kind={event.kind}>
+                            <EventCard {...card(event)} />
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  ))}
+                </section>
+              )}
+            </div>
+            <aside class="cal__side" aria-label="This month">
+              <div class="month" aria-hidden="true">
+                <p class="month__label">{month.label}</p>
+                <ol class="month__grid">
+                  {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d) => (
+                    <li class="month__dow">{d}</li>
+                  ))}
+                  {Array.from({ length: month.blanks }, () => (
+                    <li />
+                  ))}
+                  {month.days.map((d) => (
+                    <li
+                      class:list={['month__day', d.today && 'is-today']}
+                      data-kind={d.kinds[0]}
+                    >
+                      {d.day}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+              <ul class="legend">
+                <li data-kind="hack-night">Hack Night</li>
+                <li data-kind="workshop">Workshop</li>
+                <li data-kind="special">Guests and the rest</li>
+              </ul>
+              {waveforumAhead && (
+                <p class="cal__also">
+                  Also ahead: <Link href="/shows#waveforum">waveforum</Link>,
+                  the next show, December 5 at 7 PM.
+                </p>
+              )}
+              <DitherButton
+                href={EVENTS_URL}
+                target="_blank"
+                rel="noopener"
+                cols={10}
+              >
+                full calendar
+              </DitherButton>
+            </aside>
+          </div>
+        ) : (
+          <p class="cal__empty">
+            {events
+              ? 'Nothing is listed right now.'
+              : 'The events feed did not answer just now, and we would rather show nothing than guess.'}{' '}
+            Everything lives on <Link href={EVENTS_URL}>the events site</Link>.
+            Hack Night is usually Fridays at 8 PM in the HIVE.
+          </p>
+        )
+      }
+    </Scene>
+
+    <Scene title="Winter and summer programs">
+      <div class="long">
+        <Exhibit
+          photos={[
+            {
+              src: sighorse,
+              alt: 'Printed copies of the SIGHORSE journal stacked on a table.',
+              label: 'SIGHORSE 2025',
+              note: '307 pages',
+              href: 'https://sig.horse/',
+              col: '1 / -1',
+              tilt: -1.5,
+              ratio: '4 / 3',
+            },
+          ]}
+        />
+        <div class="long__copy">
+          <h3 class="ph-headline">Commit Overflow</h3>
+          <p>
+            A winter-break challenge: work on a project every day and post the
+            progress in the Discord. Code, art, hardware and writing all count.
+          </p>
+          <p class="long__stats ph-headline">
+            <span>59<i>hackers</i></span><span>1121<i>commits</i></span><span
+              >21<i>days</i></span
+            >
+          </p>
+          <p class="long__when">
+            2025 round, December 22 to January 12 ·
+            <Link href="https://commit.purduehackers.com/">recap</Link>
+          </p>
+          <h3 class="ph-headline">SIGHORSE</h3>
+          <p>
+            The Special Interest Group in HORSEing around: a parody academic
+            journal of what members built over the summer, presented at spill.
+            Free to read as a PDF.
+          </p>
+          <p class="long__when">
+            2025 edition · <Link href="https://sig.horse/">sig.horse</Link>
+          </p>
+        </div>
+      </div>
+    </Scene>
+
+    <a class="shows-strip" href="/shows" aria-label="The Shows">
+      <Marquee
+        text="waveforum ✷ BENTO ✷ spill ≋ ✷ BURST ✷"
+        class="ph-headline"
+        duration="70s"
+      />
+      <span class="mono">The shows →</span>
+    </a>
+  </main>
+</BaseLayout>
+
+<script>
+  // Filter the recent list by kind; months with nothing left hide too.
+  const months = document.querySelectorAll<HTMLElement>('[data-month]');
+  document.addEventListener('ph:change', (e) => {
+    const { name, value } = (e as CustomEvent).detail;
+    if (name !== 'kind') return;
+    months.forEach((month) => {
+      let shown = 0;
+      month.querySelectorAll<HTMLElement>('li[data-kind]').forEach((item) => {
+        item.hidden = value !== 'all' && item.dataset.kind !== value;
+        if (!item.hidden) shown++;
+      });
+      month.hidden = shown === 0;
+    });
+  });
+</script>
+
+<style>
+  /* category colours, the same ones EventCard uses */
+  [data-kind] {
+    --kind: var(--ph-purple);
+  }
+  [data-kind='hack-night'] {
+    --kind: var(--ph-yellow);
+  }
+  [data-kind='workshop'] {
+    --kind: var(--ph-pink);
+  }
+
+  /* ── the words: four ideas with room around them ── */
+  .words {
+    display: grid;
+    gap: 3rem clamp(2rem, 4vw, 4rem);
+  }
+  @media (min-width: 640px) {
+    .words {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1024px) {
+    .words {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .words dt {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: clamp(2.2rem, 3.4vw, 2.9rem);
+  }
+  .words dt::before {
+    content: '';
+    flex: none;
+    width: 0.32em;
+    aspect-ratio: 1;
+    background: var(--kind);
+  }
+  .words dd {
+    max-width: 19rem;
+    margin-top: 0.9rem;
+    font-size: 1.05rem;
+    line-height: 1.45;
+  }
+
+  /* ── calendar: timeline on the left, the month on the right ── */
+  .cal {
+    display: grid;
+    gap: 3rem clamp(2.5rem, 6vw, 6rem);
+    align-items: start;
+  }
+  @media (min-width: 1024px) {
+    .cal {
+      grid-template-columns: minmax(0, 1fr) 19rem;
+    }
+    .cal__side {
+      position: sticky;
+      top: 6rem;
+    }
+  }
+  .cal__main {
+    display: grid;
+    gap: 3rem;
+    max-width: 44rem;
+  }
+  .cal__label {
+    font-family: var(--ph-font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ph-yellow);
+  }
+  .cal__past-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+  }
+  .cal__past-head :global([data-ph-toggle]) {
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  @media (max-width: 480px) {
+    .cal__past-head :global([data-ph-toggle]) {
+      width: 100%;
+      font-size: 13px;
+    }
+  }
+  .cal__month h4 {
+    margin: 2rem 0 1rem;
+    font-family: var(--ph-font-pixel);
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1;
+  }
+  .cal__month[hidden] {
+    display: none;
+  }
+  .cal__label + .cal__list {
+    margin-top: 1rem;
+  }
+  /* a rail with one square per event, like the events site */
+  .cal__list {
+    display: grid;
+    gap: 0.75rem;
+    margin-left: 0.3rem;
+    padding-left: 1.4rem;
+    border-left: 1px solid var(--rule);
+  }
+  .cal__list li {
+    position: relative;
+  }
+  .cal__list li[hidden] {
+    display: none;
+  }
+  .cal__list li::before {
+    content: '';
+    position: absolute;
+    left: calc(-1.4rem - 4px);
+    top: 1.5rem;
+    width: 7px;
+    height: 7px;
+    background: var(--kind);
+  }
+  .cal__list :global(.ph-event-card h3) {
+    font-size: 1.2rem;
+  }
+  @media (max-width: 480px) {
+    .cal__list {
+      margin-left: 0;
+      padding-left: 0.9rem;
+    }
+    .cal__list li::before {
+      left: calc(-0.9rem - 4px);
+    }
+    .cal__list :global(.ph-event-card > div:first-child) {
+      width: 4.5rem;
+      height: 4.5rem;
+    }
+    .cal__list :global(.ph-event-card p) {
+      font-size: 12px;
+    }
+  }
+
+  .cal__side {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+  }
+  .month {
+    width: 100%;
+    max-width: 19rem;
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+  }
+  .month__label {
+    margin-bottom: 1rem;
+    font-family: var(--ph-font-pixel);
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+  .month__grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    font-family: var(--ph-font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .month__dow {
+    padding-bottom: 0.35rem;
+    color: var(--muted-foreground);
+  }
+  .month__day {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    color: var(--muted-foreground);
+  }
+  .month__day[data-kind] {
+    background: var(--kind);
+    color: var(--ph-black);
+  }
+  .month__day[data-kind='special'],
+  .month__day[data-kind='callout'],
+  .month__day[data-kind='other'] {
+    color: var(--ph-cream);
+  }
+  .month__day.is-today {
+    outline: 1px solid var(--foreground);
+    outline-offset: -1px;
+    color: var(--foreground);
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+    font-family: var(--ph-font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .legend li {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  .legend li::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--kind);
+  }
+  .cal__also,
+  .cal__empty {
+    max-width: 40rem;
+  }
+
+  /* ── programs ── */
+  .long {
+    display: grid;
+    gap: 2.5rem 5rem;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .long {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .long__copy h3 {
+    font-size: 2.6rem;
+    margin-bottom: 0.6rem;
+  }
+  .long__copy p {
+    max-width: 30rem;
+  }
+  .long__when + h3 {
+    margin-top: 3rem;
+  }
+  .long__when {
+    margin-top: 0.75rem;
+    font-size: 14px;
+  }
+  .long__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    margin-top: 1.25rem;
+    font-size: 2.6rem;
+    color: var(--ph-yellow);
+  }
+  .long__stats i {
+    margin-left: 0.4rem;
+    font-family: var(--ph-font-mono);
+    font-style: normal;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--foreground);
+  }
+  .shows-strip {
+    display: block;
+    padding-block: 3rem 3.5rem;
+    font-size: clamp(3rem, 9vw, 7rem);
+    line-height: 1.1;
+    transition: color 0.2s;
+  }
+  .shows-strip:hover,
+  .shows-strip:focus-visible {
+    color: var(--ph-yellow);
+  }
+  .shows-strip .mono {
+    display: block;
+    margin: 1.25rem 0 0 1.25rem;
+    font-size: 15px;
+  }
+</style>

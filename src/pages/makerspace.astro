@@ -1,0 +1,270 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Scene from '../components/Scene.astro';
+import Exhibit from '../components/Exhibit.astro';
+import RoomGuide from '../components/RoomGuide.astro';
+import DitherFilters from '../components/DitherFilters.astro';
+import DitherButton from '../components/ph/DitherButton.astro';
+import Button from '../components/ph/Button.astro';
+import Link from '../components/ph/Link.astro';
+import NumberedList from '../components/ph/NumberedList.astro';
+import { DISCORD_URL } from '../data/site';
+import { PRINTHIVE_URL, getPrintQueue } from '../lib/printHive';
+import { eventDate } from '../lib/events';
+import hive from '../assets/sites/hive-hero.webp';
+
+const SITE = 'https://makerspace.purduehackers.com';
+const queue = await getPrintQueue();
+---
+
+<BaseLayout
+  title="Makerspace"
+  description="The HIVE Makerspace in BHEE 280N is a shared workshop from Purdue HIVE and Purdue Hackers: 3D printers, soldering and electronics, hand and power tools, and project lockers. How a first visit works, shop rules, and where to find current hours."
+>
+  <main id="main" class="ph-scope dark" data-header-dark>
+    <DitherFilters />
+    <PageHero titleMax="9rem">
+      <Fragment slot="title">Maker<wbr />space</Fragment>
+      <Fragment slot="lede">
+        Printers, soldering irons and a drill in <span class="hl-yellow"
+          >BHEE 280N</span
+        >. Shared by Purdue HIVE and Purdue Hackers.
+      </Fragment>
+      <DitherButton
+        href={`${SITE}/hours`}
+        target="_blank"
+        rel="noopener"
+        cols={11}>this week’s hours</DitherButton
+      >
+      <Button
+        href="#first-visit"
+        variant="outline"
+        size="lg"
+        iconEnd="arrow-down">first visit</Button
+      >
+      <Exhibit
+        slot="aside"
+        class="hero-photo"
+        photos={[
+          {
+            src: hive,
+            alt: 'Inside the HIVE makerspace: a shared table, an electronics bench, a shelf of 3D printers and a workbench.',
+            label: 'BHEE 280N',
+            note: 'inside the HIVE',
+            col: '1 / -1',
+            tilt: 1.5,
+            ratio: '16 / 10',
+          },
+        ]}
+      />
+    </PageHero>
+
+    <Scene title="What’s in the room">
+      <Fragment slot="lede">
+        Pick an area to see what lives there. The makerspace site keeps the
+        <Link href={`${SITE}/#equipment`}>current list</Link>.
+      </Fragment>
+      <RoomGuide />
+    </Scene>
+
+    <Scene title="Send it to the queue">
+      <Fragment slot="lede">
+        PrintHive is the print queue. Upload a model, pick a material, and an
+        organizer prints it. The queue is public.
+      </Fragment>
+      <div class="queue">
+        {
+          queue && (
+            <p class="queue__now">
+              <span>
+                <b class="ph-headline">{queue.printing}</b> printing
+              </span>
+              <span>
+                <b class="ph-headline">{queue.queued}</b> waiting
+              </span>
+              <small>as of {eventDate.time(queue.checkedAt)}</small>
+            </p>
+          )
+        }
+        <DitherButton
+          href={PRINTHIVE_URL}
+          target="_blank"
+          rel="noopener"
+          cols={10}>open printhive</DitherButton
+        >
+      </div>
+    </Scene>
+
+    <Scene title="Before you walk over" id="first-visit">
+      <div class="visit">
+        <div class="visit__first">
+          <p class="visit__lead">
+            First time? Say you’re coming in <b>#makerspace</b> on Discord before
+            you head over, so an organizer can let you in and show you around.
+          </p>
+          <p>
+            The HIVE doors stay locked, and the shop is open only while an
+            organizer is in. Hours change every week. It’s for Purdue students
+            and members of the community.
+          </p>
+          <div class="actions">
+            <DitherButton
+              href={`${SITE}/hours`}
+              target="_blank"
+              rel="noopener"
+              cols={9}>see hours</DitherButton
+            >
+            <Button
+              href={DISCORD_URL}
+              target="_blank"
+              rel="noopener"
+              variant="outline"
+              size="lg"
+              icon="discord">ask first</Button
+            >
+          </div>
+        </div>
+        <div>
+          <h3 class="visit__rules ph-headline">Shop rules</h3>
+          <NumberedList class="visit__list">
+            <li>Use the shop only while an organizer is present.</li>
+            <li>
+              Tools stay in the makerspace. Ask an organizer before borrowing
+              anything.
+            </li>
+            <li>Wear safety glasses for the drill and the Dremel.</li>
+            <li>
+              Clean up after yourself. Put everything away if you’ll be gone
+              more than 30 minutes.
+            </li>
+          </NumberedList>
+        </div>
+      </div>
+    </Scene>
+
+    <section class="wrap outro">
+      <p class="ph-headline">Need parts money too?</p>
+      <div class="actions">
+        <DitherButton href="/support" cols={8} class="keep-case"
+          >µgrants</DitherButton
+        >
+        <Button
+          href="/hack-night"
+          variant="ghost"
+          size="lg"
+          iconEnd="arrow-right">or just come Friday</Button
+        >
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .hero-photo {
+    width: min(100%, 34rem);
+    justify-self: end;
+  }
+  @media (max-width: 1023px) {
+    .hero-photo {
+      justify-self: start;
+    }
+  }
+  @media (max-width: 700px) {
+    /* one photo: no swipe strip, just the photo */
+    :global(.hero-photo.exhibit) {
+      display: block;
+      margin: 0;
+      padding: 0;
+      overflow: visible;
+    }
+  }
+
+  .queue {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+  .queue__now {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 2.5rem;
+    font-family: var(--ph-font-mono);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .queue__now b {
+    margin-right: 0.5rem;
+    font-size: clamp(3.5rem, 8vw, 6rem);
+    font-weight: 400;
+    color: var(--ph-yellow);
+  }
+  .queue__now small {
+    flex-basis: 100%;
+    font-size: 12px;
+    color: var(--muted-foreground);
+  }
+
+  .visit {
+    display: grid;
+    gap: 3.5rem 5rem;
+  }
+  @media (min-width: 900px) {
+    .visit {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .visit__first {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+    max-width: 32rem;
+  }
+  .visit__lead {
+    font-size: clamp(1.35rem, 2.2vw, 1.7rem);
+    line-height: 1.3;
+    text-wrap: pretty;
+  }
+  .visit__lead b {
+    font-family: var(--ph-font-mono);
+    color: var(--ph-yellow);
+  }
+  .visit__first .actions {
+    margin-top: 0.75rem;
+  }
+  .visit__rules {
+    font-size: 1.75rem;
+    margin-bottom: 1.25rem;
+  }
+  .visit :global(.visit__list) {
+    gap: 0;
+    font-size: 1.15rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .visit :global(.visit__list > li) {
+    gap: 1rem;
+    padding-block: 1.25rem;
+    line-height: 1.45;
+    border-top: 1px solid var(--border);
+  }
+  .visit :global(.visit__list > li::before) {
+    color: var(--ph-yellow);
+  }
+
+  .outro {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-block: 4rem 5rem;
+  }
+  .outro .ph-headline {
+    font-size: clamp(2.2rem, 5vw, 3.75rem);
+  }
+</style>

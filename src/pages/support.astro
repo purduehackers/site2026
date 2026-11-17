@@ -1,0 +1,324 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Scene from '../components/Scene.astro';
+import Exhibit from '../components/Exhibit.astro';
+import DitherButton from '../components/ph/DitherButton.astro';
+import Button from '../components/ph/Button.astro';
+import Link from '../components/ph/Link.astro';
+import LogoGrid from '../components/LogoSoup';
+import sponsorLogos from '../data/sponsors.normalized.json';
+import { CONTACT_EMAIL, DONATE_URL } from '../data/site';
+import ai2048 from '../assets/sites/grant-2048.png';
+import beacon from '../assets/sites/grant-beacon.png';
+import chair from '../assets/sites/grant-chair.png';
+import notebooks from '../assets/sites/grant-notebooks.png';
+import poas from '../assets/sites/grant-poas.png';
+import qter from '../assets/sites/grant-qter.png';
+import sign from '../assets/sites/grant-sign.png';
+import love from '../assets/sites/grant-spread-the-love.png';
+import wwlb from '../assets/sites/grant-wwlb.png';
+import signPhoto from '../assets/hack-night/3556.webp';
+import badgePhoto from '../assets/hack-night/3489.webp';
+import pizzaPhoto from '../assets/hack-night/3593.webp';
+import roomPhoto from '../assets/sites/hive-hero.webp';
+import showPhoto from '../assets/sites/spill-crowd-shot.webp';
+
+const GRANTS = 'https://grants.purduehackers.com/';
+
+// Things µgrants paid for, as the grants site shows them. Scattered like
+// objects on a table; each one can be picked up and moved.
+const funded = [
+  [qter, 'Qter Robot', 'a Rubik’s Cube that computes', '1 / span 4', '0', -3],
+  [sign, 'The Sign', 'a glider that tells time', '5 / span 4', '1.5rem', 2],
+  [ai2048, '2048 AI', 'a neural net on a CRT', '9 / span 4', '0.25rem', -1.5],
+  [chair, 'Controller Chair', 'sit down to play', '1 / span 4', '12.5rem', 2],
+  [poas, 'Portraits of a Star', 'paintings', '5 / span 4', '13.5rem', -2],
+  [love, 'Spread The Love', 'a dating sim', '9 / span 4', '12rem', 3],
+  [beacon, 'Beacons', 'warm introductions', '1 / span 4', '25rem', -1.5],
+  [notebooks, 'Mini Notebooks', 'custom pages', '5 / span 4', '26rem', 2.5],
+  [wwlb, 'What Was Left Behind', 'an artwork', '9 / span 4', '24.5rem', -2],
+] as const;
+
+// "Your donation becomes…": each word is a link that swaps in a real photo.
+const becomes = [
+  {
+    key: 'grants',
+    word: 'µgrants',
+    href: GRANTS,
+    image: signPhoto,
+    alt: 'The Sign, a funded glider, glowing beside Hack Night badges.',
+  },
+  {
+    key: 'badges',
+    word: 'badges',
+    href: 'https://blog.purduehackers.com/posts/the-best-badge',
+    image: badgePhoto,
+    alt: 'Hands finishing a small acrylic badge beside a laser cutter.',
+  },
+  {
+    key: 'filament',
+    word: 'filament',
+    href: '/makerspace',
+    image: roomPhoto,
+    alt: 'The HIVE makerspace, with its shelf of 3D printers.',
+  },
+  {
+    key: 'pizza',
+    word: 'pizza',
+    href: '/hack-night',
+    image: pizzaPhoto,
+    alt: 'A hacker behind stacks of pizza boxes at Hack Night.',
+  },
+  {
+    key: 'shows',
+    word: 'shows',
+    href: '/shows',
+    image: showPhoto,
+    alt: 'A crowd at spill, the December 2025 project showcase.',
+  },
+];
+---
+
+<BaseLayout
+  title="Support"
+  description="Purdue Hackers microgrants (µgrants) give students up to $1000 for ambitious projects and artworks. See what has been funded, who backs Purdue Hackers, and how to donate through HCB."
+>
+  <main id="main" class="ph-scope dark" data-header-dark>
+    <PageHero titleMax="9rem">
+      <Fragment slot="title">Support</Fragment>
+      <Fragment slot="lede">
+        <span class="hl-yellow">Up to $1000</span> for the student project you can’t
+        stop thinking about. It starts with a short form on the
+        <Link href={GRANTS}>µgrants site</Link>, which says when applications are
+        open.
+      </Fragment>
+      <DitherButton
+        href={GRANTS}
+        target="_blank"
+        rel="noopener"
+        cols={8}
+        class="keep-case">µgrants</DitherButton
+      >
+      <Button href="#back-us" variant="outline" size="lg" iconEnd="arrow-down"
+        >back us</Button
+      >
+      <Exhibit
+        slot="aside"
+        class="pile"
+        dither={false}
+        photos={funded.map(([src, label, note, col, drop, tilt]) => ({
+          src,
+          label,
+          alt: `${label}, ${note}. Funded by a µgrant.`,
+          href: GRANTS,
+          col,
+          drop,
+          tilt,
+          ratio: '1 / 1',
+        }))}
+      />
+    </PageHero>
+
+    <Scene title="Friends">
+      <Fragment slot="lede">
+        Backed by people and companies whose work we really admire, including
+        <Link href="https://www.paulgraham.com/">Paul Graham</Link> and
+        <Link href="https://mitchellh.com/">Mitchell Hashimoto</Link>.
+      </Fragment>
+      <div class="friends">
+        <LogoGrid logos={sponsorLogos} showGrid={false} />
+      </div>
+    </Scene>
+
+    <section class="scene back" id="back-us" aria-labelledby="back-us-title">
+      <div class="wrap becomes">
+        <div class="becomes__copy">
+          <h2 class="ph-headline" id="back-us-title">
+            Your donation becomes{' '}
+            {
+              becomes.map((item, i) => (
+                <Fragment>
+                  <a class:list={['becomes__word', item.key === 'grants' && 'keep-case']} href={item.href} data-k={item.key}>{item.word}</a>{i < becomes.length - 2 ? ', ' : i === becomes.length - 2 ? ' and ' : '.'}
+                </Fragment>
+              ))
+            }
+          </h2>
+          <p class="becomes__fine">
+            Donations go through HCB to <b>Hackers at Purdue</b>, fiscally
+            sponsored by Hack Club, a 501(c)(3) nonprofit.
+          </p>
+          <div class="actions">
+            <DitherButton
+              href={DONATE_URL}
+              target="_blank"
+              rel="noopener"
+              cols={7}>donate</DitherButton
+            >
+            <Button
+              href={`mailto:${CONTACT_EMAIL}`}
+              variant="outline"
+              size="lg"
+              icon="envelope">{CONTACT_EMAIL}</Button
+            >
+          </div>
+          <p class="becomes__more">
+            Other ways in: <Link href={`mailto:${CONTACT_EMAIL}`}
+              >fund µgrants directly</Link
+            >, <Link href="/events">run a talk or workshop with us</Link>, adopt
+            a project on <Link href="https://shelter.purduehackers.com/"
+              >Shelter</Link
+            >, or bring a friend <Link href="/hack-night">on Friday</Link>.
+          </p>
+        </div>
+        <div class="becomes__photos" aria-hidden="true">
+          {
+            becomes.map((item) => (
+              <figure data-k={item.key}>
+                <Image
+                  src={item.image}
+                  alt=""
+                  widths={[480, 800]}
+                  sizes="(min-width: 900px) 34rem, 100vw"
+                />
+                <figcaption>{item.alt}</figcaption>
+              </figure>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  /* the funded objects, scattered on the right of the hero */
+  :global(.pile) {
+    width: min(100%, 34rem);
+    justify-self: end;
+    column-gap: 0.9rem;
+    padding-bottom: 1rem;
+  }
+  :global(.pile .exhibit__frame) {
+    padding: 6px 6px 0;
+  }
+  :global(.pile .exhibit__plate) {
+    padding: 5px 1px 6px;
+    font-size: 10px;
+  }
+  @media (max-width: 1023px) {
+    :global(.pile) {
+      justify-self: stretch;
+      width: 100%;
+    }
+  }
+  @media (max-width: 700px) {
+    :global(.pile .exhibit__frame) {
+      flex-basis: 42%;
+    }
+  }
+
+  .friends {
+    max-width: 46rem;
+    margin-inline: auto;
+    padding-block: 1rem 2rem;
+  }
+
+  /* ── your donation becomes… ── */
+  .becomes {
+    display: grid;
+    gap: 3rem clamp(2.5rem, 6vw, 6rem);
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .becomes {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    }
+  }
+  .becomes h2 {
+    font-size: clamp(2.6rem, 5.6vw, 4.6rem);
+    line-height: 0.95;
+    text-wrap: balance;
+  }
+  .becomes__word {
+    color: var(--ph-yellow);
+    text-decoration: underline;
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.12em;
+    transition: color 0.15s;
+  }
+  .becomes__word:nth-of-type(even) {
+    color: var(--ph-pink);
+  }
+  .becomes__word:hover,
+  .becomes__word:focus-visible {
+    color: var(--foreground);
+  }
+  .becomes__fine {
+    max-width: 30rem;
+    margin-top: 2rem;
+    font-size: 15px;
+  }
+  .becomes__copy .actions {
+    margin-top: 1.5rem;
+  }
+  .becomes__more {
+    max-width: 32rem;
+    margin-top: 2.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+    font-size: 15px;
+  }
+
+  /* Photos stack; the hovered or focused word's photo shows, µgrants by
+     default. Pure CSS, so it works before (and without) any script. */
+  .becomes__photos {
+    display: grid;
+    rotate: 1.5deg;
+  }
+  .becomes__photos figure {
+    grid-area: 1 / 1;
+    padding: 8px 8px 0;
+    background: var(--ph-cream);
+    color: var(--ph-black);
+    box-shadow: 0 18px 40px rgb(0 0 0 / 0.55);
+    opacity: 0;
+    transition: opacity 0.25s var(--ph-ease);
+  }
+  .becomes__photos img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .becomes__photos figcaption {
+    padding: 7px 2px 8px;
+    font-family: var(--ph-font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .becomes:not(:has(.becomes__word:is(:hover, :focus-visible)))
+    figure[data-k='grants'],
+  .becomes:has([data-k='grants']:is(:hover, :focus-visible))
+    figure[data-k='grants'],
+  .becomes:has([data-k='badges']:is(:hover, :focus-visible))
+    figure[data-k='badges'],
+  .becomes:has([data-k='filament']:is(:hover, :focus-visible))
+    figure[data-k='filament'],
+  .becomes:has([data-k='pizza']:is(:hover, :focus-visible))
+    figure[data-k='pizza'],
+  .becomes:has([data-k='shows']:is(:hover, :focus-visible))
+    figure[data-k='shows'] {
+    opacity: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .becomes__photos figure,
+    .becomes__word {
+      transition: none;
+    }
+  }
+</style>

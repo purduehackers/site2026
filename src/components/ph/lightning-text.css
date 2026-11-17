@@ -1,0 +1,6 @@
+.ph-lightning-text {
+  background: linear-gradient(to right, var(--ph-bolt, currentColor), var(--ph-zap, currentColor), var(--ph-spark, currentColor));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

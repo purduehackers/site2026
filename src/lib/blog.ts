@@ -64,11 +64,16 @@ export async function getLatestPost(): Promise<LatestPost | null> {
     const slug = slugFromLink(link);
     if (!title || !link || !slug) throw new Error("Incomplete feed item");
 
+    // Not every post has generated art (e.g. UUID-slug posts 404); fall back
+    // to the default instead of handing the image optimizer a dead URL.
+    const ogImage = `${OG_BASE}/${slug}.png`;
+    const hasArt = (await fetch(ogImage, { method: "HEAD" })).ok;
+
     const post: LatestPost = {
       title,
       link,
       slug,
-      ogImage: `${OG_BASE}/${slug}.png`,
+      ogImage: hasArt ? ogImage : `${OG_BASE}/sighorse.png`,
       date: formatDate(tag(block, "pubDate")),
     };
 

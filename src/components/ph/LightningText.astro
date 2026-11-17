@@ -1,0 +1,17 @@
+---
+import "./lightning-text.css";
+
+type Props = {
+  class?: string;
+};
+
+const { class: className } = Astro.props;
+---
+
+<span class:list={["ph-lightning-text font-bold", className]}><slot /></span>
+
+<script>
+  import { startLightning } from "./lightning";
+
+  startLightning();
+</script>

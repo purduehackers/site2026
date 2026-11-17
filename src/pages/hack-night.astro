@@ -1,0 +1,513 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Scene from '../components/Scene.astro';
+import Exhibit from '../components/Exhibit.astro';
+import SignObject from '../components/SignObject.astro';
+import DitherFilters from '../components/DitherFilters.astro';
+import HackNightPhotos from '../components/HackNightPhotos.astro';
+import DitherButton from '../components/ph/DitherButton.astro';
+import Button from '../components/ph/Button.astro';
+import Link from '../components/ph/Link.astro';
+import EventCard from '../components/ph/EventCard.astro';
+import Callout from '../components/ph/Callout.astro';
+import NumberedList from '../components/ph/NumberedList.astro';
+import RevealRow from '../components/ph/RevealRow.astro';
+import Marquee from '../components/ph/Marquee.astro';
+import { PULSAR } from '../constants/gliderGrid';
+import {
+  KIND_CATEGORY,
+  eventDate,
+  getEvents,
+  splitEvents,
+} from '../lib/events';
+import { lightningFromClock } from '../lib/lightningTime';
+import { DISCORD_URL, EVENTS_URL, HIVE_MAP_URL, SITE_URL } from '../data/site';
+import phoneBell from '../assets/sites/burst-13.webp';
+import badges from '../assets/sites/burst-09.webp';
+import printer from '../assets/sites/burst-17.webp';
+
+const events = await getEvents();
+const next = events
+  ? (splitEvents(events).upcoming.find((e) => e.kind === 'hack-night') ?? null)
+  : null;
+
+const BLOG = 'https://blog.purduehackers.com/posts';
+const OG = 'https://blog.purduehackers.com/og/posts';
+
+const beats = [
+  {
+    clock: [20, 0],
+    time: '8:00 PM',
+    title: 'Doors',
+    text: 'Find a table, plug in, start. Brought nothing? Wander and ask what people are making.',
+  },
+  {
+    clock: [20, 30],
+    time: '8:30 PM',
+    title: 'Kickoff',
+    text: 'Two minutes of announcements, then this week’s laser-cut badge. A different member designs each one.',
+  },
+  {
+    clock: [21, 0],
+    time: '9:00 PM',
+    title: 'Sessions',
+    text: 'A member teaches something they care about, on the couches. Technical or not.',
+  },
+  {
+    clock: [22, 0],
+    time: '10:00 PM',
+    title: 'Circles',
+    text: 'Groups that meet every week. Art Circle is running this fall: bring a sketchbook.',
+  },
+  {
+    clock: [0, 0],
+    time: 'Midnight',
+    title: 'Checkpoints',
+    text: 'Two minutes at the projector to show what you made tonight. Unfinished is the point.',
+  },
+].map((beat) => ({
+  ...beat,
+  lt: lightningFromClock(beat.clock[0], beat.clock[1]),
+}));
+
+const lore = [
+  {
+    title: 'Hack Night 1.0',
+    meta: 'Nov 2022',
+    slug: 'hack-night-1point0',
+    text: 'The new Hack Night, now including Sessions, challenges, and game breaks.',
+  },
+  {
+    title: 'Hack Night 2.0',
+    meta: 'Feb 2023',
+    slug: 'hack-night-20',
+    text: 'A recap of the new, new Hack Night.',
+  },
+  {
+    title: 'The Best Badge We’ve Ever Made',
+    meta: 'Oct 2024',
+    slug: 'the-best-badge',
+    text: 'A vine cipher, a modded rotary phone, and a scavenger hunt.',
+  },
+  {
+    title: 'How We Cracked Demos',
+    meta: 'Feb 2025',
+    slug: 'how-we-cracked-demos',
+    text: 'How it took two years to discover Hack Night’s purpose.',
+  },
+];
+
+const jsonLd = next
+  ? [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Event',
+        name: next.name,
+        startDate: next.start,
+        ...(next.end ? { endDate: next.end } : {}),
+        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+        eventStatus: 'https://schema.org/EventScheduled',
+        isAccessibleForFree: true,
+        url: next.url,
+        location: {
+          '@type': 'Place',
+          name: next.location ?? 'HIVE (BHEE 270/280), Purdue University',
+          address: 'West Lafayette, IN',
+        },
+        organizer: {
+          '@type': 'Organization',
+          name: 'Purdue Hackers',
+          url: SITE_URL,
+        },
+      },
+    ]
+  : [];
+---
+
+<BaseLayout
+  title="Hack Night"
+  description="Hack Night is Purdue Hackers' free, all-night build session: Fridays at 8 PM in the HIVE (BHEE 270/280). Anyone can come. See the next date, what a night looks like, and how to get there."
+  jsonLd={jsonLd}
+>
+  <main id="main" class="ph-scope dark" data-header-dark>
+    <DitherFilters />
+    <PageHero
+      speed={240}
+      seeds={[{ cells: PULSAR, at: [0.46, 0.2], atSmall: [2, 2] }]}
+    >
+      <Fragment slot="title">Hack<br />Night</Fragment>
+      <Fragment slot="lede">
+        Fridays, 8 PM, the HIVE. Free, all night, and
+        <span class="hl-yellow">anyone can come.</span>
+      </Fragment>
+      <DitherButton href="#getting-there" cols={9}>get there</DitherButton>
+      <Button href="#the-night" variant="outline" size="lg" iconEnd="arrow-down"
+        >a typical night</Button
+      >
+      <SignObject slot="aside" />
+    </PageHero>
+
+    <section class="next" aria-labelledby="next-title">
+      <div class="wrap next__grid">
+        <h2 id="next-title" class="mono">Next Hack Night</h2>
+        {
+          next ? (
+            <>
+              <p
+                class="next__count ph-headline"
+                data-countdown
+                data-start={next.start}
+                data-end={next.end}
+                aria-hidden="true"
+              >
+                <>
+                  <span data-unit="days">--</span>
+                  <i>d</i>
+                </>
+                <>
+                  <span data-unit="hrs">--</span>
+                  <i>h</i>
+                </>
+                <>
+                  <span data-unit="min">--</span>
+                  <i>m</i>
+                </>
+                <>
+                  <span data-unit="sec">--</span>
+                  <i>s</i>
+                </>
+              </p>
+              <EventCard
+                title={next.name}
+                href={next.url}
+                date={eventDate.long(next.start)}
+                time={eventDate.time(next.start)}
+                location={next.location ?? 'HIVE (BHEE 270/280)'}
+                category={KIND_CATEGORY[next.kind]}
+              />
+            </>
+          ) : (
+            <p class="next__none">
+              {events
+                ? 'Nothing on the calendar right now, which usually means a break.'
+                : 'The calendar did not load just now.'}
+              It is normally Fridays at 8 PM during the semester.
+              <Link href={`${EVENTS_URL}/?cat=hack-night`}>
+                Check the calendar
+              </Link>{' '}
+              before you head over.
+            </p>
+          )
+        }
+      </div>
+    </section>
+
+    <Scene title="A night, in five moves" id="the-night">
+      <Fragment slot="lede">
+        The usual shape, not a schedule you owe anyone. Skip all of it and keep
+        hacking. It ends when the last person leaves.
+      </Fragment>
+      <ol class="beats">
+        {
+          beats.map((beat, i) => (
+            <li data-reveal style={`--i: ${i}`}>
+              <p class="beats__when">
+                <span>{beat.time}</span>
+                <span
+                  class="beats__lt"
+                  title="The same moment in Lightning Time"
+                >
+                  {beat.lt.colors.map((c) => (
+                    <i style={`background:${c}`} />
+                  ))}
+                  {beat.lt.text}
+                </span>
+              </p>
+              <h3 class="ph-headline">{beat.title}</h3>
+              <p>{beat.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="beats__foot">
+        The hex codes are <Link href="https://time.purduehackers.com/"
+          >Lightning Time</Link
+        >, our own clock. This week’s lineup is on <Link
+          href={`${EVENTS_URL}/?cat=hack-night`}>the calendar</Link
+        >.
+      </p>
+    </Scene>
+
+    <div class="photos">
+      <HackNightPhotos />
+    </div>
+
+    <Scene title="BHEE 270/280" id="getting-there">
+      <Fragment slot="lede">
+        The HIVE: second floor of Purdue’s electrical engineering building, on
+        Northwestern Avenue.
+      </Fragment>
+      <div class="there">
+        <NumberedList class="there__steps">
+          <li>
+            Check the date above. There are weeks off around breaks and finals.
+          </li>
+          <li>Walk up to the second floor and follow the noise.</li>
+          <li>
+            Tell anyone running things it is your first time. You get a tour and
+            a badge.
+          </li>
+        </NumberedList>
+        <div class="there__side">
+          <Callout title="Door locked?" icon="exclamation-triangle">
+            Building doors can lock late at night. Post in Discord and someone
+            inside will come get you.
+          </Callout>
+          <div class="actions">
+            <DitherButton
+              href={HIVE_MAP_URL}
+              target="_blank"
+              rel="noopener"
+              cols={9}>open in maps</DitherButton
+            >
+            <Button
+              href="https://engineering.purdue.edu/HIVE"
+              target="_blank"
+              rel="noopener"
+              variant="outline"
+              size="lg">about the HIVE</Button
+            >
+          </div>
+        </div>
+      </div>
+    </Scene>
+
+    <Scene title="Started on a Friday">
+      <Fragment slot="lede">
+        Most projects here are personal. A few became part of the room.
+        <Link href="/community#artifacts">See all the artifacts</Link>
+      </Fragment>
+      <Exhibit
+        photos={[
+          {
+            src: badges,
+            alt: 'A hand picking a red acrylic badge from rows of them on a table.',
+            label: 'Badges',
+            note: 'one new design a week',
+            href: `${BLOG}/the-best-badge`,
+            col: '1 / span 5',
+            tilt: -2,
+          },
+          {
+            src: phoneBell,
+            alt: 'A visitor holding the handset of a rotary phone on a plinth.',
+            label: 'Phone Bell',
+            note: 'dial to ring the doorbell',
+            href: 'https://burst.purduehackers.com/',
+            col: '5 / span 5',
+            drop: '5rem',
+            tilt: 1.5,
+            z: 3,
+          },
+          {
+            src: printer,
+            alt: 'A receipt printer on a gallery wall with a pile of printed paper on the floor.',
+            label: 'Awestruck Printer',
+            note: 'prints the room, live',
+            href: 'https://burst.purduehackers.com/',
+            col: '9 / span 4',
+            drop: '1.5rem',
+            tilt: -1,
+          },
+        ]}
+      />
+    </Scene>
+
+    <Scene title="How it got this way">
+      <Fragment slot="lede"
+        >Hack Night has been rebuilt a few times, in public.</Fragment
+      >
+      <div>
+        {
+          lore.map((post) => (
+            <RevealRow
+              title={post.title}
+              meta={post.meta}
+              href={`${BLOG}/${post.slug}`}
+              image={`${OG}/${post.slug}.png`}
+              description={post.text}
+            />
+          ))
+        }
+      </div>
+    </Scene>
+
+    <section class="closer">
+      <Marquee
+        text="make things ✷ share what you learn ✷ build together ✷"
+        class="closer__marquee ph-headline"
+        duration="90s"
+      />
+      <div class="wrap actions">
+        <DitherButton
+          href={DISCORD_URL}
+          target="_blank"
+          rel="noopener"
+          cols={10}>join the discord</DitherButton
+        >
+        <Button href="/events" variant="ghost" size="lg" iconEnd="arrow-right"
+          >everything else we run</Button
+        >
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<script>
+  const count = document.querySelector<HTMLElement>('[data-countdown]');
+  if (count) {
+    const start = Date.parse(count.dataset.start!);
+    const end = Date.parse(count.dataset.end || '') || start + 6 * 3_600_000;
+    const tick = () => {
+      const left = start - Date.now();
+      if (left <= 0) {
+        count.textContent = Date.now() < end ? 'On right now' : 'Just ended';
+        return;
+      }
+      const s = Math.floor(left / 1000);
+      const values: Record<string, number> = {
+        days: Math.floor(s / 86400),
+        hrs: Math.floor(s / 3600) % 24,
+        min: Math.floor(s / 60) % 60,
+        sec: s % 60,
+      };
+      count.querySelectorAll<HTMLElement>('[data-unit]').forEach((el) => {
+        el.textContent = String(values[el.dataset.unit!]).padStart(2, '0');
+      });
+    };
+    tick();
+    setInterval(tick, 1000);
+  }
+</script>
+
+<style>
+  .next {
+    padding-block: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .next__grid {
+    display: grid;
+    gap: 1rem 3rem;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .next__grid {
+      grid-template-columns: auto minmax(0, 1fr) minmax(0, 26rem);
+    }
+  }
+  .next h2 {
+    font-size: 13px;
+    color: var(--ph-yellow);
+  }
+  .next__count {
+    font-size: clamp(2.6rem, 7vw, 4.75rem);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .next__count i {
+    font-style: normal;
+    font-size: 0.4em;
+    margin: 0 0.45em 0 0.1em;
+    color: var(--ph-yellow);
+  }
+  .next__none {
+    max-width: 40rem;
+  }
+
+  .beats {
+    display: grid;
+    gap: 2rem 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12.5rem), 1fr));
+  }
+  .beats li {
+    padding-top: 1rem;
+    border-top: 1px solid var(--foreground);
+  }
+  .beats__when {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-family: var(--ph-font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--ph-yellow);
+  }
+  .beats__lt {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    color: var(--foreground);
+    text-transform: none;
+  }
+  .beats__lt i {
+    width: 9px;
+    height: 9px;
+  }
+  .beats__lt i:last-of-type {
+    margin-right: 5px;
+  }
+  .beats h3 {
+    font-size: 2.1rem;
+    margin: 1.1rem 0 0.6rem;
+  }
+  .beats li > p:last-child {
+    font-size: 15px;
+  }
+  .beats__foot {
+    margin-top: 2.5rem;
+    font-size: 15px;
+  }
+
+  .photos {
+    padding-block: 1.5rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .there {
+    display: grid;
+    gap: 2.5rem 4rem;
+  }
+  @media (min-width: 900px) {
+    .there {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .there :global(.there__steps) {
+    gap: 0;
+    font-size: clamp(1.1rem, 1.8vw, 1.35rem);
+  }
+  .there :global(.there__steps > li) {
+    padding-block: 1rem;
+    border-top: 1px solid var(--border);
+  }
+  .there__side {
+    display: grid;
+    gap: 1.5rem;
+    align-content: start;
+  }
+
+  .closer {
+    padding-block: 3.5rem 5rem;
+  }
+  .closer :global(.closer__marquee) {
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    line-height: 1.1;
+    margin-bottom: 2.5rem;
+    color: var(--ph-yellow);
+  }
+</style>

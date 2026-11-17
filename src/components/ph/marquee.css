@@ -1,0 +1,19 @@
+.ph-marquee__track {
+  animation: ph-marquee var(--duration, 60s) linear infinite;
+}
+
+.ph-marquee[data-reverse] .ph-marquee__track {
+  animation-direction: reverse;
+}
+
+@keyframes ph-marquee {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ph-marquee__track {
+    animation: none;
+  }
+}

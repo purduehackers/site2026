@@ -1,0 +1,291 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Scene from '../components/Scene.astro';
+import DitherButton from '../components/ph/DitherButton.astro';
+import Button from '../components/ph/Button.astro';
+import Link from '../components/ph/Link.astro';
+import RevealRow from '../components/ph/RevealRow.astro';
+import Marquee from '../components/ph/Marquee.astro';
+import { R_PENTOMINO } from '../constants/gliderGrid';
+import { CONTACT_EMAIL, DISCORD_URL } from '../data/site';
+import burst from '../assets/sites/burst-01.webp';
+import spill from '../assets/sites/spill-crowd-shot.webp';
+import bento from '../assets/shows/dithered/bento-dj.webp';
+
+const BLOG = 'https://blog.purduehackers.com/posts';
+const OG = 'https://blog.purduehackers.com/og/posts';
+const post = (slug: string) => ({
+  href: `${BLOG}/${slug}`,
+  image: `${OG}/${slug}.png`,
+});
+
+const timeline = [
+  {
+    title: 'Purdue Hackers is founded',
+    meta: '2013',
+    text: 'A club for students who want to make things outside of class.',
+  },
+  {
+    title: 'Lightning Time',
+    meta: 'Oct 2022',
+    text: 'A new way to measure time.',
+    ...post('lightning-time'),
+  },
+  {
+    title: 'Hack Night 1.0',
+    meta: 'Nov 2022',
+    text: 'Sessions, challenges, and game breaks.',
+    ...post('hack-night-1point0'),
+  },
+  {
+    title: 'College Clubs Are Awesome',
+    meta: 'May 2023',
+    text: 'What clubs can be that nothing else on campus is.',
+    ...post('college-clubs-are-awesome'),
+  },
+  {
+    title: 'Papers, Please',
+    meta: 'Apr 2024',
+    text: 'The NFC-enabled passport.',
+    ...post('papers-please'),
+  },
+  {
+    title: 'Galactic Empire',
+    meta: 'May 2024',
+    text: 'For the long-term future of Purdue Hackers.',
+    ...post('galactic-empire'),
+  },
+  {
+    title: 'BURST',
+    meta: 'Dec 2024',
+    text: 'The first show. 250 people in a gallery.',
+    href: '/shows#burst',
+    image: burst.src,
+  },
+  {
+    title: 'How We Cracked Demos',
+    meta: 'Feb 2025',
+    text: 'Two years to find Hack Night’s purpose.',
+    ...post('how-we-cracked-demos'),
+  },
+  {
+    title: 'spill',
+    meta: 'Dec 2025',
+    text: '200 people, 23 projects, one coffee shop.',
+    href: '/shows#spill',
+    image: spill.src,
+  },
+  {
+    title: 'BENTO',
+    meta: 'Apr 2026',
+    text: 'A night of lightning talks.',
+    href: '/shows#bento',
+    image: bento.src,
+  },
+  {
+    title: 'waveforum',
+    meta: 'Dec 2026',
+    text: 'The next show, December 5.',
+    href: '/shows#waveforum',
+  },
+];
+
+const answers = [
+  {
+    q: 'What is it?',
+    a: 'A community of Purdue students, hobbyists, engineers and artists building creative projects in software, hardware, design and art. Around since 2013.',
+  },
+  {
+    q: 'Who can come?',
+    a: 'Anyone at Purdue. Any major, any year, never-coded to shipped-products. Beginners are not a separate track.',
+    href: '/hack-night',
+    label: 'Hack Night',
+  },
+  { q: 'What does it cost?', a: 'Hack Night is free. Show up.' },
+  {
+    q: 'When and where?',
+    a: 'Fridays, 8 PM, the HIVE (BHEE 270/280), until the last person leaves.',
+    href: '/hack-night#getting-there',
+    label: 'Directions',
+  },
+  {
+    q: 'Not at Purdue?',
+    a: 'The Discord is open to you. Spaces, tools and grants are for Purdue students and longstanding members.',
+    href: '/community',
+    label: 'Community',
+  },
+  {
+    q: 'What do I get?',
+    a: 'A makerspace, µgrants up to $1000, and a few hundred people happy to look at your bug.',
+    href: '/makerspace',
+    label: 'Makerspace',
+    href2: '/support',
+    label2: 'µgrants',
+  },
+  {
+    q: 'How do I do more?',
+    a: 'Run a Session, design a badge, show at Checkpoints, exhibit at a show, or adopt an open-source project.',
+    href: 'https://phack.rs/roles',
+    label: 'Open roles',
+  },
+];
+---
+
+<BaseLayout
+  title="About"
+  description="What Purdue Hackers is, who can come, what it costs (Hack Night is free), where and when it meets, how it got here since 2013, and how to get in touch."
+>
+  <main id="main" class="ph-scope dark" data-header-dark>
+    <PageHero
+      speed={90}
+      seeds={[{ cells: R_PENTOMINO, at: [0.78, 0.4], atSmall: [0.7, 0.1] }]}
+    >
+      <Fragment slot="title">About</Fragment>
+      <Fragment slot="lede">
+        Purdue students making things nobody assigned.
+        <span class="hl-yellow">Since 2013.</span>
+      </Fragment>
+      <DitherButton href="/hack-night" cols={9}>come friday</DitherButton>
+      <Button
+        href={DISCORD_URL}
+        target="_blank"
+        rel="noopener"
+        variant="outline"
+        size="lg"
+        icon="discord">discord</Button
+      >
+      <p slot="aside" class="seed-note">
+        That mess started as five cells. Most good things here did too.
+      </p>
+    </PageHero>
+
+    <Scene title="Short answers">
+      <dl class="answers">
+        {
+          answers.map((item) => (
+            <div>
+              <dt class="ph-headline">{item.q}</dt>
+              <dd>
+                {item.a}
+                {item.href && <Link href={item.href}>{item.label}</Link>}
+                {item.href2 && <Link href={item.href2}>{item.label2}</Link>}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </Scene>
+
+    <Marquee
+      text="make things ✷ share what you learn ✷ build together ✷"
+      class="creed ph-headline"
+      duration="90s"
+    />
+
+    <Scene title="How we got here">
+      <Fragment slot="lede">
+        Most of it is written down on the <Link
+          href="https://blog.purduehackers.com/">blog</Link
+        >, including the parts that did not work.
+      </Fragment>
+      <div class="rows">
+        {
+          timeline.map((row) => (
+            <RevealRow
+              title={row.title}
+              meta={row.meta}
+              href={row.href}
+              image={row.image}
+              description={row.text}
+            />
+          ))
+        }
+      </div>
+    </Scene>
+
+    <section class="wrap contact">
+      <h2 class="ph-headline">Say hi</h2>
+      <a class="contact__mail ph-headline" href={`mailto:${CONTACT_EMAIL}`}
+        >{CONTACT_EMAIL}</a
+      >
+      <p>
+        Discord is fastest. Email is for press, partnerships and sponsorship.
+      </p>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .seed-note {
+    justify-self: end;
+    align-self: end;
+    max-width: 16rem;
+    font-family: var(--ph-font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    text-align: right;
+  }
+  @media (max-width: 1023px) {
+    .seed-note {
+      display: none;
+    }
+  }
+  .answers {
+    display: grid;
+    gap: 0 4rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
+    border-top: 1px solid var(--foreground);
+  }
+  .answers > div {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+    gap: 1.25rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .answers dt {
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    line-height: 1;
+    color: var(--ph-yellow);
+  }
+  .answers dd {
+    font-size: 15px;
+  }
+  .answers dd :global(a) {
+    margin-left: 0.4rem;
+    white-space: nowrap;
+  }
+  :global(.creed) {
+    padding-block: 2.5rem;
+    border-bottom: 1px solid var(--border);
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    line-height: 1.1;
+    color: var(--ph-pink);
+  }
+  .rows {
+    border-top: 1px solid var(--foreground);
+    font-size: 1.15rem;
+  }
+  .contact {
+    display: grid;
+    gap: 1rem;
+    padding-block: 4.5rem 5.5rem;
+  }
+  .contact h2 {
+    font-size: clamp(2.6rem, 6.5vw, 5rem);
+  }
+  .contact__mail {
+    width: fit-content;
+    max-width: 100%;
+    font-size: clamp(1.9rem, 6.5vw, 5rem);
+    overflow-wrap: anywhere;
+    color: var(--ph-yellow);
+    transition: color 0.15s;
+  }
+  .contact__mail:hover,
+  .contact__mail:focus-visible {
+    color: var(--ph-pink);
+  }
+</style>

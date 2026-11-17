@@ -1,0 +1,113 @@
+---
+/**
+ * Photos hung like a small show: cream mounts, a caption plate, slight tilt.
+ * Uses the homepage's DitheredPhoto, so pictures rest as a 1-bit dither and
+ * switch to colour tile by tile on hover. Needs <DitherFilters /> on the page
+ * unless `dither` is false.
+ */
+import DitheredPhoto from './DitheredPhoto.astro';
+
+export interface ExhibitPhoto {
+  src: ImageMetadata;
+  alt: string;
+  /** Short plate text, e.g. the work's name. */
+  label: string;
+  /** Right side of the plate, e.g. the show. */
+  note?: string;
+  href?: string;
+  /** Grid placement on desktop, e.g. "1 / span 5". */
+  col?: string;
+  drop?: string;
+  tilt?: number;
+  z?: number;
+  ratio?: string;
+}
+
+interface Props {
+  photos: ExhibitPhoto[];
+  class?: string;
+  /** false: show images as they are (pixel art that is already dithered). */
+  dither?: boolean;
+}
+const { photos, class: className, dither = true } = Astro.props;
+---
+
+<div class:list={['exhibit', className]}>
+  {
+    photos.map((photo, i) => {
+      const Tag = photo.href ? 'a' : 'figure';
+      const external = photo.href?.startsWith('http');
+      return (
+        <Tag
+          class="exhibit__frame"
+          href={photo.href}
+          target={external ? '_blank' : undefined}
+          rel={external ? 'noopener' : undefined}
+          style={`--col: ${photo.col ?? 'auto / span 4'}; --drop: ${photo.drop ?? '0'}; --tilt: ${photo.tilt ?? 0}deg; --z: ${photo.z ?? i + 1}; --ratio: ${photo.ratio ?? '3 / 2'}`}
+          data-reveal
+        >
+          {dither ? (
+            <DitheredPhoto src={photo.src} alt={photo.alt} desktopWidth={520} />
+          ) : (
+            <img
+              class="exhibit__img pixelated"
+              src={photo.src.src}
+              width={photo.src.width}
+              height={photo.src.height}
+              alt={photo.alt}
+              loading="lazy"
+              decoding="async"
+            />
+          )}
+          <span class="exhibit__plate">
+            <span>{photo.label}</span>
+            {photo.note && <span>{photo.note}</span>}
+          </span>
+        </Tag>
+      );
+    })
+  }
+</div>
+
+<script>
+  // Pick the photos up and rearrange the wall. Mouse/pen only: on touch the
+  // wall is a swipeable strip, and links keep working when nothing was moved.
+  let top = 10;
+  document.querySelectorAll<HTMLElement>('.exhibit__frame').forEach((frame) => {
+    let startX = 0;
+    let startY = 0;
+    let baseX = 0;
+    let baseY = 0;
+    let moved = false;
+    frame.addEventListener('dragstart', (e) => e.preventDefault());
+    frame.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch' || e.button !== 0) return;
+      startX = e.clientX;
+      startY = e.clientY;
+      moved = false;
+      frame.setPointerCapture(e.pointerId);
+      frame.dataset.held = '';
+      frame.style.setProperty('--z', String(++top));
+    });
+    frame.addEventListener('pointermove', (e) => {
+      if (frame.dataset.held === undefined) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      if (!moved && Math.hypot(dx, dy) < 5) return;
+      moved = true;
+      frame.style.setProperty('--dx', `${baseX + dx}px`);
+      frame.style.setProperty('--dy', `${baseY + dy}px`);
+    });
+    const drop = (e: PointerEvent) => {
+      if (frame.dataset.held === undefined) return;
+      delete frame.dataset.held;
+      if (moved) {
+        baseX += e.clientX - startX;
+        baseY += e.clientY - startY;
+      }
+    };
+    frame.addEventListener('pointerup', drop);
+    frame.addEventListener('pointercancel', drop);
+    frame.addEventListener('click', (e) => moved && e.preventDefault());
+  });
+</script>

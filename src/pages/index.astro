@@ -7,11 +7,8 @@ import sponsorLogos from '../data/sponsors.normalized.json';
 import PhotoCollageItems from '../components/PhotoCollageItems.astro';
 import HackNightPhotos from '../components/HackNightPhotos.astro';
 import Community from '../components/Community.astro';
-import ShowReel from '../components/ShowReel.astro';
-import footerImage from '../assets/footer.webp';
 import { getLatestShip } from '../lib/ships';
 import { getLatestPost } from '../lib/blog';
-import SocialPreviewMetadata from '../components/SocialPreviewMetadata.astro';
 import Sprite from '../components/Sprite.astro';
 import DitherFilters from '../components/DitherFilters.astro';
 import { DITHER_BAND_ROWS, GLIDER_CELL_SIZE } from '../constants/gliderGrid';
@@ -30,13 +27,10 @@ const backPixels = getPixelIndices(40);
 const shouldEnablePixelCursor = true;
 ---
 
-<BaseLayout>
-  <slot name="head">
-    <SocialPreviewMetadata
-      title="Purdue Hackers"
-      description="Purdue Hackers backs highly talented and curious individuals working on ambitious ideas across software, hardware, and design."
-    />
-  </slot>
+<BaseLayout
+  title="Purdue Hackers"
+  description="Purdue Hackers backs highly talented and curious individuals working on ambitious ideas across software, hardware, and design. Hack Night is every Friday at 8 PM in the HIVE at Purdue."
+>
   {
     shouldEnablePixelCursor && (
       <div
@@ -45,7 +39,7 @@ const shouldEnablePixelCursor = true;
       />
     )
   }
-  <main>
+  <main id="main">
     <DitherFilters />
     <!-- one Conway grid spans the whole hero: the gun runs at the top, and the
          bottom rows are the pinned dither that fades into the dark section.
@@ -55,7 +49,11 @@ const shouldEnablePixelCursor = true;
       style={`background-color: var(--color-bg); padding-bottom: calc(${ditherBandPx}px + 2rem);`}
     >
       <div class="hero-grid" aria-hidden="true"></div>
-      <Glider cellSize={GLIDER_CELL_SIZE} speedMs={100} ditherRows={DITHER_BAND_ROWS} />
+      <Glider
+        cellSize={GLIDER_CELL_SIZE}
+        speedMs={100}
+        ditherRows={DITHER_BAND_ROWS}
+      />
       <div class="relative z-10 flex flex-col gap-6">
         <h1
           class="font-pixel-hackers text-7xl sm:text-8xl md:text-[8.5rem] leading-[0.85] shrink-0 noselect pb-2"
@@ -87,8 +85,7 @@ const shouldEnablePixelCursor = true;
               ))
             }
           </span>
-          <span
-            class="join-session-btn__label pointer-events-none"
+          <span class="join-session-btn__label pointer-events-none"
             >build with us</span
           >
         </a>
@@ -107,6 +104,7 @@ const shouldEnablePixelCursor = true;
     </div>
 
     <section
+      data-header-dark
       class="photo-collage-after relative z-[2] min-h-screen flex flex-col items-center px-8 pb-16 bg-black text-[var(--color-bg)] text-center overflow-clip"
     >
       <!-- creatura! -->
@@ -149,8 +147,6 @@ const shouldEnablePixelCursor = true;
         aria-hidden="true"
       />
 
-
-
       <!-- 1 -->
       <div class="mb-72 relative">
         <img
@@ -173,7 +169,10 @@ const shouldEnablePixelCursor = true;
       </div>
 
       <!-- 2 -->
-      <div id="hack-night" class="mb-72 relative w-full max-w-[32rem] scroll-mt-24">
+      <div
+        id="hack-night"
+        class="mb-72 relative w-full max-w-[32rem] scroll-mt-24"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -184,21 +183,19 @@ const shouldEnablePixelCursor = true;
             points="22 17 22 19 21 19 21 20 20 20 20 21 18 21 18 22 16 22 16 23 10 23 10 22 8 22 8 21 6 21 6 20 5 20 5 19 4 19 4 17 3 17 3 15 2 15 2 9 3 9 3 7 4 7 4 5 5 5 5 4 6 4 6 3 8 3 8 2 10 2 10 1 15 1 15 2 13 2 13 3 11 3 11 4 10 4 10 6 9 6 9 8 8 8 8 12 9 12 9 14 10 14 10 16 11 16 11 17 13 17 13 18 15 18 15 19 19 19 19 18 21 18 21 17 22 17"
           ></polygon>
         </svg>
-        <p
+        <h2
           class="max-w-[32rem] font-pixel-hackers text-4xl md:text-6xl leading-relaxed pb-6 pt-6"
         >
           Hack Night
-        </p>
+        </h2>
         <p class="max-w-[32rem] font-polysans text-l leading-relaxed">
-          Hack Night happens <span class="highlight"
-            >every Friday, 8pm</span
-          > at <a
+          Hack Night happens <span class="highlight">every Friday, 8pm</span> at <a
             href="https://engineering.purdue.edu/HIVE"
             target="_blank"
             class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 motion-reduce:transition-none whitespace-nowrap"
             >the HIVE (BHEE 270/280)</a
-          >. It's a dedicated space to work on personal projects, join (or
-          run) workshops, and share your progress at Checkpoints or on <a
+          >. It's a dedicated space to work on personal projects, join (or run)
+          workshops, and share your progress at Checkpoints or on <a
             href="https://discord.gg/5paFjKzdPE"
             target="_blank"
             class="highlight hover:text-[var(--color-secondary)] underline transition-colors duration-300 motion-reduce:transition-none"
@@ -212,12 +209,68 @@ const shouldEnablePixelCursor = true;
           &mdash; <br />
           <span class="highlight">you're invited.</span>
         </p>
+        <p class="pt-6">
+          <a
+            href="/hack-night"
+            class="font-inconsolata text-l md:text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300 motion-reduce:transition-none"
+            >Next date, directions + what a night is like →</a
+          >
+        </p>
       </div>
 
       <Community />
 
       <!-- 4 -->
-      <ShowReel />
+      <div class="mb-72 relative">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          class="w-8 h-8 mx-auto text-[var(--color-secondary)]"
+          fill="currentColor"
+        >
+          <polygon
+            points="23 18 23 20 21 20 21 21 20 21 20 23 18 23 18 21 17 21 17 20 15 20 15 18 17 18 17 17 18 17 18 15 20 15 20 17 21 17 21 18 23 18"
+          ></polygon><polygon
+            points="23 4 23 6 21 6 21 7 20 7 20 9 18 9 18 7 17 7 17 6 15 6 15 4 17 4 17 3 18 3 18 1 20 1 20 3 21 3 21 4 23 4"
+          ></polygon><polygon
+            points="17 11 17 13 15 13 15 14 13 14 13 15 12 15 12 16 11 16 11 18 10 18 10 20 8 20 8 18 7 18 7 16 6 16 6 15 5 15 5 14 3 14 3 13 1 13 1 11 3 11 3 10 5 10 5 9 6 9 6 8 7 8 7 6 8 6 8 4 10 4 10 6 11 6 11 8 12 8 12 9 13 9 13 10 15 10 15 11 17 11"
+          ></polygon>
+        </svg>
+        <h2
+          class="max-w-[32rem] font-pixel-hackers text-4xl md:text-6xl leading-relaxed pb-6 pt-6"
+        >
+          The Show
+        </h2>
+        <p class="max-w-[32rem] font-polysans text-l leading-relaxed">
+          At the end of the year, we hold the Show, an exhibit where our
+          community comes together to share projects made throughout the
+          semester at Hack Night and beyond.
+        </p>
+        <br />
+        <p class="font-inconsolata text-xl font-semibold uppercase">
+          ???????: Fall 2026
+        </p>
+        <a
+          href="https://spill.purduehackers.com/"
+          target="_blank"
+          class="font-inconsolata text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300 motion-reduce:transition-none"
+          >spill ≋: Fall 2025</a
+        >
+        <br />
+        <a
+          href="https://burst.purduehackers.com/"
+          target="_blank"
+          class="font-inconsolata text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300 motion-reduce:transition-none"
+          >BURST ✷: Fall 2024</a
+        >
+        <p class="pt-6">
+          <a
+            href="/shows"
+            class="font-inconsolata text-l md:text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300 motion-reduce:transition-none"
+            >All the shows →</a
+          >
+        </p>
+      </div>
       <div class="mb-72 relative w-full max-w-2xl">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -229,11 +282,11 @@ const shouldEnablePixelCursor = true;
             points="23 6 23 11 22 11 22 12 21 12 21 13 20 13 20 14 19 14 19 15 18 15 18 16 17 16 17 17 16 17 16 18 15 18 15 19 14 19 14 20 13 20 13 21 11 21 11 20 10 20 10 19 9 19 9 18 8 18 8 17 7 17 7 16 6 16 6 15 5 15 5 14 4 14 4 13 3 13 3 12 2 12 2 11 1 11 1 6 2 6 2 5 3 5 3 4 4 4 4 3 10 3 10 4 11 4 11 5 13 5 13 4 14 4 14 3 20 3 20 4 21 4 21 5 22 5 22 6 23 6"
           ></polygon></svg
         >
-        <p
+        <h2
           class="max-w-[32rem] mx-auto text-center font-pixel-hackers text-4xl md:text-6xl leading-relaxed pb-6 pt-6"
         >
           Friends
-        </p>
+        </h2>
         <p
           class="max-w-[32rem] font-polysans text-l mx-auto text-center leading-relaxed pb-8"
         >
@@ -284,322 +337,16 @@ const shouldEnablePixelCursor = true;
             >back us</span
           >
         </a>
-      </div>
-    </section>
-
-    <section
-      class="relative min-h-screen w-full flex flex-col justify-end"
-    >
-      <!-- Keep the pixel art lossless, fingerprinted and lazy. It is already
-           only 820px wide, so upscaling it through the optimizer adds no detail. -->
-      <img
-        src={footerImage.src}
-        width={footerImage.width}
-        height={footerImage.height}
-        alt=""
-        aria-hidden="true"
-        class="absolute inset-0 h-full w-full object-cover pointer-events-none"
-        style="image-rendering: pixelated;"
-        loading="lazy"
-        decoding="async"
-      />
-      <div class="absolute inset-0 z-[1] w-full h-full" aria-hidden="true">
-        <div
-          id="pixel-blast-root"
-          class="w-full h-full"
-          aria-label="PixelBlast interactive dither overlay"
-        >
-        </div>
-      </div>
-      <div
-        class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none"
-        aria-hidden="true"
-      >
-      </div>
-      <div
-        class="relative z-10 flex flex-col-reverse md:flex-row flex-wrap items-start md:items-end justify-between gap-8 px-8 py-8 md:px-12 md:py-12 pointer-events-none"
-      >
-        <div
-          id="footer-made-with"
-          class="font-inconsolata text-[var(--color-bg)] text-left pointer-events-auto"
-        >
-          <p
-            class="text-sm font-semibold md:text-base uppercase tracking-wide opacity-90"
+        <p class="pt-6">
+          <a
+            href="/support"
+            class="font-inconsolata text-l md:text-xl font-semibold uppercase underline hover:text-[var(--color-secondary)] transition-colors duration-300 motion-reduce:transition-none"
+            >Microgrants + ways to support →</a
           >
-            made with <span
-              id="made-with-rotate"
-              style="display:inline-block;transition:opacity 0.3s ease;"
-              >spills</span
-            >
-            <br />
-            <a
-              href="https://hcb.hackclub.com/donations/start/purdue-hackers"
-              target="_blank"
-              class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-              >Donate [501(c)(3) nonprofit]</a
-            >
-            <br />
-            <a
-              href="mailto:phackers@purdue.edu"
-              class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-              >Contact us</a
-            >
-          </p>
-        </div>
-        <div
-          class="flex gap-12 md:gap-16 font-inconsolata text-[var(--color-bg)]"
-        >
-          <div class="text-right">
-            <p
-              class="text-sm md:text-base font-semibold uppercase tracking-wide opacity-90 text-[var(--color-bg)]"
-            >
-              more from us
-            </p>
-            <p class="mt-2 text-lg md:text-xl uppercase text-[var(--color-bg)]">
-              <a
-                href="https://ships.purduehackers.com/"
-                target="_blank"
-                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >Ships</a
-              >
-              <br />
-              <a
-                href="https://passports.purduehackers.com/"
-                target="_blank"
-                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >Passports</a
-              >
-              <br />
-              <a
-                href="https://merch.purduehackers.com/"
-                target="_blank"
-                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >Merchandise</a
-              >
-              <br />
-              <a
-                href="https://ring.purduehackers.com/"
-                target="_blank"
-                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >Webring</a
-              >
-              <br />
-              <a
-                href="https://sig.horse/"
-                target="_blank"
-                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >SIGHORSE</a
-              >
-              <br />
-              <a
-                href="https://commit.purduehackers.com/"
-                target="_blank"
-                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >Commit Overflow</a
-              >
-              <br />
-              <a
-                href="https://phack.rs/roles"
-                target="_blank"
-                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >Hiring</a
-              >
-              <br />
-              <!-- easter egg: invisible until the pointer comes within ~20px (see initLunarEgg) or it receives keyboard focus; once revealed it stays -->
-              <a
-                id="lunar-egg"
-                href="https://lunar.purduehackers.com/"
-                target="_blank"
-                class="lunar-egg footer-overlay-link underline hover:text-[var(--color-secondary)] font-semibold"
-                >Lunar</a
-              >
-            </p>
-          </div>
-          <div class="text-right">
-            <p
-              class="text-sm md:text-base font-semibold uppercase tracking-wide opacity-90 text-[var(--color-bg)]"
-            >
-              find us on
-            </p>
-            <p class="mt-2 text-lg md:text-xl uppercase text-[var(--color-bg)]">
-              <a
-                href="https://discord.gg/5paFjKzdPE"
-                target="_blank"
-                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >Discord</a
-              >
-              <br />
-              <a
-                href="https://github.com/purduehackers"
-                target="_blank"
-                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >GitHub</a
-              >
-              <br />
-              <a
-                href="https://www.instagram.com/purduehackers/"
-                target="_blank"
-                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >Instagram</a
-              >
-              <br />
-              <a
-                href="https://www.linkedin.com/company/purdue-hackers/"
-                target="_blank"
-                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >LinkedIn</a
-              >
-              <br />
-              <a
-                href="https://x.com/purduehackers/"
-                target="_blank"
-                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >Twitter</a
-              >
-              <br />
-              <a
-                href="https://www.youtube.com/@PurdueHackers/"
-                target="_blank"
-                class="footer-overlay-link underline hover:text-[var(--color-secondary)] transition-colors font-semibold"
-                >YouTube</a
-              >
-            </p>
-          </div>
-        </div>
+        </p>
       </div>
     </section>
   </main>
-  <script>
-    import { initPixelBlast } from '../scripts/PixelBlast';
-    const MADE_WITH_OPTIONS = [
-      'astro',
-      'bees',
-      'spills',
-      'bursts ✷',
-      'the abyss...',
-      'friendship and love',
-      'the power of awestruck',
-      'horse feed electrolytes',
-      'vercel',
-      'eggz',
-      'kiwis',
-      'one william dollars',
-      'acrylic from canal plastics',
-      'blackberry jam',
-      'pear and prosciutto croissants',
-    ];
-    function initMadeWith() {
-      const span = document.getElementById('made-with-rotate');
-      const container = document.getElementById('footer-made-with');
-      if (!span || !container) return;
-      let index = 2; // start at "spills"
-      let intervalId: ReturnType<typeof setInterval> | null = null;
-      const slowMs = 2500;
-      const fastMs = 500;
-      const fadeDuration = 200;
-      let fading = false;
-      function update() {
-        const el = document.getElementById('made-with-rotate');
-        if (!el || fading) return;
-        fading = true;
-        el.style.opacity = '0';
-        setTimeout(() => {
-          index = (index + 1) % MADE_WITH_OPTIONS.length;
-          el.textContent = MADE_WITH_OPTIONS[index];
-          el.style.opacity = '1';
-          fading = false;
-        }, fadeDuration);
-      }
-      function startInterval(ms: number) {
-        if (intervalId) clearInterval(intervalId);
-        intervalId = setInterval(update, ms);
-      }
-      startInterval(slowMs);
-      container.addEventListener('mouseenter', () => startInterval(fastMs));
-      container.addEventListener('mouseleave', () => startInterval(slowMs));
-    }
-    function initLunarEgg() {
-      const link = document.getElementById('lunar-egg');
-      const zone = link?.closest('section');
-      if (!link || !zone) return;
-      const RADIUS = 20; // px around the link's box that counts as "near"
-      // once found, it stays found: reveal is one-shot and the listener goes away
-      function reveal() {
-        link!.classList.add('is-near');
-        zone!.removeEventListener('pointermove', onMove);
-      }
-      function onMove(e: PointerEvent) {
-        const r = link!.getBoundingClientRect();
-        if (
-          e.clientX >= r.left - RADIUS &&
-          e.clientX <= r.right + RADIUS &&
-          e.clientY >= r.top - RADIUS &&
-          e.clientY <= r.bottom + RADIUS
-        ) {
-          reveal();
-        }
-      }
-      zone.addEventListener('pointermove', onMove, { passive: true });
-      link.addEventListener('focus', reveal, { once: true });
-    }
-    function init() {
-      const root = document.getElementById('pixel-blast-root');
-      if (root) {
-        const cleanup = initPixelBlast(root, {
-          variant: 'square',
-          pixelSize: 2,
-          color: '#000000',
-          patternScale: 4.5,
-          patternDensity: 1.5,
-          pixelSizeJitter: 0,
-          enableRipples: true,
-          rippleSpeed: 0.3,
-          rippleThickness: 0.15,
-          rippleIntensityScale: 2,
-          liquid: false,
-          liquidStrength: 0.12,
-          liquidRadius: 1.2,
-          liquidWobbleSpeed: 5,
-          speed: 0.5,
-          edgeFade: 0,
-          topFade: 0.25,
-          transparent: true,
-        });
-        document.addEventListener('astro:before-swap', cleanup, { once: true });
-      }
-      
-      // same dither behind the header, for readability and cohesive look
-      const headerRoot = document.getElementById('header-dither-root');
-      if (headerRoot) {
-        const cleanupHeader = initPixelBlast(headerRoot, {
-          variant: 'diamond',
-          pixelSize: 1,
-          color: '#000000',
-          patternScale: 4.5,
-          patternDensity: 0.5,
-          pixelSizeJitter: 0,
-          enableRipples: false,
-          liquid: false,
-          speed: 0.5,
-          edgeFade: 0,
-          topFade: 0.1,
-          sideFade: 2,
-          bottomFade: .5,
-          transparent: true,
-        });
-        document.addEventListener('astro:before-swap', cleanupHeader, {
-          once: true,
-        });
-      }
-      initMadeWith();
-      initLunarEgg();
-    }
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', init);
-    } else {
-      init();
-    }
-  </script>
   <script>
     function initPhotoCaption() {
       const tip = document.getElementById(

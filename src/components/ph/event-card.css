@@ -1,0 +1,37 @@
+.ph-event-card {
+  transition:
+    border-color 150ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.ph-event-card:active {
+  transform: scale(0.99);
+}
+
+.ph-event-card__star {
+  transition: transform 150ms;
+}
+
+@media (hover: hover) {
+  .ph-event-card:hover .ph-event-card__star {
+    animation: ph-star-idle 0.75s steps(1, end) 0.3s infinite;
+    transform: scale(1.15) rotate(-90deg);
+  }
+}
+
+@keyframes ph-star-idle {
+  0% {
+    transform: scale(0.9) rotate(20deg);
+  }
+  50% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ph-event-card,
+  .ph-event-card__star {
+    transition: none;
+    animation: none !important;
+  }
+}

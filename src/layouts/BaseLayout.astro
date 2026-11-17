@@ -1,13 +1,70 @@
 ---
 import '../styles/global.css';
+import '../styles/site.css';
 import { Font } from 'astro:assets';
 import Analytics from '@vercel/analytics/astro';
+import SocialPreviewMetadata from '../components/SocialPreviewMetadata.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { CONTACT_EMAIL, DISCORD_URL, NAV, SITE_URL } from '../data/site';
 
 interface Props {
   title?: string;
+  description?: string;
+  /** Extra JSON-LD objects for this page (e.g. an Event). */
+  jsonLd?: Record<string, unknown>[];
 }
 
-const { title = 'Purdue Hackers' } = Astro.props;
+const DEFAULT_DESCRIPTION =
+  'Purdue Hackers is a community of Purdue students building creative projects across software, hardware, design and art. Hack Night is every Friday at 8 PM in the HIVE.';
+
+const {
+  title = 'Purdue Hackers',
+  description = DEFAULT_DESCRIPTION,
+  jsonLd = [],
+} = Astro.props;
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const canonical = new URL(path, SITE_URL).href;
+const current = NAV.find((item) => item.href === path);
+const fullTitle = path === '/' ? title : `${title} · Purdue Hackers`;
+
+const structuredData: Record<string, unknown>[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Purdue Hackers',
+    url: SITE_URL,
+    logo: `${SITE_URL}/glider.svg`,
+    email: CONTACT_EMAIL,
+    foundingDate: '2013',
+    description: DEFAULT_DESCRIPTION,
+    sameAs: [
+      'https://github.com/purduehackers',
+      'https://www.instagram.com/purduehackers/',
+      'https://www.linkedin.com/company/purdue-hackers/',
+      'https://x.com/purduehackers/',
+      'https://www.youtube.com/@PurdueHackers/',
+    ],
+  },
+  ...(path === '/'
+    ? []
+    : [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              name: 'Purdue Hackers',
+              item: SITE_URL,
+            },
+            { '@type': 'ListItem', position: 2, name: title, item: canonical },
+          ],
+        },
+      ]),
+  ...jsonLd,
+];
 ---
 
 <html lang="en">
@@ -21,7 +78,24 @@ const { title = 'Purdue Hackers' } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
 
-    <slot name="head"></slot>
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap.xml" />
+    <SocialPreviewMetadata
+      title={fullTitle}
+      description={description}
+      url={canonical}
+    />
+    {
+      structuredData.map((data) => (
+        <script
+          type="application/ld+json"
+          set:html={JSON.stringify(data).replace(/</g, '\\u003c')}
+        />
+      ))
+    }
+    <slot name="head" />
 
     <Font cssVariable="--font-whyte" preload />
     <Font cssVariable="--font-inconsolata" preload />
@@ -31,7 +105,6 @@ const { title = 'Purdue Hackers' } = Astro.props;
 
     <Analytics />
 
-    <title>{title}</title>
     <style is:global>
       .header-over-dark .nav-link {
         color: var(--color-bg) !important;
@@ -49,35 +122,14 @@ const { title = 'Purdue Hackers' } = Astro.props;
       .header-over-dark .mobile-menu-btn__line {
         background-color: var(--color-bg);
       }
-      .header-dither-backdrop {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        /* total length of the dither ramp; it overflows below the header on
-           purpose so the tail has room to reach zero instead of being cut */
-        height: var(--header-dither-height, 200px);
-        z-index: -1;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-      }
-      .header-over-dark .header-dither-backdrop {
-        opacity: 1;
-      }
     </style>
   </head>
   <body>
+    <a href="#main" class="skip-link">Skip to content</a>
     <header
       id="site-header"
       class="fixed top-0 left-0 right-0 z-30 px-6 py-5 md:px-8 md:py-6 font-inconsolata"
     >
-      <div
-        id="header-dither-root"
-        class="header-dither-backdrop"
-        aria-hidden="true"
-      >
-      </div>
       <div class="flex items-center justify-between">
         <!-- glider logo -->
         <a
@@ -100,39 +152,32 @@ const { title = 'Purdue Hackers' } = Astro.props;
           </svg>
         </a>
 
-        <!-- desktopn nav -->
-        <nav class="hidden md:flex gap-8 header-links">
-          <a
-            href="https://discord.gg/5paFjKzdPE"
-            target="_blank"
-            class="nav-link text-base text-black tracking-wide font-semibold"
-            >DISCORD</a
-          >
-          <a
-            href="https://events.purduehackers.com/"
-            target="_blank"
-            class="nav-link text-base text-black tracking-wide font-semibold"
-            >EVENTS</a
-          >
-          <a
-            href="https://blog.purduehackers.com/"
-            target="_blank"
-            class="nav-link text-base text-black tracking-wide font-semibold"
-            >BLOG</a
-          >
-          <a
-            href="https://grants.purduehackers.com/"
-            target="_blank"
-            class="nav-link text-base text-black tracking-wide font-semibold"
-            >MICROGRANTS</a
-          >
+        <!-- desktop nav -->
+        <nav
+          class="hidden lg:flex items-center gap-3 xl:gap-6 header-links"
+          aria-label="Main"
+        >
+          {
+            NAV.map((item) => (
+              <a
+                href={item.href}
+                aria-current={current === item ? 'page' : undefined}
+                class="nav-link text-base text-black tracking-wide font-semibold uppercase"
+              >
+                {item.label}
+              </a>
+            ))
+          }
+          <a href={DISCORD_URL} target="_blank" class="nav-cta">
+            Join Discord <span aria-hidden="true">↗</span>
+          </a>
         </nav>
 
-        <!-- mobile hanburger -->
+        <!-- mobile hamburger -->
         <button
           type="button"
           id="menu-toggle"
-          class="mobile-menu-btn md:hidden ml-auto flex flex-col justify-center items-center w-10 h-10 gap-1.5 text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black"
+          class="mobile-menu-btn lg:hidden ml-auto flex flex-col justify-center items-center w-10 h-10 gap-1.5 text-black focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black"
           aria-expanded="false"
           aria-label="Open menu"
           aria-controls="mobile-menu"
@@ -146,37 +191,45 @@ const { title = 'Purdue Hackers' } = Astro.props;
     <!-- mobile menu overlay -->
     <div
       id="mobile-menu"
-      class="mobile-menu fixed inset-0 z-20 bg-black font-inconsolata"
+      class="mobile-menu fixed inset-0 z-20 bg-black font-inconsolata overflow-y-auto"
       aria-hidden="true"
       role="dialog"
       aria-label="Main menu"
+      inert
     >
       <nav
-        class="mobile-menu__nav flex flex-col justify-center min-h-full px-8 py-24 gap-6"
+        class="mobile-menu__nav flex flex-col justify-center min-h-full px-8 pt-24 pb-10"
+        aria-label="Main"
       >
+        {
+          NAV.map((item, index) => (
+            <a
+              href={item.href}
+              aria-current={current === item ? 'page' : undefined}
+              class="mobile-menu__link mobile-menu__link--page"
+              style={`--i: ${index}`}
+            >
+              <span class="mobile-menu__index" aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <span>
+                {item.label}
+                <small>{item.blurb}</small>
+              </span>
+            </a>
+          ))
+        }
         <a
-          href="https://discord.gg/5paFjKzdPE"
+          href={DISCORD_URL}
           target="_blank"
-          class="mobile-menu__link">DISCORD</a
+          class="mobile-menu__link mobile-menu__discord"
         >
-        <a
-          href="https://events.purduehackers.com/"
-          target="_blank"
-          class="mobile-menu__link">EVENTS</a
-        >
-        <a
-          href="https://blog.purduehackers.com/"
-          target="_blank"
-          class="mobile-menu__link">BLOG</a
-        >
-        <a
-          href="https://grants.purduehackers.com/"
-          target="_blank"
-          class="mobile-menu__link">MICROGRANTS</a
-        >
+          Join Discord ↗
+        </a>
       </nav>
     </div>
     <slot />
+    <SiteFooter />
     <script src="../scripts/header.ts"></script>
     <!-- <script src="../scripts/hoverSound.ts"></script> -->
   </body>

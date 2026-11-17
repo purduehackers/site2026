@@ -1,0 +1,25 @@
+---
+import Glider from "./Glider.astro";
+
+type Props = {
+  label?: string;
+  class?: string;
+  tintLinks?: boolean;
+};
+
+const { label, class: className, tintLinks = false } = Astro.props;
+---
+
+<Glider
+  label={label}
+  class={className}
+  style="--glider-a: var(--ph-zap); --glider-b: var(--ph-spark); --glider-c: var(--ph-bolt)"
+  data-ph-lightning={tintLinks ? "tint" : ""}
+/>
+
+<script>
+  import { startLightning, tintLinks } from "./lightning";
+
+  startLightning();
+  if (document.querySelector('[data-ph-lightning="tint"]')) tintLinks();
+</script>

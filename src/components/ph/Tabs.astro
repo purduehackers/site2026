@@ -1,0 +1,71 @@
+---
+type Tab = {
+  value: string;
+  label: string;
+};
+
+type Props = {
+  tabs: Tab[];
+  value?: string;
+  label?: string;
+  class?: string;
+};
+
+const { tabs, value = tabs[0]?.value, label, class: className } = Astro.props;
+---
+
+<div data-ph-tabs data-value={value} class:list={["flex flex-col gap-4 [&:not([data-ready])>[data-ph-tab-panel]~[data-ph-tab-panel]]:hidden", className]}>
+  <div role="tablist" aria-label={label} class="flex flex-wrap gap-1 border-b border-foreground">
+    {
+      tabs.map((t) => (
+        <button
+          type="button"
+          role="tab"
+          data-value={t.value}
+          aria-selected={t.value === value ? "true" : "false"}
+          tabindex={t.value === value ? 0 : -1}
+          class="-mb-px cursor-pointer px-3 py-1.5 font-mono text-[13px] font-semibold tracking-wide uppercase transition-colors duration-150 ease-quint hover:bg-foreground/[0.08] aria-selected:bg-foreground aria-selected:text-background"
+        >
+          {t.label}
+        </button>
+      ))
+    }
+  </div>
+  <slot />
+</div>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>("[data-ph-tabs]")) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>(':scope > [role="tablist"] > [role="tab"]')];
+    const panels = [...root.querySelectorAll<HTMLElement>(":scope > [data-ph-tab-panel]")];
+    const uid = Math.random().toString(36).slice(2, 8);
+
+    const select = (value: string, focus = false) => {
+      for (const t of tabs) {
+        const on = t.dataset.value === value;
+        t.setAttribute("aria-selected", String(on));
+        t.tabIndex = on ? 0 : -1;
+        if (on && focus) t.focus();
+      }
+      for (const p of panels) p.hidden = p.dataset.phTabPanel !== value;
+    };
+
+    for (const [i, t] of tabs.entries()) {
+      t.id = `ph-tab-${uid}-${t.dataset.value}`;
+      t.setAttribute("aria-controls", `ph-panel-${uid}-${t.dataset.value}`);
+      t.addEventListener("click", () => select(t.dataset.value!));
+      t.addEventListener("keydown", (e) => {
+        const step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+        if (!step) return;
+        e.preventDefault();
+        select(tabs[(i + step + tabs.length) % tabs.length].dataset.value!, true);
+      });
+    }
+    for (const p of panels) {
+      p.id = `ph-panel-${uid}-${p.dataset.phTabPanel}`;
+      p.setAttribute("aria-labelledby", `ph-tab-${uid}-${p.dataset.phTabPanel}`);
+    }
+    select(root.dataset.value!);
+    root.dataset.ready = "";
+  }
+</script>

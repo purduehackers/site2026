@@ -1,0 +1,91 @@
+---
+/** 3D sketch of The Sign, lit by live Lightning Time. Static glider fallback. */
+import LightningGlider from './ph/LightningGlider.astro';
+import Link from './ph/Link.astro';
+---
+
+<figure class="sign">
+  <div class="sign__stage" data-sign>
+    <LightningGlider
+      class="sign__fallback"
+      label="The Sign: a glider lit in the colours of the current Lightning Time"
+    />
+    <canvas aria-hidden="true"></canvas>
+  </div>
+  <figcaption class="sign__plate">
+    <span>
+      <b>The Sign</b> A meter-tall glider that shows the time as colour.
+      <Link href="https://blog.purduehackers.com/posts/sign"
+        >Read the build</Link
+      >
+    </span>
+    <span class="sign__note">3D sketch, live colours · drag it</span>
+  </figcaption>
+</figure>
+
+<script>
+  import { initSign } from '../scripts/signObject';
+
+  document.querySelectorAll<HTMLElement>('[data-sign]').forEach(initSign);
+</script>
+
+<style>
+  .sign {
+    width: 100%;
+    max-width: 34rem;
+    justify-self: end;
+  }
+  .sign__stage {
+    position: relative;
+    aspect-ratio: 1;
+    cursor: grab;
+    touch-action: pan-y;
+  }
+  .sign__stage:active {
+    cursor: grabbing;
+  }
+  .sign__stage canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+  }
+  .sign__stage[data-ready] canvas {
+    display: block;
+  }
+  .sign__stage :global(.sign__fallback) {
+    position: absolute;
+    inset: 18%;
+    width: 64%;
+    height: 64%;
+  }
+  .sign__stage[data-ready] :global(.sign__fallback) {
+    visibility: hidden;
+  }
+  .sign__plate {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.25rem 1.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--foreground);
+    font-size: 14px;
+  }
+  .sign__plate b {
+    margin-right: 0.35rem;
+  }
+  .sign__note {
+    font-family: var(--ph-font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  @media (max-width: 1023px) {
+    .sign {
+      justify-self: start;
+      max-width: 22rem;
+    }
+  }
+</style>

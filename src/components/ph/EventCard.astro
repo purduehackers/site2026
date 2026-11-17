@@ -1,0 +1,61 @@
+---
+import Icon from "./Icon.astro";
+import { categoryClasses, categorySlug } from "./categories";
+import "./event-card.css";
+
+type Props = {
+  title: string;
+  href: string;
+  date: string;
+  time?: string;
+  location?: string;
+  category?: string;
+  image?: string;
+  class?: string;
+};
+
+const { title, href, date, time, location, category, image, class: className } = Astro.props;
+const when = [date, time].filter(Boolean).join(" • ");
+---
+
+<a
+  href={href}
+  data-category={category && categorySlug(category)}
+  class:list={[
+    "ph-event-card group flex w-full gap-4 border border-border bg-card text-left text-card-foreground no-underline hover:border-foreground sm:gap-6",
+    image ? "flex-row items-stretch p-3 sm:p-5" : "h-full flex-col justify-between px-6 py-5",
+    className,
+  ]}
+>
+  {
+    image && (
+      <div class="size-24 shrink-0 bg-muted">
+        <img class="size-full object-cover" src={image} alt="" width="96" height="96" loading="lazy" decoding="async" />
+      </div>
+    )
+  }
+  <div class="flex min-w-0 flex-1 flex-col justify-between gap-2">
+    <div class="flex items-start justify-between gap-3">
+      <p class="font-mono text-[15px] leading-none font-semibold uppercase">{when}</p>
+      <Icon name="star" class="ph-event-card__star size-3.5" />
+    </div>
+    <h3 class="text-lg leading-tight font-semibold">{title}</h3>
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      {
+        location && (
+          <p class="flex min-w-0 items-center gap-2 font-mono text-[15px] leading-none font-semibold">
+            <Icon name="location-pin" class="size-3.5" />
+            <span class="line-clamp-1">{location}</span>
+          </p>
+        )
+      }
+      {
+        category && (
+          <span class:list={["px-1.5 py-0.5 font-mono text-[11px] leading-none font-semibold tracking-wide uppercase", categoryClasses(category)]}>
+            {category}
+          </span>
+        )
+      }
+    </div>
+  </div>
+</a>

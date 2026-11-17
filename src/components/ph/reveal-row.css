@@ -1,0 +1,97 @@
+/* translate and scale stay separate so per-frame writes don't fight hover. */
+.ph-reveal-row__card {
+  position: fixed;
+  top: 0;
+  left: 0;
+  translate: var(--card-x, 0) var(--card-y, 0);
+  z-index: 20;
+  display: flex;
+  width: calc(232px + 32px);
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 28px rgb(0 0 0 / 0.1);
+  opacity: 0;
+  scale: 0.97;
+  transform-origin: top left;
+  pointer-events: none;
+
+  --dur: 200ms;
+  --beat: 55ms;
+
+  transition:
+    opacity 120ms var(--ph-ease),
+    scale 120ms var(--ph-ease);
+}
+
+.ph-reveal-row__frame {
+  flex: none;
+}
+
+.ph-reveal-row__text {
+  opacity: 0;
+  translate: 0 4px;
+  transition:
+    opacity 120ms var(--ph-ease),
+    translate 120ms var(--ph-ease);
+}
+
+[data-ph-warm] .ph-reveal-row__card {
+  --dur: 110ms;
+  --beat: 25ms;
+}
+
+.ph-reveal-row:is(:hover, :has(:focus-visible)) .ph-reveal-row__card {
+  opacity: 1;
+  scale: 1;
+  transition-duration: var(--dur);
+}
+
+.ph-reveal-row:is(:hover, :has(:focus-visible)) .ph-reveal-row__text {
+  opacity: 1;
+  translate: 0 0;
+  transition-duration: var(--dur);
+  transition-delay: var(--beat);
+}
+
+@media (hover: none) {
+  .ph-reveal-row__card {
+    position: static;
+    grid-column: 1 / -1;
+    width: auto;
+    padding: 6px 0 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    opacity: 1;
+    translate: none;
+    scale: none;
+    pointer-events: auto;
+  }
+
+  .ph-reveal-row__frame {
+    display: none;
+  }
+
+  .ph-reveal-row__text {
+    opacity: 1;
+    translate: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ph-reveal-row__card,
+  .ph-reveal-row:is(:hover, :has(:focus-visible)) .ph-reveal-row__card {
+    scale: 1;
+    transition: opacity 120ms linear;
+  }
+
+  .ph-reveal-row__text,
+  .ph-reveal-row:is(:hover, :has(:focus-visible)) .ph-reveal-row__text {
+    translate: none;
+    transition: opacity 120ms linear;
+    transition-delay: 0ms;
+  }
+}

@@ -1,0 +1,343 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Scene from '../components/Scene.astro';
+import Exhibit, { type ExhibitPhoto } from '../components/Exhibit.astro';
+import DitherFilters from '../components/DitherFilters.astro';
+import DitherButton from '../components/ph/DitherButton.astro';
+import Button from '../components/ph/Button.astro';
+import Link from '../components/ph/Link.astro';
+import Badge from '../components/ph/Badge.astro';
+import { KOKS_GALAXY } from '../constants/gliderGrid';
+import burstCrowd from '../assets/sites/burst-01.webp';
+import burstWall from '../assets/sites/burst-15.webp';
+import burstPhotos from '../assets/sites/burst-05.webp';
+import spillCrowd from '../assets/sites/spill-crowd-shot.webp';
+import spillArm from '../assets/sites/spill-arm.webp';
+import spillSign from '../assets/sites/spill-spill-sign.webp';
+import spillTypewriter from '../assets/sites/spill-typewriter.webp';
+import bentoTalk from '../assets/shows/bento-dj.webp';
+
+const upcoming = Date.now() < Date.parse('2026-12-06T05:00:00Z');
+
+const shows: {
+  id: string;
+  name: string;
+  color: string;
+  badge: string;
+  facts: string[];
+  text: string;
+  href: string;
+  cta: string;
+  more?: { href: string; label: string };
+  photos: ExhibitPhoto[];
+}[] = [
+  {
+    id: 'waveforum',
+    name: 'waveforum',
+    color: '#83e5f5',
+    badge: upcoming ? 'Up next' : 'Fall 2026',
+    facts: ['December 5, 2026', '7 PM', 'Showcase'],
+    text: 'The next one. Apply to show something you made, or RSVP to come see it.',
+    href: 'https://waveforum.purduehackers.com/',
+    cta: upcoming ? 'apply or rsvp' : 'visit waveforum',
+    photos: [],
+  },
+  {
+    id: 'bento',
+    name: 'BENTO',
+    color: '#b9a3ff',
+    badge: 'Spring 2026',
+    facts: ['April 11, 2026', 'KRAN 140', 'Lightning talks'],
+    text: 'Not an exhibition. A night of short talks on wacky interests: Rust crates, Rubik’s cubes, birds, iOS tweaks, VR laser tag.',
+    href: 'https://bento.purduehackers.com/',
+    cta: 'watch the talks',
+    photos: [
+      {
+        src: bentoTalk,
+        alt: 'A speaker at BENTO in front of a projected DJ deck interface.',
+        label: 'A talk at BENTO',
+        note: 'KRAN 140',
+        col: '2 / span 9',
+        tilt: 1.2,
+        ratio: '16 / 9',
+      },
+    ],
+  },
+  {
+    id: 'spill',
+    name: 'spill ≋',
+    color: '#ffc481',
+    badge: 'Fall 2025',
+    facts: [
+      'December 6, 2025',
+      'Vienna Coffee House',
+      '200 people, 23 projects',
+    ],
+    text: 'A warm coffee shop on a cold night, a free drink, and projects made by people, late nights and spilled coffee.',
+    href: 'https://spill.purduehackers.com/',
+    cta: 'visit spill',
+    more: {
+      href: 'https://blog.purduehackers.com/posts/spill',
+      label: 'the branding study',
+    },
+    photos: [
+      {
+        src: spillCrowd,
+        alt: 'A packed coffee shop during spill.',
+        label: 'The room · 200 people',
+        col: '1 / span 6',
+        tilt: -1.5,
+      },
+      {
+        src: spillArm,
+        alt: 'An industrial robot arm playing Connect Four against a visitor.',
+        label: 'Robot arm',
+        note: 'plays Connect Four',
+        col: '6 / span 4',
+        drop: '7rem',
+        tilt: 2,
+        z: 4,
+      },
+      {
+        src: spillSign,
+        alt: 'A glowing squiggle of light tubing in a clear case.',
+        label: 'The spill sign',
+        col: '9 / span 4',
+        drop: '1rem',
+        tilt: -1,
+      },
+      {
+        src: spillTypewriter,
+        alt: 'A typewriter fitted with electronics, mid-print.',
+        label: 'Typewriter',
+        col: '2 / span 4',
+        drop: '20rem',
+        tilt: 1,
+        z: 5,
+      },
+    ],
+  },
+  {
+    id: 'burst',
+    name: 'BURST ✷',
+    color: '#ff8296',
+    badge: 'Fall 2024',
+    facts: ['December 8, 2024', 'A gallery in West Lafayette', '250 visitors'],
+    text: 'The first one. Two years of Hack Night projects, rehung as art in a real gallery for a four-hour pop-up.',
+    href: 'https://burst.purduehackers.com/',
+    cta: 'visit burst',
+    photos: [
+      {
+        src: burstCrowd,
+        alt: 'Visitors filling a white-walled gallery at BURST.',
+        label: 'Opening',
+        note: '250 visitors',
+        col: '1 / span 6',
+        tilt: 1.5,
+      },
+      {
+        src: burstWall,
+        alt: 'Three visitors talking in front of a wall of colourful badges.',
+        label: 'The badge wall',
+        col: '6 / span 5',
+        drop: '6rem',
+        tilt: -2,
+        z: 4,
+      },
+      {
+        src: burstPhotos,
+        alt: 'Visitors photographing a spiral of small works on the gallery wall.',
+        label: 'Passports',
+        note: 'Republic of Hackerland',
+        col: '9 / span 4',
+        drop: '-1rem',
+        tilt: 1,
+      },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="The Shows"
+  description="A dated record of Purdue Hackers' public shows: BURST (gallery exhibition, 2024), spill (coffee shop showcase, 2025), BENTO (lightning talks, 2026) and waveforum (December 5, 2026)."
+>
+  <main id="main" class="ph-scope dark" data-header-dark>
+    <DitherFilters />
+    <PageHero
+      color="#ff8296"
+      speed={170}
+      seeds={[{ cells: KOKS_GALAXY, at: [0.8, 0.3], atSmall: [0.72, 0.1] }]}
+    >
+      <Fragment slot="title">The<br />Shows</Fragment>
+      <Fragment slot="lede">
+        Sometimes the projects leave the room. So far: a gallery, a coffee shop,
+        a lecture hall.
+      </Fragment>
+      {
+        shows.map((show) => (
+          <Button
+            href={`#${show.id}`}
+            variant="outline"
+            style={`--c: ${show.color}`}
+            class="jump"
+          >
+            {show.name}
+          </Button>
+        ))
+      }
+    </PageHero>
+
+    {
+      shows.map((show) => (
+        <Scene id={show.id} class="show">
+          <div class="show__head" style={`--c: ${show.color}`}>
+            <h2 class="ph-headline">{show.name}</h2>
+            <div class="show__copy">
+              <p class="show__facts">
+                <Badge class="show__badge">{show.badge}</Badge>
+                {show.facts.map((fact) => (
+                  <span>{fact}</span>
+                ))}
+              </p>
+              <p>{show.text}</p>
+              <div class="actions">
+                <DitherButton
+                  href={show.href}
+                  target="_blank"
+                  rel="noopener"
+                  cols={9}
+                >
+                  {show.cta}
+                </DitherButton>
+                {show.more && (
+                  <Link href={show.more.href}>{show.more.label}</Link>
+                )}
+              </div>
+            </div>
+          </div>
+          {show.photos.length > 0 ? (
+            <Exhibit photos={show.photos} class="show__wall" />
+          ) : (
+            <div class="wave" aria-hidden="true" style={`--c: ${show.color}`}>
+              {Array.from({ length: 64 }, (_, bar) => (
+                <i style={`--b: ${bar}`} />
+              ))}
+            </div>
+          )}
+        </Scene>
+      ))
+    }
+
+    <section class="outro wrap">
+      <p class="ph-headline">Want in? Make something.</p>
+      <p>
+        Shows fill up with projects from <Link href="/hack-night"
+          >Hack Night</Link
+        >, some funded by a
+        <Link href="/support">µgrant</Link>. Calls go out on Discord and the <Link
+          href="/events">calendar</Link
+        >.
+      </p>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  :global(.jump:hover) {
+    background: var(--c) !important;
+    color: #000 !important;
+    border-color: var(--c) !important;
+  }
+  .show__head {
+    display: grid;
+    gap: 1.5rem 4rem;
+    align-items: end;
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+  @media (min-width: 900px) {
+    .show__head {
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    }
+  }
+  .show__head h2 {
+    font-size: clamp(4rem, 13vw, 10rem);
+    color: var(--c);
+  }
+  .show__copy {
+    display: grid;
+    gap: 1rem;
+    max-width: 30rem;
+  }
+  .show__facts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.9rem;
+    font-family: var(--ph-font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .show__facts :global(.show__badge) {
+    background: var(--c);
+    color: #000;
+  }
+  .show__facts span:not(:last-child)::after {
+    content: '·';
+    margin-left: 0.9rem;
+  }
+  :global(.show__wall) {
+    padding-bottom: 2rem;
+  }
+
+  /* waveforum has no photos yet: a stepped waveform stands in */
+  .wave {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    height: clamp(9rem, 22vw, 16rem);
+  }
+  .wave i {
+    flex: 1;
+    height: 100%;
+    background: var(--c);
+    transform: scaleY(0.1);
+    animation: wave 2.4s steps(7) infinite alternate;
+    animation-delay: calc(var(--b) * -0.17s);
+  }
+  .wave i:nth-child(3n) {
+    animation-duration: 1.7s;
+  }
+  .wave i:nth-child(4n + 1) {
+    animation-duration: 3.1s;
+    background: var(--foreground);
+  }
+  @keyframes wave {
+    to {
+      transform: scaleY(1);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wave i {
+      animation: none;
+      transform: scaleY(calc(0.2 + 0.75 * abs(sin(var(--b) * 0.45))));
+    }
+  }
+
+  .outro {
+    display: grid;
+    gap: 1rem 4rem;
+    align-items: end;
+    padding-block: 4rem 5rem;
+  }
+  @media (min-width: 900px) {
+    .outro {
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    }
+  }
+  .outro .ph-headline {
+    font-size: clamp(2.6rem, 6.5vw, 5rem);
+  }
+</style>
